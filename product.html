@@ -367,7 +367,7 @@
 
         function sendWhatsApp() {
             if (cart.length === 0) return;
-            let phoneNumber = "2348000000000"; // REPLACE WITH YOUR NUMBER
+            let phoneNumber = "2347016685134"; // REPLACE WITH YOUR NUMBER
             let message = "*New Order from WearTee.ng*%0A%0A";
             cart.forEach(i => { message += `- ${i.name.toUpperCase()} (x${i.qty}): ₦${(i.price * i.qty).toLocaleString()}%0A`; });
             const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
@@ -387,5 +387,6 @@
     </script>
 
 </body>
+
 
 </html>
