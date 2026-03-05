@@ -12,6 +12,7 @@
             --bg: #ffffff;
             --white: #ffffff;
             --transition: all 0.3s ease;
+            --danger: #ff4444;
         }
 
         * {
@@ -26,7 +27,6 @@
             color: var(--primary);
         }
 
-        /* --- HEADER --- */
         header {
             position: sticky;
             top: 0;
@@ -64,7 +64,6 @@
             padding-bottom: 2px;
         }
 
-        /* --- PRODUCT GRID --- */
         .container {
             max-width: 1400px;
             margin: 20px auto;
@@ -80,7 +79,7 @@
         .card {
             background: var(--white);
             transition: var(--transition);
-            cursor: pointer;
+            position: relative;
         }
 
         .img-box {
@@ -89,6 +88,7 @@
             overflow: hidden;
             background: #f9f9f9;
             border-radius: 4px;
+            position: relative;
         }
 
         .card img {
@@ -102,11 +102,37 @@
             opacity: 0.8;
         }
 
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--danger);
+            color: white;
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            z-index: 10;
+            border-radius: 2px;
+        }
+
+        .sold-out-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            text-transform: uppercase;
+            z-index: 5;
+        }
+
         .card-info {
             padding: 15px 0;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 8px;
         }
 
         .info-row {
@@ -127,20 +153,38 @@
             font-size: 14px;
         }
 
+        /* SIZE SELECTOR STYLE */
+        .size-selector {
+            width: 100%;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            border: 1px solid #eee;
+            outline: none;
+            background: #fff;
+            cursor: pointer;
+        }
+
         .add-to-cart-action {
-            margin-top: 10px;
             font-size: 11px;
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1px;
             border: 1px solid #000;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
         }
 
         .card:hover .add-to-cart-action {
             background: #000;
             color: #fff;
+        }
+
+        .card.disabled {
+            pointer-events: none;
+            opacity: 0.7;
         }
 
         /* --- SIDEBAR CART --- */
@@ -211,10 +255,6 @@
             margin-top: 5px;
         }
 
-        .remove-btn:hover {
-            color: #000;
-        }
-
         .cart-footer {
             padding: 30px;
             border-top: 1px solid #eee;
@@ -243,7 +283,7 @@
 
         .clear-btn {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background: transparent;
             color: #999;
             border: 1px solid #eee;
@@ -252,12 +292,6 @@
             font-size: 10px;
             letter-spacing: 1px;
             transition: var(--transition);
-        }
-
-        .clear-btn:hover {
-            background: #fff0f0;
-            color: #ff4444;
-            border-color: #ff4444;
         }
 
         .overlay {
@@ -294,7 +328,7 @@
     <div class="overlay" id="overlay"></div>
 
     <header>
-        <div class="logo"><a href="weartee.html">WearTee.ng</a></div>
+        <div class="logo"><a href="#">WearTee.ng</a></div>
         <div class="cart-btn" id="cart-open">cart (<span id="cart-count">0</span>)</div>
     </header>
 
@@ -308,8 +342,7 @@
             <span id="cart-close"
                 style="cursor:pointer; font-size: 11px; font-weight: 800; text-transform: uppercase;">Close</span>
         </div>
-        <div class="cart-items" id="cart-list">
-        </div>
+        <div class="cart-items" id="cart-list"></div>
         <div class="cart-footer">
             <div class="total-row">
                 <span>Total</span>
@@ -322,80 +355,118 @@
 
     <script>
         const products = [
-            { id: 1, name: "black tee", price: 10000, img: "images/black tees (1).JPG" },
-            { id: 2, name: "grey tee", price: 10000, img: "images/grey tees .JPG" },
-            { id: 3, name: "blue tee", price: 10000, img: "images/black tees (3).JPG" },
-            { id: 4, name: "gray tee", price: 10000, img: "images/black tees (4).JPG" },
-            { id: 5, name: "black tee", price: 10000, img: "images/black tees (5).JPG" },
-            { id: 6, name: "black tee", price: 10000, img: "images/black tees (6).JPG" },
-            { id: 7, name: "trucker cap", price: 15000, img: "images/cap (1).JPG" },
-            { id: 8, name: "basic-top", price: 10000, img: "images/cap (2).JPG" },
-            { id: 9, name: "classic cap", price: 15000, img: "images/cap (3).JPG" },
-            { id: 10, name: "classic cap", price: 15000, img: "images/cap (4).JPG" },
-            { id: 11, name: "snapback", price: 15000, img: "images/snapback (1).JPG" },
-            { id: 12, name: "snapback", price: 15000, img: "images/snapback (4).JPG" },
-            { id: 13, name: "snapback", price: 15000, img: "images/snapback (5).JPG" },
-            { id: 14, name: "snapback", price: 15000, img: "images/snapback (6).JPG" },
-            { id: 15, name: "snapback", price: 15000, img: "images/snapback (7).JPG" },
-            { id: 16, name: "snapback", price: 15000, img: "images/snapback (8).JPG" },
-            { id: 17, name: "snapback", price: 15000, img: "images/snapback (9).JPG" },
-            { id: 18, name: "snapback", price: 15000, img: "images/snapback (10).JPG" },
-            { id: 19, name: "jersey-pink", price: 7000, img: "images/jersey.JPG" },
-            { id: 20, name: "jersey-purple", price: 7000, img: "images/jersey (2).JPG" },
-            { id: 21, name: "jersey-black", price: 7000, img: "images/jersey (3).JPG" },
-            { id: 22, name: "jersey 03", price: 7000, img: "images/IMG_4723.JPG" },
-            { id: 23, name: "jersey 03", price: 7000, img: "images/IMG_4724.JPG" },
-            { id: 24, name: "jersey 03", price: 7000, img: "images/IMG_4725.JPG" },
-            { id: 25, name: "jersey 03", price: 7000, img: "images/IMG_4726.JPG" },
+            { id: 1, name: "black tee 01", price: 10000, img: "images/black tees (1).JPG" },
+            { id: 2, name: "grey tee 01", price: 10000, img: "images/grey tees .JPG" },
+            { id: 3, name: "black tee 02", price: 10000, img: "images/black tees (3).JPG" },
+            { id: 4, name: "black tee 03", price: 10000, img: "images/black tees (4).JPG" },
+            { id: 5, name: "black tee 04", price: 10000, img: "images/black tees (5).JPG" },
+            { id: 6, name: "black tee 05", price: 10000, img: "images/black tees (6).JPG" },
+            { id: 7, name: "trucker cap 01", price: 15000, img: "images/cap (1).JPG" },
+            { id: 8, name: "urban cap 01", price: 10000, img: "images/cap (2).JPG" },
+            { id: 9, name: "classic cap 01", price: 15000, img: "images/cap (3).JPG" },
+            { id: 10, name: "white cap 01", price: 15000, img: "images/cap (4).JPG" },
+            { id: 11, name: "snapback 01", price: 15000, img: "images/snapback (1).JPG" },
+            { id: 12, name: "snapback 02", price: 15000, img: "images/snapback (4).JPG" },
+            { id: 13, name: "snapback 03", price: 15000, img: "images/snapback (5).JPG" },
+            { id: 14, name: "snapback 04", price: 15000, img: "images/snapback (6).JPG" },
+            { id: 15, name: "snapback 05", price: 15000, img: "images/snapback (7).JPG" },
+            { id: 16, name: "snapback 06", price: 15000, img: "images/snapback (8).JPG" },
+            { id: 17, name: "snapback 07", price: 15000, img: "images/snapback (9).JPG" },
+            { id: 18, name: "snapback 08", price: 15000, img: "images/snapback (10).JPG" },
+            { id: 19, name: "jersey 01", price: 7000, img: "images/jersey.JPG" },
+            { id: 20, name: "jersey 02", price: 7000, img: "images/jersey (2).JPG" },
+            { id: 21, name: "jersey 03", price: 7000, img: "images/jersey (3).JPG" },
+            { id: 22, name: "free pant", price: 4000, img: "images/IMG_4723.JPG", stock: 2 },
+            { id: 23, name: "free pant", price: 4000, img: "images/IMG_4724.JPG", stock: 1 },
+            { id: 24, name: "lounge pant", price: 6000, img: "images/IMG_4725.JPG", stock: 0 },
+            { id: 25, name: "joggers", price: 8000, img: "images/IMG_4726.JPG" },
             { id: 26, name: "jersey 03", price: 10000, img: "images/IMG_4727.JPG" },
-            { id: 27, name: "basic-top 03", price: 10000, img: "images/IMG_4728.JPG" },
-            { id: 28, name: "basic-top", price: 10000, img: "images/IMG_4729.JPG" },
-            { id: 29, name: "basic-top", price: 10000, img: "images/IMG_4730.JPG" },
-            { id: 30, name: "brown tee", price: 10000, img: "images/IMG_4743.JPG" },
-            { id: 31, name: "pink tee", price: 10000, img: "images/IMG_4750.JPG" },
+            { id: 27, name: "jersey 03", price: 10000, img: "images/IMG_4728.JPG" },
+            { id: 28, name: "jersey 03", price: 10000, img: "images/IMG_4729.JPG" },
+            { id: 29, name: "jersey 03", price: 10000, img: "images/IMG_4730.JPG" },
+            { id: 30, name: "jersey 03", price: 10000, img: "images/IMG_4743.JPG" },
+            { id: 31, name: "jersey 03", price: 10000, img: "images/IMG_4750.JPG" },
         ];
 
-        // LOAD DATA FROM LOCAL STORAGE ON START
         let cart = JSON.parse(localStorage.getItem('weartee_cart')) || [];
 
         const grid = document.getElementById('product-grid');
-        grid.innerHTML = products.map(p => `
-        <div class="card" onclick="addToCart(${p.id})">
-            <div class="img-box"><img src="${p.img}"></div>
-            <div class="card-info">
-                <div class="info-row">
-                    <span class="brand-name">weartee.ng</span>
-                    <span class="price">₦${p.price.toLocaleString()}</span>
+
+        function renderProducts() {
+            grid.innerHTML = products.map(p => {
+                const isSoldOut = p.stock === 0;
+                const isLowStock = p.stock > 0 && p.stock <= 5;
+
+                return `
+                <div class="card ${isSoldOut ? 'disabled' : ''}">
+                    <div class="img-box">
+                        ${isLowStock ? `<div class="stock-badge">Only ${p.stock} left</div>` : ''}
+                        ${isSoldOut ? `<div class="sold-out-overlay">Sold Out</div>` : ''}
+                        <img src="${p.img}">
+                    </div>
+                    <div class="card-info">
+                        <div class="info-row">
+                            <span class="brand-name">weartee.ng</span>
+                            <span class="price">₦${p.price.toLocaleString()}</span>
+                        </div>
+                        
+                        <select class="size-selector" id="size-${p.id}" ${isSoldOut ? 'disabled' : ''}>
+                            <option value="S">Small (S)</option>
+                            <option value="M" selected>Medium (M)</option>
+                            <option value="L">Large (L)</option>
+                            <option value="XL">Extra Large (XL)</option>
+                            <option value="XXL">Double XL (XXL)</option>
+                        </select>
+
+                        <div class="add-to-cart-action" onclick="addToCart(${p.id})">
+                            ${isSoldOut ? 'Out of Stock' : 'Add to Cart'}
+                        </div>
+                    </div>
                 </div>
-                <div class="add-to-cart-action">Add to Cart</div>
-            </div>
-        </div>
-    `).join('');
+            `}).join('');
+        }
 
         function addToCart(id) {
             const product = products.find(p => p.id === id);
-            const item = cart.find(i => i.id === id);
-            if (item) { item.qty++ } else { cart.push({ ...product, qty: 1 }) }
+            const size = document.getElementById(`size-${id}`).value;
+
+            // Check Stock
+            const itemsInCartOfThisSize = cart.filter(i => i.id === id && i.size === size);
+            const currentQty = itemsInCartOfThisSize.reduce((acc, curr) => acc + curr.qty, 0);
+
+            if (product.stock !== undefined && currentQty >= product.stock) {
+                alert(`Sorry, we only have ${product.stock} of these available in this size.`);
+                return;
+            }
+
+            // Find item with same ID AND same size
+            const item = cart.find(i => i.id === id && i.size === size);
+
+            if (item) {
+                item.qty++;
+            } else {
+                cart.push({ ...product, size: size, qty: 1 });
+            }
+
             updateUI();
             toggleCart(true);
         }
 
-        function removeFromCart(id) {
-            cart = cart.filter(i => i.id !== id);
+        function removeFromCart(id, size) {
+            cart = cart.filter(i => !(i.id === id && i.size === size));
             updateUI();
         }
 
         function clearCart() {
-            if (confirm("Are you sure you want to clear your cart?")) {
+            if (cart.length === 0) return;
+            if (confirm("Clear all items from your cart?")) {
                 cart = [];
                 updateUI();
             }
         }
 
         function updateUI() {
-            // SAVE DATA TO LOCAL STORAGE
             localStorage.setItem('weartee_cart', JSON.stringify(cart));
-
             const cartList = document.getElementById('cart-list');
             const count = cart.reduce((a, b) => a + b.qty, 0);
             const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
@@ -404,23 +475,28 @@
             document.getElementById('cart-total').innerText = `₦${total.toLocaleString()}`;
 
             cartList.innerHTML = cart.map(i => `
-            <div class="cart-item">
-                <img src="${i.img}" alt="${i.name}">
-                <div class="item-details">
-                    <span style="font-weight:700; font-size:13px; text-transform:uppercase;">${i.name}</span>
-                    <span style="font-size:12px; color:#666;">₦${i.price.toLocaleString()} × ${i.qty}</span>
-                    <button class="remove-btn" onclick="event.stopPropagation(); removeFromCart(${i.id})">REMOVE</button>
+                <div class="cart-item">
+                    <img src="${i.img}" alt="${i.name}">
+                    <div class="item-details">
+                        <span style="font-weight:700; font-size:13px; text-transform:uppercase;">${i.name}</span>
+                        <span style="font-size:11px; color:#333; font-weight:600;">SIZE: ${i.size}</span>
+                        <span style="font-size:12px; color:#666;">₦${i.price.toLocaleString()} × ${i.qty}</span>
+                        <button class="remove-btn" onclick="removeFromCart(${i.id}, '${i.size}')">REMOVE</button>
+                    </div>
+                    <div style="font-weight:700; font-size:13px;">₦${(i.price * i.qty).toLocaleString()}</div>
                 </div>
-                <div style="font-weight:700; font-size:13px;">₦${(i.price * i.qty).toLocaleString()}</div>
-            </div>
-        `).join('');
+            `).join('');
         }
 
         function sendWhatsApp() {
             if (cart.length === 0) return;
-            let phoneNumber = "2347016685134"; // REPLACE WITH YOUR NUMBER
+            let phoneNumber = "2348000000000"; // REPLACE WITH YOUR NUMBER
             let message = "*New Order from WearTee.ng*%0A%0A";
-            cart.forEach(i => { message += `- ${i.name.toUpperCase()} (x${i.qty}): ₦${(i.price * i.qty).toLocaleString()}%0A`; });
+
+            cart.forEach(i => {
+                message += `- ${i.name.toUpperCase()} [Size: ${i.size}] (x${i.qty}): ₦${(i.price * i.qty).toLocaleString()}%0A`;
+            });
+
             const total = cart.reduce((a, b) => a + (b.price * b.qty), 0);
             message += `%0A*Total Amount: ₦${total.toLocaleString()}*`;
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
@@ -436,9 +512,8 @@
         document.getElementById('cart-close').onclick = () => toggleCart(false);
         overlay.onclick = () => toggleCart(false);
 
-        // INITIAL UI UPDATE ON PAGE LOAD
+        renderProducts();
         updateUI();
-
     </script>
 
 </body>
