@@ -355,12 +355,12 @@
 
     <script>
         const products = [
-            { id: 1, name: "black tee 01", price: 10000, img: "images/black tees (1).JPG" },
-            { id: 2, name: "grey tee 01", price: 10000, img: "images/grey tees .JPG" },
-            { id: 3, name: "black tee 02", price: 10000, img: "images/black tees (3).JPG" },
-            { id: 4, name: "black tee 03", price: 10000, img: "images/black tees (4).JPG" },
-            { id: 5, name: "black tee 04", price: 10000, img: "images/black tees (5).JPG" },
-            { id: 6, name: "black tee 05", price: 10000, img: "images/black tees (6).JPG" },
+            { id: 1, name: "black tee 01", price: 10000, img: "images/black tees (1).JPG", stock: 0 },
+            { id: 2, name: "grey tee 01", price: 10000, img: "images/grey tees .JPG", stock: 0   },
+            { id: 3, name: "black tee 02", price: 10000, img: "images/black tees (3).JPG" , stock: 0 },
+            { id: 4, name: "black tee 03", price: 10000, img: "images/black tees (4).JPG", stock: 0  },
+            { id: 5, name: "black tee 04", price: 10000, img: "images/black tees (5).JPG", stock: 0  },
+            { id: 6, name: "black tee 05", price: 10000, img: "images/black tees (6).JPG", stock: 0  },
             { id: 7, name: "trucker cap 01", price: 15000, img: "images/cap (1).JPG" },
             { id: 8, name: "urban cap 01", price: 10000, img: "images/cap (2).JPG" },
             { id: 9, name: "classic cap 01", price: 15000, img: "images/cap (3).JPG" },
@@ -388,8 +388,6 @@
             { id: 29, name: "jersey 03", price: 10000, img: "images/IMG_4730.JPG" },
             { id: 30, name: "jersey 03", price: 10000, img: "images/IMG_4743.JPG" },
             { id: 31, name: "jersey 03", price: 10000, img: "images/IMG_4750.JPG" },
-            { id: 31, name: "jersey 03", price: 10000, img: "images/IMG_5088.JPG" },
-            { id: 31, name: "jersey 03", price: 10000, img: "images/IMG_5089.JPG" },
         ];
 
         let cart = JSON.parse(localStorage.getItem('weartee_cart')) || [];
@@ -523,3 +521,4 @@
 </body>
 
 </html>
+
