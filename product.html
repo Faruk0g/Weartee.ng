@@ -920,39 +920,39 @@ header {
 
 <script>
 const PRODUCTS = [
-  { id:1,  name:"black tee 01",   price:10000, img:"images/black tees (1).JPG",    stock:0, cat:"tee" },
-  { id:2,  name:"grey tee 01",    price:10000, img:"images/grey tees .JPG",         stock:0, cat:"tee" },
-  { id:3,  name:"black tee 02",   price:10000, img:"images/black tees (3).JPG",     stock:0, cat:"tee" },
-  { id:4,  name:"black tee 03",   price:10000, img:"images/black tees (4).JPG",     stock:0, cat:"tee" },
-  { id:5,  name:"black tee 04",   price:10000, img:"images/black tees (5).JPG",     stock:0, cat:"tee" },
+  { id:1,  name:"black tee",   price:10000, img:"images/black tees (1).JPG",    stock:0, cat:"tee" },
+  { id:2,  name:"grey tee",    price:10000, img:"images/grey tees .JPG",         stock:0, cat:"tee" },
+  { id:3,  name:"grey tee",   price:10000, img:"images/black tees (3).JPG",     stock:0, cat:"tee" },
+  { id:4,  name:"black tee",   price:10000, img:"images/black tees (4).JPG",     stock:0, cat:"tee" },
+  { id:5,  name:"black tee",   price:10000, img:"images/black tees (5).JPG",     stock:0, cat:"tee" },
   { id:6,  name:"black tee 05",   price:10000, img:"images/black tees (6).JPG",     stock:0, cat:"tee" },
-  { id:7,  name:"trucker cap 01", price:15000, img:"images/cap (1).JPG",            cat:"cap" },
-  { id:8,  name:"urban cap 01",   price:10000, img:"images/cap (2).JPG",            cat:"cap" },
-  { id:9,  name:"classic cap 01", price:15000, img:"images/cap (3).JPG",            cat:"cap" },
-  { id:10, name:"white cap 01",   price:15000, img:"images/cap (4).JPG",            stock:0, cat:"cap" },
-  { id:11, name:"snapback 01",    price:15000, img:"images/snapback (1).JPG",       cat:"snapback" },
-  { id:12, name:"snapback 02",    price:15000, img:"images/snapback (4).JPG",       cat:"snapback" },
-  { id:13, name:"snapback 03",    price:15000, img:"images/snapback (5).JPG",       cat:"snapback" },
-  { id:14, name:"snapback 04",    price:15000, img:"images/snapback (6).JPG",       stock:0, cat:"snapback" },
-  { id:15, name:"snapback 05",    price:15000, img:"images/snapback (7).JPG",       stock:0, cat:"snapback" },
-  { id:16, name:"snapback 06",    price:15000, img:"images/snapback (8).JPG",       stock:0, cat:"snapback" },
-  { id:17, name:"snapback 07",    price:15000, img:"images/snapback (9).JPG",       stock:0, cat:"snapback" },
-  { id:18, name:"snapback 08",    price:15000, img:"images/snapback (10).JPG",      stock:0, cat:"snapback" },
-  { id:19, name:"jersey 01",      price:7000,  img:"images/jersey.JPG",             stock:0, cat:"jersey" },
-  { id:20, name:"jersey 02",      price:7000,  img:"images/jersey (2).JPG",         stock:0, cat:"jersey" },
-  { id:21, name:"jersey 03",      price:7000,  img:"images/jersey (3).JPG",         stock:0, cat:"jersey" },
-  { id:22, name:"jersey 04",      price:7000,  img:"images/IMG_5093.JPG",           cat:"jersey" },
-  { id:23, name:"jersey 05",      price:7000,  img:"images/IMG_5097.JPG",           stock:0, cat:"jersey" },
+  { id:7,  name:"trucker cap", price:15000, img:"images/cap (1).JPG",            cat:"cap" },
+  { id:8,  name:"Basic Top",   price:10000, img:"images/cap (2).JPG",            cat:"baisc" },
+  { id:9,  name:"classic cap", price:15000, img:"images/cap (3).JPG",            cat:"cap" },
+  { id:10, name:"white cap",   price:15000, img:"images/cap (4).JPG",            stock:0, cat:"cap" },
+  { id:11, name:"snapback",    price:15000, img:"images/snapback (1).JPG",       cat:"snapback" },
+  { id:12, name:"snapback",    price:15000, img:"images/snapback (4).JPG",       cat:"snapback" },
+  { id:13, name:"snapback",    price:15000, img:"images/snapback (5).JPG",       cat:"snapback" },
+  { id:14, name:"snapback",    price:15000, img:"images/snapback (6).JPG",       stock:0, cat:"snapback" },
+  { id:15, name:"snapback",    price:15000, img:"images/snapback (7).JPG",       stock:0, cat:"snapback" },
+  { id:16, name:"snapback",    price:15000, img:"images/snapback (8).JPG",       stock:0, cat:"snapback" },
+  { id:17, name:"snapback",    price:15000, img:"images/snapback (9).JPG",       stock:0, cat:"snapback" },
+  { id:18, name:"snapback",    price:15000, img:"images/snapback (10).JPG",      stock:0, cat:"snapback" },
+  { id:19, name:"jersey(pink)",      price:7000,  img:"images/jersey.JPG",             stock:0, cat:"jersey" },
+  { id:20, name:"jersey(blue)",      price:7000,  img:"images/jersey (2).JPG",         stock:0, cat:"jersey" },
+  { id:21, name:"jersey(black)",      price:7000,  img:"images/jersey (3).JPG",         stock:0, cat:"jersey" },
+  { id:22, name:"jersey(purple)",      price:7000,  img:"images/IMG_5093.JPG",           cat:"jersey" },
+  { id:23, name:"jersey(grey)",      price:7000,  img:"images/IMG_5097.JPG",           stock:0, cat:"jersey" },
   { id:25, name:"free pant",      price:4000,  img:"images/IMG_4723.JPG",           stock:2, cat:"pant" },
   { id:251,name:"free pant",      price:4000,  img:"images/IMG_4724.JPG",           stock:2, cat:"pant" },
   { id:26, name:"lounge pant",    price:6000,  img:"images/IMG_4725.JPG",           stock:0, cat:"pant" },
   { id:27, name:"joggers",        price:8000,  img:"images/IMG_4726.JPG",           cat:"joggers" },
-  { id:28, name:"jersey 06",      price:10000, img:"images/IMG_4727.JPG",           cat:"jersey" },
-  { id:29, name:"jersey 07",      price:10000, img:"images/IMG_4728.JPG",           stock:0, cat:"jersey" },
-  { id:30, name:"jersey 08",      price:10000, img:"images/IMG_4729.JPG",           stock:0, cat:"jersey" },
-  { id:31, name:"jersey 09",      price:10000, img:"images/IMG_4730.JPG",           stock:1, cat:"jersey" },
-  { id:32, name:"jersey 10",      price:10000, img:"images/IMG_4743.JPG",           stock:0, cat:"jersey" },
-  { id:33, name:"jersey 11",      price:10000, img:"images/IMG_4750.JPG",           stock:0, cat:"jersey" },
+  { id:28, name:"basic top",      price:10000, img:"images/IMG_4727.JPG",           cat:"basic" },
+  { id:29, name:"bassic top",      price:10000, img:"images/IMG_4728.JPG",           stock:0, cat:"basic" },
+  { id:30, name:"basic top",      price:10000, img:"images/IMG_4729.JPG",           stock:0, cat:"basic" },
+  { id:31, name:"basic top",      price:10000, img:"images/IMG_4730.JPG",           stock:1, cat:"basic" },
+  { id:32, name:"brown tee",      price:10000, img:"images/IMG_4743.JPG",           stock:0, cat:"tee" },
+  { id:33, name:"pink tee",      price:10000, img:"images/IMG_4750.JPG",           stock:0, cat:"tee" },
 ];
 
 const SIZES_MAP = {
@@ -962,6 +962,7 @@ const SIZES_MAP = {
   jersey:   ["S","M","L","XL","XXL"],
   pant:     ["S","M","L","XL","XXL"],
   joggers:  ["S","M","L","XL","XXL"],
+  basic:  ["S","M","L","XL","XXL"],  
 };
 
 // STATE
@@ -1264,3 +1265,4 @@ updateCartUI();
 </script>
 </body>
 </html>
+
