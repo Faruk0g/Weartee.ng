@@ -1,985 +1,1320 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WearTee.ng | Premium Nigerian Streetwear</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --black: #0a0a0a;
-  --white: #fafaf8;
-  --cream: #f4f0e8;
-  --cream2: #ede9df;
-  --accent: #e8452a;
-  --mid: #777;
-  --border: rgba(10,10,10,0.1);
-  --ease: cubic-bezier(0.4,0,0.2,1);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WearTee.ng | Premium Nigerian Streetwear</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --black: #0a0a0a;
+            --white: #fafaf8;
+            --cream: #f4f0e8;
+            --cream2: #ede9df;
+            --accent: #e8452a;
+            --mid: #777;
+            --border: rgba(10, 10, 10, 0.1);
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-body {
-  background: var(--white);
-  color: var(--black);
-  font-family: 'DM Sans', sans-serif;
-  overflow-x: hidden;
-}
+        html {
+            scroll-behavior: smooth;
+        }
 
-/* ── TICKER ── */
-.ticker-wrap {
-  background: var(--black);
-  padding: 7px 0;
-  overflow: hidden;
-  white-space: nowrap;
-  position: relative;
-  z-index: 600;
-}
-.ticker-track {
-  display: inline-block;
-  animation: tick 22s linear infinite;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.7);
-}
-.ticker-track span { margin: 0 32px; }
-.ticker-sep { color: var(--accent); opacity: 1; }
-@keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        body {
+            background: var(--white);
+            color: var(--black);
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+        }
 
-/* ── HEADER ── */
-header {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 500;
-  padding: 0 5%;
-  transition: background 0.4s, box-shadow 0.4s;
-}
-header.scrolled {
-  background: rgba(250,250,248,0.95);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 1px 0 var(--border);
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 70px;
-}
-.logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
-  letter-spacing: 0.1em;
-  color: var(--white);
-  text-decoration: none;
-  z-index: 10;
-  position: relative;
-  transition: color 0.3s;
-}
-header.scrolled .logo { color: var(--black); }
-.logo span { color: var(--accent); }
+        /* ── TICKER ── */
+        .ticker-wrap {
+            background: var(--black);
+            padding: 7px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 600;
+        }
 
-nav { display: flex; align-items: center; gap: 36px; }
-nav a {
-  text-decoration: none;
-  color: rgba(255,255,255,0.8);
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  transition: color 0.2s;
-  position: relative;
-}
-header.scrolled nav a { color: rgba(10,10,10,0.6); }
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -3px; left: 0;
-  width: 0; height: 1px;
-  background: var(--accent);
-  transition: width 0.3s var(--ease);
-}
-nav a:hover { color: var(--accent) !important; }
-nav a:hover::after { width: 100%; }
-nav a.active::after { width: 100%; }
-header.scrolled nav a.active { color: var(--black); }
-nav a.active { color: var(--white); }
+        .ticker-track {
+            display: inline-block;
+            animation: tick 22s linear infinite;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.14em;
+            color: rgba(255, 255, 255, 0.7);
+        }
 
-.shop-btn {
-  padding: 9px 22px;
-  background: var(--accent);
-  color: var(--white);
-  border: none;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 100px;
-  font-family: 'DM Mono', monospace;
-  text-decoration: none;
-  transition: background 0.2s, color 0.2s;
-}
-.shop-btn:hover { background: var(--black); }
-header.scrolled .shop-btn { background: var(--black); color: var(--white); }
-header.scrolled .shop-btn:hover { background: var(--accent); }
+        .ticker-track span {
+            margin: 0 32px;
+        }
 
-/* HAMBURGER */
-.hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  z-index: 10;
-  padding: 4px;
-}
-.hamburger span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: var(--white);
-  border-radius: 2px;
-  transition: all 0.3s var(--ease);
-  transform-origin: center;
-}
-header.scrolled .hamburger span { background: var(--black); }
-.hamburger.open span { background: var(--black) !important; }
-.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
-.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        .ticker-sep {
+            color: var(--accent);
+            opacity: 1;
+        }
 
-/* MOBILE NAV */
-.mobile-nav {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: var(--cream);
-  z-index: 400;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
-}
-.mobile-nav.open { opacity: 1; pointer-events: all; }
-.mobile-nav a {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(48px, 10vw, 80px);
-  letter-spacing: 0.06em;
-  color: rgba(10,10,10,0.2);
-  text-decoration: none;
-  transition: color 0.2s;
-  line-height: 1.1;
-  padding: 4px 0;
-}
-.mobile-nav a:hover { color: var(--accent); }
-.mobile-nav-foot {
-  position: absolute;
-  bottom: 40px;
-  font-size: 11px;
-  color: rgba(10,10,10,0.3);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.1em;
-}
+        @keyframes tick {
+            from {
+                transform: translateX(0)
+            }
 
-/* ── HERO ── */
-.hero {
-  position: relative;
-  height: 100vh;
-  min-height: 600px;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-}
+            to {
+                transform: translateX(-50%)
+            }
+        }
 
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url('images/logo.JPG');
-  background-size: cover;
-  background-position: center top;
-  filter: brightness(0.6);
-  transform: scale(1.05);
-  animation: slow-zoom 18s ease-in-out infinite alternate;
-}
-@keyframes slow-zoom {
-  from { transform: scale(1.05); }
-  to   { transform: scale(1.12); }
-}
+        /* ── HEADER ── */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 500;
+            padding: 0 5%;
+            transition: background 0.4s, box-shadow 0.4s;
+        }
 
-.hero-grain {
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.5;
-  pointer-events: none;
-}
+        header.scrolled {
+            background: rgba(250, 250, 248, 0.95);
+            backdrop-filter: blur(16px);
+            box-shadow: 0 1px 0 var(--border);
+        }
 
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.35) 45%, transparent 70%);
-  pointer-events: none;
-}
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
 
-.hero-content {
-  position: relative;
-  z-index: 2;
-  padding: 0 5% 60px;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 0.1em;
+            color: var(--white);
+            text-decoration: none;
+            z-index: 10;
+            position: relative;
+            transition: color 0.3s;
+        }
 
-.hero-left { max-width: 700px; }
+        header.scrolled .logo {
+            color: var(--black);
+        }
 
-.hero-eyebrow {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  animation: fade-up 0.8s var(--ease) 0.2s both;
-}
-.hero-eyebrow::before { content: ''; width: 30px; height: 1px; background: var(--accent); }
+        .logo span {
+            color: var(--accent);
+        }
 
-.hero-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(72px, 12vw, 160px);
-  line-height: 0.88;
-  letter-spacing: 0.03em;
-  color: var(--white);
-  animation: fade-up 0.8s var(--ease) 0.35s both;
-}
-.hero-title em { color: var(--accent); font-style: normal; }
-.hero-title .outline {
-  -webkit-text-stroke: 2px rgba(255,255,255,0.5);
-  color: transparent;
-}
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
 
-.hero-sub {
-  font-size: 15px;
-  font-weight: 300;
-  color: rgba(255,255,255,0.65);
-  margin-top: 20px;
-  line-height: 1.6;
-  max-width: 400px;
-  animation: fade-up 0.8s var(--ease) 0.5s both;
-}
+        nav a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: color 0.2s;
+            position: relative;
+        }
 
-.hero-ctas {
-  display: flex;
-  gap: 14px;
-  margin-top: 32px;
-  animation: fade-up 0.8s var(--ease) 0.65s both;
-}
-.btn-primary {
-  padding: 15px 32px;
-  background: var(--accent);
-  color: var(--white);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: none;
-  border-radius: 100px;
-  cursor: pointer;
-  font-family: 'DM Mono', monospace;
-  text-decoration: none;
-  display: inline-block;
-  transition: background 0.2s, transform 0.2s;
-}
-.btn-primary:hover { background: var(--black); transform: translateY(-2px); }
-.btn-ghost {
-  padding: 15px 32px;
-  background: transparent;
-  color: var(--white);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,0.4);
-  border-radius: 100px;
-  cursor: pointer;
-  font-family: 'DM Mono', monospace;
-  text-decoration: none;
-  display: inline-block;
-  transition: border-color 0.2s, background 0.2s, transform 0.2s;
-}
-.btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.08); transform: translateY(-2px); }
+        header.scrolled nav a {
+            color: rgba(10, 10, 10, 0.6);
+        }
 
-.hero-right {
-  text-align: right;
-  animation: fade-up 0.8s var(--ease) 0.5s both;
-}
-.hero-stat {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.15em;
-  color: rgba(255,255,255,0.4);
-  margin-bottom: 10px;
-}
-.hero-stat strong {
-  display: block;
-  font-size: 48px;
-  color: var(--white);
-  letter-spacing: 0.02em;
-  line-height: 1;
-}
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s var(--ease);
+        }
 
-/* SCROLL INDICATOR */
-.scroll-hint {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  animation: fade-up 0.8s var(--ease) 1s both;
-}
-.scroll-hint span {
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  font-family: 'DM Mono', monospace;
-  color: rgba(255,255,255,0.4);
-}
-.scroll-line {
-  width: 1px;
-  height: 40px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
-  animation: scroll-pulse 2s ease-in-out infinite;
-}
-@keyframes scroll-pulse {
-  0%,100% { opacity: 0.4; transform: scaleY(1); }
-  50% { opacity: 1; transform: scaleY(0.6); }
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+        nav a:hover {
+            color: var(--accent) !important;
+        }
 
-/* ── MARQUEE DIVIDER ── */
-.marquee-section {
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  overflow: hidden;
-  padding: 18px 0;
-  background: var(--cream);
-}
-.marquee-track {
-  display: inline-block;
-  animation: marquee 20s linear infinite;
-  white-space: nowrap;
-}
-.marquee-track span {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.25em;
-  color: rgba(10,10,10,0.3);
-  margin: 0 28px;
-}
-.marquee-track span.accent { color: var(--accent); }
-@keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+        nav a:hover::after {
+            width: 100%;
+        }
 
-/* ── CATEGORIES ── */
-.section { padding: 80px 5%; background: var(--white); }
-.section-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.section-label::before { content:''; width: 24px; height: 1px; background: var(--accent); }
-.section-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(36px, 6vw, 72px);
-  letter-spacing: 0.05em;
-  line-height: 0.95;
-  margin-bottom: 48px;
-  color: var(--black);
-}
+        nav a.active::after {
+            width: 100%;
+        }
 
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-.cat-card {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
-  cursor: pointer;
-  aspect-ratio: 3/4;
-  text-decoration: none;
-  display: block;
-  box-shadow: 0 2px 12px rgba(10,10,10,0.06);
-}
-.cat-card:first-child {
-  grid-row: span 2;
-  aspect-ratio: auto;
-}
-.cat-card-bg {
-  position: absolute;
-  inset: 0;
-  background: var(--cream2);
-  transition: transform 0.6s var(--ease);
-}
-.cat-card-bg img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  opacity: 0.82;
-  transition: opacity 0.4s;
-}
-.cat-card:hover .cat-card-bg { transform: scale(1.06); }
-.cat-card:hover .cat-card-bg img { opacity: 0.6; }
-.cat-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(10,10,10,0.88) 0%, transparent 55%);
-}
-.cat-info {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  padding: 24px 20px;
-  z-index: 2;
-}
-.cat-name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 28px;
-  letter-spacing: 0.08em;
-  display: block;
-  margin-bottom: 4px;
-  color: var(--white);
-}
-.cat-count {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  color: rgba(255,255,255,0.5);
-  letter-spacing: 0.1em;
-}
-.cat-arrow {
-  position: absolute;
-  top: 20px; right: 20px;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(255,255,255,0.4);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  font-size: 14px;
-  color: white;
-  transition: background 0.2s, border-color 0.2s;
-}
-.cat-card:hover .cat-arrow { background: var(--accent); border-color: var(--accent); }
+        header.scrolled nav a.active {
+            color: var(--black);
+        }
 
-/* ── FEATURES ── */
-.features { padding: 60px 5%; background: var(--cream); }
-.feat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-  background: var(--white);
-}
-.feat-item {
-  padding: 36px 28px;
-  background: var(--white);
-  text-align: center;
-  border-right: 1px solid var(--border);
-  transition: background 0.3s;
-}
-.feat-item:last-child { border-right: none; }
-.feat-item:hover { background: var(--cream); }
-.feat-icon { font-size: 28px; margin-bottom: 14px; }
-.feat-name {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 16px;
-  letter-spacing: 0.1em;
-  margin-bottom: 6px;
-  color: var(--black);
-}
-.feat-desc { font-size: 12px; color: var(--mid); line-height: 1.6; }
+        nav a.active {
+            color: var(--white);
+        }
 
-/* ── ABOUT STRIP ── */
-.about-strip {
-  padding: 100px 5%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
-  background: var(--white);
-}
-.about-visual {
-  position: relative;
-  aspect-ratio: 4/5;
-  border-radius: 8px;
-  overflow: hidden;
-  background: var(--cream2);
-  box-shadow: 0 16px 48px rgba(10,10,10,0.1);
-}
-.about-visual img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  opacity: 0.9;
-}
-.about-tag {
-  position: absolute;
-  bottom: 24px; right: 24px;
-  background: var(--accent);
-  color: white;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.15em;
-  padding: 6px 14px;
-  border-radius: 3px;
-}
-.about-big {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(48px, 7vw, 88px);
-  line-height: 0.92;
-  letter-spacing: 0.04em;
-  margin-bottom: 28px;
-  color: var(--black);
-}
-.about-big .outline {
-  -webkit-text-stroke: 1.5px rgba(10,10,10,0.2);
-  color: transparent;
-}
-.about-para {
-  font-size: 14px;
-  font-weight: 300;
-  color: var(--mid);
-  line-height: 1.8;
-  margin-bottom: 32px;
-  max-width: 420px;
-}
-.about-stats {
-  display: flex;
-  gap: 40px;
-  margin-bottom: 36px;
-  padding-top: 28px;
-  border-top: 1px solid var(--border);
-}
-.astat-num {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 40px;
-  letter-spacing: 0.03em;
-  color: var(--accent);
-  display: block;
-  line-height: 1;
-}
-.astat-label {
-  font-size: 11px;
-  color: var(--mid);
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-top: 4px;
-}
+        .shop-btn {
+            padding: 9px 22px;
+            background: var(--accent);
+            color: var(--white);
+            border: none;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 100px;
+            font-family: 'DM Mono', monospace;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
 
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 60px 5% 30px;
-  background: var(--cream);
-}
-.footer-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 48px;
-}
-.footer-logo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 36px;
-  letter-spacing: 0.1em;
-  color: var(--black);
-}
-.footer-logo span { color: var(--accent); }
-.footer-tagline {
-  font-size: 12px;
-  color: var(--mid);
-  font-weight: 300;
-  margin-top: 6px;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: 0.06em;
-}
-.footer-links { display: flex; gap: 60px; }
-.footer-col h5 {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(10,10,10,0.4);
-  font-family: 'DM Mono', monospace;
-  margin-bottom: 16px;
-}
-.footer-col a {
-  display: block;
-  text-decoration: none;
-  color: rgba(10,10,10,0.6);
-  font-size: 13px;
-  margin-bottom: 10px;
-  transition: color 0.2s;
-}
-.footer-col a:hover { color: var(--accent); }
-.footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 28px;
-  border-top: 1px solid var(--border);
-  font-size: 11px;
-  color: rgba(10,10,10,0.3);
-  font-family: 'DM Mono', monospace;
-}
-.social-links { display: flex; gap: 16px; }
-.social-links a {
-  color: rgba(10,10,10,0.4);
-  font-size: 11px;
-  text-decoration: none;
-  letter-spacing: 0.08em;
-  transition: color 0.2s;
-}
-.social-links a:hover { color: var(--accent); }
+        .shop-btn:hover {
+            background: var(--black);
+        }
 
-/* ── RESPONSIVE ── */
-@media(max-width: 900px) {
-  .cat-grid { grid-template-columns: repeat(2, 1fr); }
-  .cat-card:first-child { grid-row: span 1; aspect-ratio: 3/4; }
-  .feat-grid { grid-template-columns: repeat(2, 1fr); }
-  .feat-item { border-bottom: 1px solid var(--border); }
-  .about-strip { grid-template-columns: 1fr; gap: 40px; }
-  .footer-links { gap: 32px; }
-}
-@media(max-width: 600px) {
-  nav { display: none; }
-  .shop-btn-wrap { display: none; }
-  .hamburger { display: flex; }
-  .mobile-nav { display: flex; }
+        header.scrolled .shop-btn {
+            background: var(--black);
+            color: var(--white);
+        }
 
-  .hero-content { flex-direction: column; align-items: flex-start; gap: 24px; padding-bottom: 50px; }
-  .hero-right { text-align: left; }
-  .hero-ctas { flex-direction: column; }
-  .btn-primary, .btn-ghost { text-align: center; }
+        header.scrolled .shop-btn:hover {
+            background: var(--accent);
+        }
 
-  .cat-grid { grid-template-columns: 1fr; }
-  .cat-card:first-child { aspect-ratio: 3/4; }
-  .feat-grid { grid-template-columns: repeat(2, 1fr); }
+        /* HAMBURGER */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            z-index: 10;
+            padding: 4px;
+        }
 
-  .footer-top { flex-direction: column; gap: 40px; }
-  .footer-links { flex-direction: column; gap: 28px; }
-  .footer-bottom { flex-direction: column; gap: 14px; text-align: center; }
-  .section { padding: 60px 5%; }
-}
-</style>
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 2px;
+            transition: all 0.3s var(--ease);
+            transform-origin: center;
+        }
+
+        header.scrolled .hamburger span {
+            background: var(--black);
+        }
+
+        .hamburger.open span {
+            background: var(--black) !important;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            transform: scaleX(0);
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+
+        /* MOBILE NAV */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--cream);
+            z-index: 400;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .mobile-nav.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .mobile-nav a {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 10vw, 80px);
+            letter-spacing: 0.06em;
+            color: rgba(10, 10, 10, 0.2);
+            text-decoration: none;
+            transition: color 0.2s;
+            line-height: 1.1;
+            padding: 4px 0;
+        }
+
+        .mobile-nav a:hover {
+            color: var(--accent);
+        }
+
+        .mobile-nav-foot {
+            position: absolute;
+            bottom: 40px;
+            font-size: 11px;
+            color: rgba(10, 10, 10, 0.3);
+            font-family: 'DM Mono', monospace;
+            letter-spacing: 0.1em;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('images/logo.JPG');
+            background-size: cover;
+            background-position: center top;
+            filter: brightness(0.6);
+            transform: scale(1.05);
+            animation: slow-zoom 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes slow-zoom {
+            from {
+                transform: scale(1.05);
+            }
+
+            to {
+                transform: scale(1.12);
+            }
+        }
+
+        .hero-grain {
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 0%, rgba(10, 10, 10, 0.35) 45%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 0 5% 60px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .hero-left {
+            max-width: 700px;
+        }
+
+        .hero-eyebrow {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fade-up 0.8s var(--ease) 0.2s both;
+        }
+
+        .hero-eyebrow::before {
+            content: '';
+            width: 30px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .hero-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(72px, 12vw, 160px);
+            line-height: 0.88;
+            letter-spacing: 0.03em;
+            color: var(--white);
+            animation: fade-up 0.8s var(--ease) 0.35s both;
+        }
+
+        .hero-title em {
+            color: var(--accent);
+            font-style: normal;
+        }
+
+        .hero-title .outline {
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.5);
+            color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 15px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.65);
+            margin-top: 20px;
+            line-height: 1.6;
+            max-width: 400px;
+            animation: fade-up 0.8s var(--ease) 0.5s both;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 14px;
+            margin-top: 32px;
+            animation: fade-up 0.8s var(--ease) 0.65s both;
+        }
+
+        .btn-primary {
+            padding: 15px 32px;
+            background: var(--accent);
+            color: var(--white);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: 'DM Mono', monospace;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--black);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            padding: 15px 32px;
+            background: transparent;
+            color: var(--white);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 100px;
+            cursor: pointer;
+            font-family: 'DM Mono', monospace;
+            text-decoration: none;
+            display: inline-block;
+            transition: border-color 0.2s, background 0.2s, transform 0.2s;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .hero-right {
+            text-align: right;
+            animation: fade-up 0.8s var(--ease) 0.5s both;
+        }
+
+        .hero-stat {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 10px;
+        }
+
+        .hero-stat strong {
+            display: block;
+            font-size: 48px;
+            color: var(--white);
+            letter-spacing: 0.02em;
+            line-height: 1;
+        }
+
+        /* SCROLL INDICATOR */
+        .scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            animation: fade-up 0.8s var(--ease) 1s both;
+        }
+
+        .scroll-hint span {
+            font-size: 9px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            font-family: 'DM Mono', monospace;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), transparent);
+            animation: scroll-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scroll-pulse {
+
+            0%,
+            100% {
+                opacity: 0.4;
+                transform: scaleY(1);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scaleY(0.6);
+            }
+        }
+
+        @keyframes fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(24px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── MARQUEE DIVIDER ── */
+        .marquee-section {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            padding: 18px 0;
+            background: var(--cream);
+        }
+
+        .marquee-track {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+            white-space: nowrap;
+        }
+
+        .marquee-track span {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            letter-spacing: 0.25em;
+            color: rgba(10, 10, 10, 0.3);
+            margin: 0 28px;
+        }
+
+        .marquee-track span.accent {
+            color: var(--accent);
+        }
+
+        @keyframes marquee {
+            from {
+                transform: translateX(0)
+            }
+
+            to {
+                transform: translateX(-50%)
+            }
+        }
+
+        /* ── CATEGORIES ── */
+        .section {
+            padding: 80px 5%;
+            background: var(--white);
+        }
+
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 24px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(36px, 6vw, 72px);
+            letter-spacing: 0.05em;
+            line-height: 0.95;
+            margin-bottom: 48px;
+            color: var(--black);
+        }
+
+        .cat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .cat-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            aspect-ratio: 3/4;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 2px 12px rgba(10, 10, 10, 0.06);
+        }
+
+        .cat-card:first-child {
+            grid-row: span 2;
+            aspect-ratio: auto;
+        }
+
+        .cat-card-bg {
+            position: absolute;
+            inset: 0;
+            background: var(--cream2);
+            transition: transform 0.6s var(--ease);
+        }
+
+        .cat-card-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.82;
+            transition: opacity 0.4s;
+        }
+
+        .cat-card:hover .cat-card-bg {
+            transform: scale(1.06);
+        }
+
+        .cat-card:hover .cat-card-bg img {
+            opacity: 0.6;
+        }
+
+        .cat-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.88) 0%, transparent 55%);
+        }
+
+        .cat-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 24px 20px;
+            z-index: 2;
+        }
+
+        .cat-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: 0.08em;
+            display: block;
+            margin-bottom: 4px;
+            color: var(--white);
+        }
+
+        .cat-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.1em;
+        }
+
+        .cat-arrow {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            font-size: 14px;
+            color: white;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .cat-card:hover .cat-arrow {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* ── FEATURES ── */
+        .features {
+            padding: 60px 5%;
+            background: var(--cream);
+        }
+
+        .feat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--white);
+        }
+
+        .feat-item {
+            padding: 36px 28px;
+            background: var(--white);
+            text-align: center;
+            border-right: 1px solid var(--border);
+            transition: background 0.3s;
+        }
+
+        .feat-item:last-child {
+            border-right: none;
+        }
+
+        .feat-item:hover {
+            background: var(--cream);
+        }
+
+        .feat-icon {
+            font-size: 28px;
+            margin-bottom: 14px;
+        }
+
+        .feat-name {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 16px;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+            color: var(--black);
+        }
+
+        .feat-desc {
+            font-size: 12px;
+            color: var(--mid);
+            line-height: 1.6;
+        }
+
+        /* ── ABOUT STRIP ── */
+        .about-strip {
+            padding: 100px 5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            background: var(--white);
+        }
+
+        .about-visual {
+            position: relative;
+            aspect-ratio: 4/5;
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--cream2);
+            box-shadow: 0 16px 48px rgba(10, 10, 10, 0.1);
+        }
+
+        .about-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+
+        .about-tag {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            background: var(--accent);
+            color: white;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            padding: 6px 14px;
+            border-radius: 3px;
+        }
+
+        .about-big {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 7vw, 88px);
+            line-height: 0.92;
+            letter-spacing: 0.04em;
+            margin-bottom: 28px;
+            color: var(--black);
+        }
+
+        .about-big .outline {
+            -webkit-text-stroke: 1.5px rgba(10, 10, 10, 0.2);
+            color: transparent;
+        }
+
+        .about-para {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--mid);
+            line-height: 1.8;
+            margin-bottom: 32px;
+            max-width: 420px;
+        }
+
+        .about-stats {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 36px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+        }
+
+        .astat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 40px;
+            letter-spacing: 0.03em;
+            color: var(--accent);
+            display: block;
+            line-height: 1;
+        }
+
+        .astat-label {
+            font-size: 11px;
+            color: var(--mid);
+            font-family: 'DM Mono', monospace;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 60px 5% 30px;
+            background: var(--cream);
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 48px;
+        }
+
+        .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 36px;
+            letter-spacing: 0.1em;
+            color: var(--black);
+        }
+
+        .footer-logo span {
+            color: var(--accent);
+        }
+
+        .footer-tagline {
+            font-size: 12px;
+            color: var(--mid);
+            font-weight: 300;
+            margin-top: 6px;
+            font-family: 'DM Mono', monospace;
+            letter-spacing: 0.06em;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 60px;
+        }
+
+        .footer-col h5 {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(10, 10, 10, 0.4);
+            font-family: 'DM Mono', monospace;
+            margin-bottom: 16px;
+        }
+
+        .footer-col a {
+            display: block;
+            text-decoration: none;
+            color: rgba(10, 10, 10, 0.6);
+            font-size: 13px;
+            margin-bottom: 10px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+            color: rgba(10, 10, 10, 0.3);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .social-links a {
+            color: rgba(10, 10, 10, 0.4);
+            font-size: 11px;
+            text-decoration: none;
+            letter-spacing: 0.08em;
+            transition: color 0.2s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media(max-width: 900px) {
+            .cat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .cat-card:first-child {
+                grid-row: span 1;
+                aspect-ratio: 3/4;
+            }
+
+            .feat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .feat-item {
+                border-bottom: 1px solid var(--border);
+            }
+
+            .about-strip {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-links {
+                gap: 32px;
+            }
+        }
+
+        @media(max-width: 600px) {
+            nav {
+                display: none;
+            }
+
+            .shop-btn-wrap {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .mobile-nav {
+                display: flex;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+                padding-bottom: 50px;
+            }
+
+            .hero-right {
+                text-align: left;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-ghost {
+                text-align: center;
+            }
+
+            .cat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cat-card:first-child {
+                aspect-ratio: 3/4;
+            }
+
+            .feat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-top {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 28px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 14px;
+                text-align: center;
+            }
+
+            .section {
+                padding: 60px 5%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker-track">
-    <span>PREMIUM NIGERIAN STREETWEAR</span><span class="ticker-sep">◆</span>
-    <span>FREE DELIVERY WITHIN LAGOS ABOVE ₦20,000</span><span class="ticker-sep">◆</span>
-    <span>PAY ON DELIVERY AVAILABLE</span><span class="ticker-sep">◆</span>
-    <span>NEW ARRIVALS IN STOCK NOW</span><span class="ticker-sep">◆</span>
-    <span>PREMIUM NIGERIAN STREETWEAR</span><span class="ticker-sep">◆</span>
-    <span>FREE DELIVERY WITHIN LAGOS ABOVE ₦20,000</span><span class="ticker-sep">◆</span>
-    <span>PAY ON DELIVERY AVAILABLE</span><span class="ticker-sep">◆</span>
-    <span>NEW ARRIVALS IN STOCK NOW</span><span class="ticker-sep">◆</span>
-  </div>
-</div>
+    <!-- TICKER -->
+    <div class="ticker-wrap">
+        <div class="ticker-track">
+            <span>PREMIUM NIGERIAN STREETWEAR</span><span class="ticker-sep">◆</span>
+            <span>PAY BEFORE DELIVERY</span><span class="ticker-sep">◆</span>
+            <span>NEW ARRIVALS COMING SOON!!!</span><span class="ticker-sep">◆</span>
+            <span>PREMIUM NIGERIAN STREETWEAR</span><span class="ticker-sep">◆</span>
+            <span>PAY BEFORE DELIVERY</span><span class="ticker-sep">◆</span>
+            <span>NEW ARRIVALS COMING SOON!!!</span><span class="ticker-sep">◆</span>
+        </div>
+    </div>
 
-<!-- HEADER -->
-<header id="header">
-  <div class="header-inner">
-    <a href="weartee.html" class="logo">Wear<span>Tee</span>.ng</a>
-    <nav>
-      <a href="weartee.html" class="active">Home</a>
-      <a href="product.html">Shop</a>
-      <a href="#">About</a>
-      <a href="#">Contact</a>
-    </nav>
-    <div class="shop-btn-wrap">
-      <a href="product.html" class="shop-btn">Shop Now</a>
-    </div>
-    <div class="hamburger" id="hamburger">
-      <span></span><span></span><span></span>
-    </div>
-  </div>
-</header>
+    <!-- HEADER -->
+    <header id="header">
+        <div class="header-inner">
+            <a href="weartee.html" class="logo">Wear<span>Tee</span>.ng</a>
+            <nav>
+                <a href="weartee.html" class="active">Home</a>
+                <a href="product.html">Shop</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </nav>
+            <div class="shop-btn-wrap">
+                <a href="product.html" class="shop-btn">Shop Now</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </header>
 
-<!-- MOBILE NAV -->
-<div class="mobile-nav" id="mobile-nav">
-  <a href="weartee.html">Home</a>
-  <a href="product.html">Shop</a>
-  <a href="#">About</a>
-  <a href="#">Contact</a>
-  <div class="mobile-nav-foot">WEARTEE.NG — LAGOS, NIGERIA</div>
-</div>
-
-<!-- HERO (stays dark — it's a full-bleed photo) -->
-<section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-grain"></div>
-  <div class="hero-content">
-    <div class="hero-left">
-      <div class="hero-eyebrow">Lagos Street Culture</div>
-      <h1 class="hero-title">
-        WEAR<br>
-        <span class="outline">THE</span><br>
-        <em>CULTURE</em>
-      </h1>
-      <p class="hero-sub">Premium streetwear designed for the streets of Lagos. Tees, caps, snapbacks, jerseys — built different.</p>
-      <div class="hero-ctas">
-        <a href="product.html" class="btn-primary">Shop Collection →</a>
-        <a href="#categories" class="btn-ghost">Explore</a>
-      </div>
-    </div>
-    <div class="hero-right">
-      <div class="hero-stat"><strong>30+</strong>Items in Store</div>
-      <div class="hero-stat" style="margin-top:18px;"><strong>₦4K</strong>Starts From</div>
-    </div>
-  </div>
-  <div class="scroll-hint">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-section">
-  <div class="marquee-track">
-    <span>TEES</span><span class="accent">◆</span>
-    <span>SNAPBACKS</span><span class="accent">◆</span>
-    <span>JERSEYS</span><span class="accent">◆</span>
-    <span>CAPS</span><span class="accent">◆</span>
-    <span>JOGGERS</span><span class="accent">◆</span>
-    <span>PANTS</span><span class="accent">◆</span>
-    <span>MADE IN LAGOS</span><span class="accent">◆</span>
-    <span>TEES</span><span class="accent">◆</span>
-    <span>SNAPBACKS</span><span class="accent">◆</span>
-    <span>JERSEYS</span><span class="accent">◆</span>
-    <span>CAPS</span><span class="accent">◆</span>
-    <span>JOGGERS</span><span class="accent">◆</span>
-    <span>PANTS</span><span class="accent">◆</span>
-    <span>MADE IN LAGOS</span><span class="accent">◆</span>
-  </div>
-</div>
-
-<!-- CATEGORIES -->
-<section class="section" id="categories">
-  <div class="section-label">Browse by Category</div>
-  <h2 class="section-title">SHOP THE<br>COLLECTION</h2>
-  <div class="cat-grid">
-    <a href="product.html" class="cat-card" style="grid-row:span 2;">
-      <div class="cat-card-bg">
-        <img src="images/black tees (1).JPG" alt="Tees" onerror="this.parentElement.style.background='#e0dbd0'">
-      </div>
-      <div class="cat-arrow">→</div>
-      <div class="cat-info">
-        <span class="cat-name">TEES</span>
-        <span class="cat-count">6 STYLES</span>
-      </div>
-    </a>
-    <a href="product.html" class="cat-card">
-      <div class="cat-card-bg">
-        <img src="images/cap (1).JPG" alt="Caps" onerror="this.parentElement.style.background='#e0dbd0'">
-      </div>
-      <div class="cat-arrow">→</div>
-      <div class="cat-info">
-        <span class="cat-name">CAPS</span>
-        <span class="cat-count">4 STYLES</span>
-      </div>
-    </a>
-    <a href="product.html" class="cat-card">
-      <div class="cat-card-bg">
-        <img src="images/snapback (1).JPG" alt="Snapbacks" onerror="this.parentElement.style.background='#e0dbd0'">
-      </div>
-      <div class="cat-arrow">→</div>
-      <div class="cat-info">
-        <span class="cat-name">SNAPBACKS</span>
-        <span class="cat-count">8 STYLES</span>
-      </div>
-    </a>
-    <a href="product.html" class="cat-card">
-      <div class="cat-card-bg">
-        <img src="images/jersey.JPG" alt="Jerseys" onerror="this.parentElement.style.background='#e0dbd0'">
-      </div>
-      <div class="cat-arrow">→</div>
-      <div class="cat-info">
-        <span class="cat-name">JERSEYS</span>
-        <span class="cat-count">11 STYLES</span>
-      </div>
-    </a>
-    <a href="product.html" class="cat-card">
-      <div class="cat-card-bg">
-        <img src="images/IMG_4726.JPG" alt="Pants" onerror="this.parentElement.style.background='#e0dbd0'">
-      </div>
-      <div class="cat-arrow">→</div>
-      <div class="cat-info">
-        <span class="cat-name">PANTS</span>
-        <span class="cat-count">3 STYLES</span>
-      </div>
-    </a>
-  </div>
-</section>
-
-<!-- FEATURES -->
-<div class="features">
-  <div class="feat-grid">
-    <div class="feat-item">
-      <div class="feat-icon">🛵</div>
-      <div class="feat-name">Lagos Delivery</div>
-      <div class="feat-desc">Fast 1–2 day delivery across Lagos Island & Mainland</div>
-    </div>
-    <div class="feat-item">
-      <div class="feat-icon">📦</div>
-      <div class="feat-name">Nationwide Shipping</div>
-      <div class="feat-desc">GIG & DHL delivery everywhere in Nigeria</div>
-    </div>
-    <div class="feat-item">
-      <div class="feat-icon">💵</div>
-      <div class="feat-name">Pay on Delivery</div>
-      <div class="feat-desc">Cash or transfer when your order arrives in Lagos</div>
-    </div>
-    <div class="feat-item">
-      <div class="feat-icon">💬</div>
-      <div class="feat-name">WhatsApp Support</div>
-      <div class="feat-desc">Real-time help — chat with us to complete any order</div>
-    </div>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<section class="about-strip" id="about">
-  <div class="about-visual">
-    <img src="images/logo.JPG" alt="WearTee.ng" onerror="this.style.display='none'">
-    <div class="about-tag">EST. LAGOS</div>
-  </div>
-  <div class="about-text">
-    <div class="section-label">Our Story</div>
-    <h2 class="about-big">BUILT FOR<br><span class="outline">THE</span><br>STREETS</h2>
-    <p class="about-para">WearTee.ng was born out of a love for Lagos street culture. We curate premium quality tees, caps, jerseys, and streetwear pieces that speak to who we are — bold, unapologetic, and always fresh.</p>
-    <div class="about-stats">
-      <div>
-        <span class="astat-num">30+</span>
-        <span class="astat-label">Styles</span>
-      </div>
-      <div>
-        <span class="astat-num">100%</span>
-        <span class="astat-label">Premium Quality</span>
-      </div>
-      <div>
-        <span class="astat-num">Lagos</span>
-        <span class="astat-label">Based & Proud</span>
-      </div>
-    </div>
-    <a href="product.html" class="btn-primary">Shop All Styles →</a>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-top">
-    <div>
-      <div class="footer-logo">Wear<span>Tee</span>.ng</div>
-      <div class="footer-tagline">PREMIUM NIGERIAN STREETWEAR</div>
-    </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <h5>Shop</h5>
-        <a href="product.html">All Products</a>
-        <a href="product.html">Tees</a>
-        <a href="product.html">Caps & Snapbacks</a>
-        <a href="product.html">Jerseys</a>
-        <a href="product.html">Pants</a>
-      </div>
-      <div class="footer-col">
-        <h5>Info</h5>
-        <a href="#">About Us</a>
-        <a href="#">Delivery Info</a>
-        <a href="#">Returns</a>
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a href="weartee.html">Home</a>
+        <a href="product.html">Shop</a>
+        <a href="#">About</a>
         <a href="#">Contact</a>
-      </div>
-      <div class="footer-col">
-        <h5>Contact</h5>
-        <a href="https://wa.me/2349067468815">WhatsApp Us</a>
-        <a href="#">Lagos, Nigeria</a>
-      </div>
+        <div class="mobile-nav-foot">WEARTEE.NG — LAGOS, NIGERIA</div>
     </div>
-  </div>
-  <div class="footer-bottom">
-    <span>© 2025 WearTee.ng — All rights reserved</span>
-    <div class="social-links">
-      <a href="#">INSTAGRAM</a>
-      <a href="#">WHATSAPP</a>
-      <a href="#">TWITTER</a>
+
+    <!-- HERO (stays dark — it's a full-bleed photo) -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grain"></div>
+        <div class="hero-content">
+            <div class="hero-left">
+                <div class="hero-eyebrow">Lagos & Ilorin Street Culture</div>
+                <h1 class="hero-title">
+                    WEAR<br>
+                    <span class="outline">THE</span><br>
+                    <em>CULTURE</em>
+                </h1>
+                <p class="hero-sub">Premium streetwear designed for the streets of Lagos & Ilorin. Tees, caps,
+                    snapbacks, jerseys
+                    — built different.</p>
+                <div class="hero-ctas">
+                    <a href="product.html" class="btn-primary">Shop Collection →</a>
+                    <a href="#categories" class="btn-ghost">Explore</a>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="hero-stat"><strong>30+</strong>Items in Store</div>
+                <div class="hero-stat" style="margin-top:18px;"><strong>₦4K</strong>Starts From</div>
+            </div>
+        </div>
+        <div class="scroll-hint">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span>TEES</span><span class="accent">◆</span>
+            <span>SNAPBACKS</span><span class="accent">◆</span>
+            <span>JERSEYS</span><span class="accent">◆</span>
+            <span>CAPS</span><span class="accent">◆</span>
+            <span>JOGGERS</span><span class="accent">◆</span>
+            <span>PANTS</span><span class="accent">◆</span>
+            <span>MADE IN LAGOS</span><span class="accent">◆</span>
+            <span>TEES</span><span class="accent">◆</span>
+            <span>SNAPBACKS</span><span class="accent">◆</span>
+            <span>JERSEYS</span><span class="accent">◆</span>
+            <span>CAPS</span><span class="accent">◆</span>
+            <span>JOGGERS</span><span class="accent">◆</span>
+            <span>PANTS</span><span class="accent">◆</span>
+            <span>MADE IN LAGOS</span><span class="accent">◆</span>
+        </div>
     </div>
-  </div>
-</footer>
 
-<script>
-// Sticky header
-const header = document.getElementById('header');
-window.addEventListener('scroll', () => {
-  header.classList.toggle('scrolled', window.scrollY > 60);
-});
+    <!-- CATEGORIES -->
+    <section class="section" id="categories">
+        <div class="section-label">Browse by Category</div>
+        <h2 class="section-title">SHOP THE<br>COLLECTION</h2>
+        <div class="cat-grid">
+            <a href="product.html" class="cat-card" style="grid-row:span 2;">
+                <div class="cat-card-bg">
+                    <img src="images/black tees (1).JPG" alt="Tees"
+                        onerror="this.parentElement.style.background='#e0dbd0'">
+                </div>
+                <div class="cat-arrow">→</div>
+                <div class="cat-info">
+                    <span class="cat-name">TEES</span>
+                    <span class="cat-count">6 STYLES</span>
+                </div>
+            </a>
+            <a href="product.html" class="cat-card">
+                <div class="cat-card-bg">
+                    <img src="images/cap (1).JPG" alt="Caps" onerror="this.parentElement.style.background='#e0dbd0'">
+                </div>
+                <div class="cat-arrow">→</div>
+                <div class="cat-info">
+                    <span class="cat-name">CAPS</span>
+                    <span class="cat-count">4 STYLES</span>
+                </div>
+            </a>
+            <a href="product.html" class="cat-card">
+                <div class="cat-card-bg">
+                    <img src="images/snapback (1).JPG" alt="Snapbacks"
+                        onerror="this.parentElement.style.background='#e0dbd0'">
+                </div>
+                <div class="cat-arrow">→</div>
+                <div class="cat-info">
+                    <span class="cat-name">SNAPBACKS</span>
+                    <span class="cat-count">8 STYLES</span>
+                </div>
+            </a>
+            <a href="product.html" class="cat-card">
+                <div class="cat-card-bg">
+                    <img src="images/jersey.JPG" alt="Jerseys" onerror="this.parentElement.style.background='#e0dbd0'">
+                </div>
+                <div class="cat-arrow">→</div>
+                <div class="cat-info">
+                    <span class="cat-name">JERSEYS</span>
+                    <span class="cat-count">5 STYLES</span>
+                </div>
+            </a>
+            <a href="product.html" class="cat-card">
+                <div class="cat-card-bg">
+                    <img src="images/IMG_4726.JPG" alt="Pants" onerror="this.parentElement.style.background='#e0dbd0'">
+                </div>
+                <div class="cat-arrow">→</div>
+                <div class="cat-info">
+                    <span class="cat-name">PANTS</span>
+                    <span class="cat-count">3 STYLES</span>
+                </div>
+            </a>
+        </div>
+    </section>
 
-// Mobile nav
-const hamburger = document.getElementById('hamburger');
-const mobileNav = document.getElementById('mobile-nav');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('open');
-  mobileNav.classList.toggle('open');
-  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-});
-mobileNav.querySelectorAll('a').forEach(a => {
-  a.addEventListener('click', () => {
-    hamburger.classList.remove('open');
-    mobileNav.classList.remove('open');
-    document.body.style.overflow = '';
-  });
-});
+    <!-- FEATURES -->
+    <div class="features">
+        <div class="feat-grid">
+            <div class="feat-item">
+                <div class="feat-icon">🛵</div>
+                <div class="feat-name">Lagos & Ilorin Delivery</div>
+                <div class="feat-desc">Fast 3–5 day delivery across Lagos Island & Mainland</div>
+            </div>
+            <div class="feat-item">
+                <div class="feat-icon">📦</div>
+                <div class="feat-name">Nationwide Shipping</div>
+                <div class="feat-desc">GIG & DHL delivery everywhere in Lagos & Ilorin</div>
+            </div>
+            <div class="feat-item">
+                <div class="feat-icon">💵</div>
+                <div class="feat-name">Payment Before Delivery!!!</div>
+                <div class="feat-desc">Transfer before your order arrives in Lagos/Ilorin</div>
+            </div>
+            <div class="feat-item">
+                <div class="feat-icon">💬</div>
+                <div class="feat-name">WhatsApp Support</div>
+                <div class="feat-desc">Real-time help — chat with us to complete any order</div>
+            </div>
+        </div>
+    </div>
 
-// Fade-in on scroll
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.15 });
+    <!-- ABOUT -->
+    <section class="about-strip" id="about">
+        <div class="about-visual">
+            <img src="images/logo.JPG" alt="WearTee.ng" onerror="this.style.display='none'">
+            <div class="about-tag">EST. LAGOS</div>
+        </div>
+        <div class="about-text">
+            <div class="section-label">Our Story</div>
+            <h2 class="about-big">BUILT FOR<br><span class="outline">THE</span><br>STREETS</h2>
+            <p class="about-para">WearTee.ng was born out of a love for Lagos street culture. We curate premium quality
+                tees, caps, jerseys, and streetwear pieces that speak to who we are — bold, unapologetic, and always
+                fresh.</p>
+            <div class="about-stats">
+                <div>
+                    <span class="astat-num">30+</span>
+                    <span class="astat-label">Styles</span>
+                </div>
+                <div>
+                    <span class="astat-num">100%</span>
+                    <span class="astat-label">Premium Quality</span>
+                </div>
+                <div>
+                    <span class="astat-num">Lagos & Ilorin</span>
+                    <span class="astat-label">Based & Proud</span>
+                </div>
+            </div>
+            <a href="product.html" class="btn-primary">Shop All Styles →</a>
+        </div>
+    </section>
 
-document.querySelectorAll('.cat-card, .feat-item, .about-visual, .about-text').forEach(el => {
-  el.style.opacity = '0';
-  el.style.transform = 'translateY(28px)';
-  el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
-  observer.observe(el);
-});
-</script>
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-top">
+            <div>
+                <div class="footer-logo">Wear<span>Tee</span>.ng</div>
+                <div class="footer-tagline">PREMIUM NIGERIAN STREETWEAR</div>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h5>Shop</h5>
+                    <a href="product.html">All Products</a>
+                    <a href="product.html">Tees</a>
+                    <a href="product.html">Caps & Snapbacks</a>
+                    <a href="product.html">Jerseys</a>
+                    <a href="product.html">Pants</a>
+                    <a href="product.html">Basic Tops</a>
+                </div>
+                <div class="footer-col">
+                    <h5>Info</h5>
+                    <a href="#">About Us</a>
+                    <a href="#">Delivery Info</a>
+                    <a href="#">Returns</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h5>Contact</h5>
+                    <a href="https://wa.me/2349067468815">WhatsApp Us</a>
+                    <a href="#">Lagos, Ilorin Nigeria</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 WearTee.ng — All rights reserved</span>
+            <div class="social-links">
+                <a href="#">INSTAGRAM</a>
+                <a href="#">WHATSAPP</a>
+                <a href="#">TWITTER</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Sticky header
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // Mobile nav
+        const hamburger = document.getElementById('hamburger');
+        const mobileNav = document.getElementById('mobile-nav');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('open');
+            mobileNav.classList.toggle('open');
+            document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+        });
+        mobileNav.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', () => {
+                hamburger.classList.remove('open');
+                mobileNav.classList.remove('open');
+                document.body.style.overflow = '';
+            });
+        });
+
+        // Fade-in on scroll
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    e.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.cat-card, .feat-item, .about-visual, .about-text').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(28px)';
+            el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+            observer.observe(el);
+        });
+    </script>
 </body>
+
 </html>
