@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WearTee.ng | Premium Nigerian Streetwear</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="product.css">
+</head>
+
+<body>
+
+    <div class="ticker-wrap">
+        <div class="ticker-track" id="ticker">
+            <span>DELIVERY WITHIN LAGOS AND ILORIN ON ALL ORDERS</span>
+            <span class="ticker-sep">◆</span>
+            <span>PAYMENT BEFORE DELIVERY</span>
+            <span class="ticker-sep">◆</span>
+            <span>BANK TRANSFER ACCEPTED</span>
+            <span class="ticker-sep">◆</span>
+            <span>CHECKOUT VIA WHATSAPP FOR INSTANT SUPPORT</span>
+            <span class="ticker-sep">◆</span>
+            <span>DELIVERY WITHIN LAGOS AND ILORIN ON ALL ORDERS</span>
+            <span class="ticker-sep">◆</span>
+            <span>PAYMENT BEFORE DELIVERY</span>
+            <span class="ticker-sep">◆</span>
+            <span>BANK TRANSFER ACCEPTED</span>
+            <span class="ticker-sep">◆</span>
+            <span>CHECKOUT VIA WHATSAPP FOR INSTANT SUPPORT</span>
+            <span class="ticker-sep">◆</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="header-inner">
+            <a href="weartee.html" class="logo">Wear<span>Tee</span>.ng</a>
+            <div class="search-wrap">
+                <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+                <input type="text" id="search-input" placeholder="Search tees, caps, jerseys..." autocomplete="off">
+            </div>
+            <div class="header-actions">
+                <button class="cart-btn" id="cart-open">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                    Cart <span class="cart-badge" id="cart-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="filter-bar" id="filter-bar">
+        <button class="chip active" data-cat="all">All</button>
+        <button class="chip" data-cat="tee">Tees</button>
+        <button class="chip" data-cat="snapback">Snapbacks</button>
+        <button class="chip" data-cat="pant">Pants</button>
+        <button class="chip" data-cat="joggers">Joggers</button>
+        <button class="chip" data-cat="basic tops">Basic Tops</button>
+    </div>
+
+    <div class="hero">
+        <h1>STREET<br>WEAR<br><em>NG</em></h1>
+        <div class="hero-sub">
+            <div>PREMIUM NIGERIAN STREETWEAR</div>
+            <div style="margin-top:4px; color:#aaa;">LAGOS, ILORIN NIGERIA</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="results-bar">
+            <span id="results-label">Loading...</span>
+            <span id="results-filter"></span>
+        </div>
+        <div class="grid" id="product-grid"></div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Cart Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-head">
+            <h3>Your Cart</h3>
+            <button class="close-btn" id="cart-close">✕</button>
+        </div>
+        <div class="cart-items" id="cart-list"></div>
+        <div class="cart-foot">
+            <div class="cart-totals">
+                <div class="tot-row"><span>Subtotal</span><span id="cart-subtotal">₦0</span></div>
+                <div class="tot-row"><span>Delivery</span><span id="cart-delivery-note" class="note">Calculated at
+                        checkout</span></div>
+                <div class="tot-row bold"><span>Total</span><span id="cart-total">₦0</span></div>
+            </div>
+            <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
+            <button class="clear-btn" onclick="clearCart()">Clear Cart</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkout-modal">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h3 id="modal-title">Checkout</h3>
+                <button class="close-btn" onclick="closeCheckout()">✕</button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Steps -->
+                <div class="steps" id="steps-ui">
+                    <div class="step active" id="step-dot-1">
+                        <div class="step-num">1</div>
+                        <div>Details</div>
+                    </div>
+                    <div class="step" id="step-dot-2">
+                        <div class="step-num">2</div>
+                        <div>Delivery</div>
+                    </div>
+                    <div class="step" id="step-dot-3">
+                        <div class="step-num">3</div>
+                        <div>Payment</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Customer Details -->
+                <div class="form-section active" id="step-1">
+                    <div class="form-row">
+                        <label>Full Name *</label>
+                        <input type="text" id="f-name" placeholder="John Doe">
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label>Phone Number *</label>
+                            <input type="tel" id="f-phone" placeholder="08012345678">
+                        </div>
+                        <div class="form-row">
+                            <label>WhatsApp Number</label>
+                            <input type="tel" id="f-whatsapp" placeholder="Same as above">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label>Email Address</label>
+                        <input type="email" id="f-email" placeholder="john@email.com">
+                    </div>
+                    <div class="btn-row">
+                        <button class="btn-next" onclick="goStep(2)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Delivery -->
+                <div class="form-section" id="step-2">
+                    <div class="delivery-options">
+                        <label class="delivery-option selected" onclick="selectDelivery(this, 0, 'Pickup')">
+                            <input type="radio" name="delivery" value="pickup" checked>
+                            <span class="del-icon">🏪</span>
+                            <div class="del-info">
+                                <div class="del-name">Delivery</div>
+                            </div>
+                            <span class="del-price">5000 & Above</span>
+                        </label>
+                        <label class="delivery-option"
+                            onclick="selectDelivery(this, 5000 & Above, 'Lagos, Ilorin, Delivery')">
+                            <input type="radio" name="delivery" value="lagos & ilorin">
+                            <span class="del-icon">🛵</span>
+                            <div class="del-info">
+                                <div class="del-name">Lagos & Ilorin Delivery</div>
+                                <div class="del-desc">Delivered within 4–5 business days</div>
+                            </div>
+                            <span class="del-price">₦5,000 & Above</span>
+                        </label>
+                        <label class="delivery-option" onclick="selectDelivery(this, 5000, 'Nationwide Shipping')">
+                            <input type="radio" name="delivery" value="national">
+                            <span class="del-icon">📦</span>
+                            <div class="del-info">
+                                <div class="del-name">Nationwide Shipping</div>
+                                <div class="del-desc">GIG / DHL — 3–5 business days anywhere in Nigeria</div>
+                            </div>
+                            <span class="del-price">₦5,000</span>
+                        </label>
+                    </div>
+
+                    <div id="address-section" style="display:none">
+                        <div class="form-row">
+                            <label>Delivery Address *</label>
+                            <input type="text" id="f-address" placeholder="House number, street name">
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-row">
+                                <label>City / Area</label>
+                                <input type="text" id="f-city" placeholder="Ikeja">
+                            </div>
+                            <div class="form-row">
+                                <label>State</label>
+                                <select id="f-state">
+                                    <option>Lagos</option>
+                                    <option>Ilorin</option>
+                                    <option>Ogun</option>
+                                    <option>Ikeja</option>
+                                    <option>Magodo</option>
+                                    <option>Ajah</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label>Delivery Notes</label>
+                            <textarea id="f-notes"
+                                placeholder="Landmark, gate code, or any special instructions..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn-back" onclick="goStep(1)">← Back</button>
+                        <button class="btn-next" onclick="goStep(3)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Payment & Review -->
+                <div class="form-section" id="step-3">
+                    <div class="order-summary" id="order-summary-box"></div>
+
+                    <h4
+                        style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:14px;">
+                        Select Payment Method</h4>
+                    <div class="payment-options">
+                        <label class="pay-option selected" onclick="selectPayment(this, 'bank')">
+                            <input type="radio" name="payment" value="bank" checked>
+                            <span class="pay-icon">🏦</span>
+                            <div class="pay-name">Bank Transfer<span class="pay-sub">Transfer to our account — details
+                                    sent via WhatsApp</span></div>
+                            <span class="pay-badge">POPULAR</span>
+                        </label>
+                        <label class="pay-option" onclick="selectPayment(this, 'pod')">
+                            <input type="radio" name="payment" value="pod">
+                            <span class="pay-icon">💵</span>
+                            <div class="pay-name">Pay Before Delivery<span class="pay-sub">Lagos & Ilorin only —
+                                    transfer
+                                    before
+                                    arrival</span></div>
+                        </label>
+                        <label class="pay-option" onclick="selectPayment(this, 'whatsapp')">
+                            <input type="radio" name="payment" value="whatsapp">
+                            <span class="pay-icon">💬</span>
+                            <div class="pay-name">Order via WhatsApp<span class="pay-sub">Chat directly with us to
+                                    complete your order</span></div>
+                        </label>
+                    </div>
+
+                    <div class="btn-row">
+                        <button class="btn-back" onclick="goStep(2)">← Back</button>
+                        <button class="btn-next" id="place-order-btn" onclick="placeOrder()">Place Order →</button>
+                    </div>
+                </div>
+
+                <!-- Success Screen -->
+                <div class="form-section" id="step-success">
+                    <div class="success-screen">
+                        <div class="success-icon">🎉</div>
+                        <h3>ORDER PLACED!</h3>
+                        <p>Thank you for shopping with WearTee.ng!<br>We'll contact you shortly via WhatsApp to confirm
+                            your order.</p>
+                        <div class="order-ref" id="order-ref-display"></div>
+                        <div style="margin-bottom:20px;">
+                            <button class="btn-whatsapp" onclick="sendWhatsApp()" style="width:100%;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                    <path
+                                        d="M11.998 0C5.373 0 0 5.373 0 12c0 2.115.554 4.1 1.522 5.823L0 24l6.335-1.508C8.025 23.452 9.975 24 11.998 24 18.625 24 24 18.627 24 12S18.625 0 11.998 0zm0 21.818c-1.872 0-3.633-.505-5.148-1.384l-.369-.219-3.761.895.952-3.652-.24-.378A9.79 9.79 0 0 1 2.18 12c0-5.413 4.406-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818S17.411 21.818 11.998 21.818z" />
+                                </svg>
+                                Open WhatsApp Chat
+                            </button>
+                        </div>
+                        <button class="btn-next" onclick="closeCheckout()" style="width:100%;">Continue
+                            Shopping</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script src="products.js"></script>
+</body>
+
+</html>
