@@ -44,8 +44,6 @@ const PRODUCTS = [
     { name: "Longsleeve Basic Top(brown)", price: 10000, img: "images/Long Sleeve Basic Top(brown).JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Longsleeve Button-up Shirt(black)", price: 20000, img: "images/Long Sleeve Button-up Shirt(black).JPG", stock: 10, cat: "tee", isNew: true },
     { name: "Longsleeve Button-up Shirt(brown)", price: 20000, img: "images/Long Sleeve Button-up Shirt(brown).JPG", stock: 10, cat: "tee", isNew: true },
-    { name: "Longsleeve Graphics Tee", price: 20000, img: "images/Long Sleeve Graphics Tee(wine).JPG", stock: 10, cat: "tee", isNew: true },
-    { name: "Longsleeve Graphics Tee(brown)", price: 20000, img: "images/Long sleeve Graphics Tee(brown).JPG", stock: 10, cat: "tee", isNew: true },
     { name: "Longsleeve Graphics Tee(wine)", price: 20000, img: "images/Long Sleeve Graphics Tee(wine).JPG", stock: 10, cat: "tee", isNew: true },
     { name: "Longsleeve Wrap Top(black stripe)", price: 12000, img: "images/Long sleeve Wrap Top (black stripe).JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Longsleeve Wrap Top", price: 12000, img: "images/Long Sleeve Wrap Top.JPG", stock: 0, cat: "basic tops", isNew: true },
