@@ -56,7 +56,7 @@ const PRODUCTS = [
     { name: "Mesh Top", price: 8000, img: "images/Mesh Top (3).JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Mesh Top", price: 8000, img: "images/Mesh Top (4).JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Jerry Graphics Tee", price: 15000, img: "images/Mickey Graphics Tee.JPG", stock: 0, cat: "tee", isNew: true },
-    { name: "Tom & Jerry Round Neck Tee", price: 15000, img: "images/Mickey Round Neck Tee.JPG", stock: 10, cat: "tee", isNew: true },
+    { name: "Tom & Jerry Round Neck Tee", price: 15000, img: "images/Mickey Round Neck Tee.JPG", stock: 0, cat: "tee", isNew: true },
     { name: "Navy Blue Tee", price: 15000, img: "images/Navy Blue Tee.JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "One Piece Black Tee", price: 15000, img: "images/One Piece Black Tee.JPG", stock: 10, cat: "tee", isNew: true },
     { name: "Printed Tee(black)", price: 15000, img: "images/Printed Tee(black).JPG", stock: 0, cat: "tee", isNew: true },
