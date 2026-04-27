@@ -9,6 +9,284 @@
         href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="product.css">
+    <style>
+        /* ── 2-per-row on mobile ──────────────────────────────────── */
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            .card-name {
+                font-size: 11px !important;
+            }
+            .card-price {
+                font-size: 12px !important;
+            }
+            .sz-btn {
+                font-size: 9px !important;
+                padding: 3px 5px !important;
+            }
+            .atc-btn {
+                font-size: 11px !important;
+                padding: 9px 6px !important;
+            }
+        }
+
+        /* ── Product Detail Modal ──────────────────────────────────── */
+        .pd-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 1100;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .pd-modal.show {
+            display: block;
+        }
+        .pd-modal-box {
+            background: var(--bg, #fff);
+            min-height: 100vh;
+            max-width: 560px;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0,0,0,.18);
+        }
+        .pd-modal-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #ece8e0;
+            position: sticky;
+            top: 0;
+            background: var(--bg, #fff);
+            z-index: 10;
+        }
+        .pd-back-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #111;
+            padding: 4px 8px 4px 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .pd-back-btn svg { flex-shrink: 0; }
+        .pd-head-title {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: #888;
+        }
+        #pd-content {
+            padding-bottom: 40px;
+        }
+        .pd-img-box {
+            position: relative;
+            width: 100%;
+            background: #f5f2ee;
+            overflow: hidden;
+        }
+        .pd-img-box img {
+            width: 100%;
+            display: block;
+            max-height: 500px;
+            object-fit: cover;
+            object-position: top center;
+        }
+        .pd-img-box .badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 2;
+        }
+        .pd-img-box .sold-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+        }
+        .pd-img-box .sold-overlay span {
+            color: #fff;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            letter-spacing: .1em;
+        }
+        .pd-info {
+            padding: 20px 18px 10px;
+        }
+        .pd-brand {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .14em;
+            color: #aaa;
+            margin-bottom: 6px;
+        }
+        .pd-name {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            margin: 0 0 12px;
+            line-height: 1.25;
+        }
+        .pd-price-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .pd-price {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 28px;
+            color: #111;
+            letter-spacing: .04em;
+        }
+        .pd-badge-new {
+            background: #111;
+            color: #fff;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .1em;
+            padding: 3px 8px;
+            border-radius: 2px;
+        }
+        .pd-stock-status {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        .pd-stock-status.in { color: #2e7d32; }
+        .pd-stock-status.out { color: #c62828; }
+        .pd-delivery-note {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            color: #666;
+            background: #f5f2ee;
+            border-radius: 6px;
+            padding: 9px 12px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pd-size-section {
+            margin-bottom: 20px;
+        }
+        .pd-size-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            letter-spacing: .12em;
+            color: #888;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .pd-size-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .pd-sz-btn {
+            border: 1.5px solid #ddd;
+            background: none;
+            border-radius: 4px;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            padding: 7px 14px;
+            cursor: pointer;
+            transition: all .15s;
+            color: #333;
+        }
+        .pd-sz-btn:hover { border-color: #111; }
+        .pd-sz-btn.selected {
+            border-color: #111;
+            background: #111;
+            color: #fff;
+        }
+        .pd-one-size {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: #888;
+        }
+        .pd-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-direction: column;
+        }
+        .pd-atc-btn {
+            width: 100%;
+            background: #111;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 15px 20px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: .05em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background .15s;
+        }
+        .pd-atc-btn:hover:not(:disabled) { background: #333; }
+        .pd-atc-btn:disabled { opacity: .5; cursor: not-allowed; }
+        .pd-wa-btn {
+            width: 100%;
+            background: #25D366;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 13px 20px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background .15s;
+        }
+        .pd-wa-btn:hover { background: #1ebe5b; }
+        .pd-details {
+            border-top: 1px solid #ece8e0;
+            padding-top: 16px;
+            margin-top: 4px;
+        }
+        .pd-detail-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0ece6;
+            color: #555;
+        }
+        .pd-detail-row span:last-child {
+            font-weight: 600;
+            color: #111;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            letter-spacing: .06em;
+        }
+    </style>
 </head>
 
 <body>
@@ -167,7 +445,7 @@
                             <span class="del-price">5000 & Above</span>
                         </label>
                         <label class="delivery-option"
-                            onclick="selectDelivery(this, 5000 & Above, 'Lagos, Ilorin, Delivery')">
+                            onclick="selectDelivery(this, 5000, 'Lagos, Ilorin, Delivery')">
                             <input type="radio" name="delivery" value="lagos & ilorin">
                             <span class="del-icon">🛵</span>
                             <div class="del-info">
@@ -285,6 +563,22 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div class="pd-modal" id="product-detail-modal">
+        <div class="pd-modal-box">
+            <div class="pd-modal-head">
+                <button class="pd-back-btn" onclick="closeProductDetail()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path d="M19 12H5M12 5l-7 7 7 7"/>
+                    </svg>
+                    Back
+                </button>
+                <span class="pd-head-title">Product Details</span>
+            </div>
+            <div id="pd-content"></div>
         </div>
     </div>
 
