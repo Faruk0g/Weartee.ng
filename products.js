@@ -77,8 +77,7 @@ const PRODUCTS = [
     { name: "White Plain Tee", price: 10000, img: "images/White Plain Tee.JPG", stock: 0, cat: "tee", isNew: true },
     { name: "V-neck Shortsleeve Basic Top(yellow)", price: 8000, img: "images/Yellow V-neck Short Sleeve Basic Top.JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Wide Leg Pant(yellow)", price: 8000, img: "images/Yellow Wide Leg Pant.JPG", stock: 10, cat: "pant", isNew: true },
-
-]
+];
 
 const SIZES_MAP = {
     tee: ["S", "M", "L", "XL", "XXL"],
@@ -101,6 +100,109 @@ let deliveryFee = 0;
 let deliveryName = 'Pickup';
 let paymentMethod = 'bank';
 let checkoutOrderRef = '';
+
+// -- PRODUCT DETAIL MODAL --
+function openProductDetail(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+
+    const sizes = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
+    const soldOut = p.stock === 0;
+    const lowStock = p.stock > 0 && p.stock <= 5;
+    const selSize = selectedSizes[p.id] || sizes[0];
+
+    const modal = document.getElementById('product-detail-modal');
+    const content = document.getElementById('pd-content');
+
+    content.innerHTML = `
+        <div class="pd-img-box">
+            ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
+            ${lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
+            ${soldOut ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
+            <img id="pd-main-img" src="${p.img}" alt="${p.name}"
+                onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
+        </div>
+        <div class="pd-info">
+            <div class="pd-brand">WEARTEE.NG</div>
+            <h2 class="pd-name">${p.name}</h2>
+            <div class="pd-price-row">
+                <span class="pd-price">&#8358;${p.price.toLocaleString()}</span>
+                ${p.isNew ? `<span class="pd-badge-new">NEW ARRIVAL</span>` : ''}
+            </div>
+            <div class="pd-stock-status ${soldOut ? 'out' : 'in'}">
+                ${soldOut ? '&#10006; Out of Stock' : lowStock ? `&#9888; Only ${p.stock} left` : '&#10003; In Stock'}
+            </div>
+            <div class="pd-delivery-note">
+                <span>&#128666;</span> Delivery: Lagos &amp; Ilorin &bull; &#8358;5,000 &amp; above
+            </div>
+
+            ${sizes.length > 1 ? `
+            <div class="pd-size-section">
+                <div class="pd-size-label">SELECT SIZE</div>
+                <div class="pd-size-row" id="pd-sizes-${p.id}">
+                    ${sizes.map(s => `<button class="pd-sz-btn${s === selSize ? ' selected' : ''}" onclick="pdSelectSize(${p.id}, '${s}')">${s}</button>`).join('')}
+                </div>
+            </div>` : `<div class="pd-size-section"><div class="pd-size-label">SIZE</div><div class="pd-one-size">ONE SIZE</div></div>`}
+
+            <div class="pd-actions">
+                <button class="pd-atc-btn" onclick="addToCartFromDetail(${p.id})" ${soldOut ? 'disabled' : ''}>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    ${soldOut ? 'Sold Out' : 'Add to Cart'}
+                </button>
+                <button class="pd-wa-btn" onclick="orderViaWhatsAppDirect(${p.id})">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 0C5.373 0 0 5.373 0 12c0 2.115.554 4.1 1.522 5.823L0 24l6.335-1.508C8.025 23.452 9.975 24 11.998 24 18.625 24 24 18.627 24 12S18.625 0 11.998 0zm0 21.818c-1.872 0-3.633-.505-5.148-1.384l-.369-.219-3.761.895.952-3.652-.24-.378A9.79 9.79 0 0 1 2.18 12c0-5.413 4.406-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818S17.411 21.818 11.998 21.818z"/></svg>
+                    Order via WhatsApp
+                </button>
+            </div>
+
+            <div class="pd-details">
+                <div class="pd-detail-row"><span>Category</span><span>${p.cat.toUpperCase()}</span></div>
+                <div class="pd-detail-row"><span>Brand</span><span>WEARTEE.NG</span></div>
+                <div class="pd-detail-row"><span>Condition</span><span>Brand New</span></div>
+            </div>
+        </div>
+    `;
+
+    modal.classList.add('show');
+    document.getElementById('overlay').classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeProductDetail() {
+    document.getElementById('product-detail-modal').classList.remove('show');
+    document.getElementById('overlay').classList.remove('show');
+    document.body.style.overflow = '';
+}
+
+function pdSelectSize(id, size) {
+    selectedSizes[id] = size;
+    const row = document.getElementById(`pd-sizes-${id}`);
+    if (!row) return;
+    row.querySelectorAll('.pd-sz-btn').forEach(btn => {
+        btn.classList.toggle('selected', btn.textContent === size);
+    });
+    // Also sync main grid size selection
+    const gridRow = document.getElementById(`sizes-${id}`);
+    if (gridRow) {
+        gridRow.querySelectorAll('.sz-btn').forEach(btn => {
+            btn.classList.toggle('selected', btn.textContent === size);
+        });
+    }
+}
+
+function addToCartFromDetail(id) {
+    closeProductDetail();
+    addToCart(id);
+}
+
+function orderViaWhatsAppDirect(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+    const sizes = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
+    const size = sizes.length === 1 ? sizes[0] : (selectedSizes[id] || sizes[0]);
+    const msg = `*Enquiry from WearTee.ng*%0A%0AProduct: ${encodeURIComponent(p.name)}%0ASize: ${size}%0APrice: ₦${p.price.toLocaleString()}%0A%0AI'd like to order this item.`;
+    window.open(`https://wa.me/2349067468815?text=${msg}`, '_blank');
+}
 
 // -- RENDER PRODUCTS --
 function getFilteredProducts() {
@@ -129,15 +231,15 @@ function renderProducts() {
         const selSize = selectedSizes[p.id] || sizes[0];
 
         return `
-      <div class="card${soldOut ? ' disabled' : ''}" style="${soldOut ? 'pointer-events:none;opacity:.65' : ''}">
-        <div class="img-box">
+      <div class="card${soldOut ? ' disabled' : ''}">
+        <div class="img-box" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
           ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
           ${!p.isNew && lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
           ${soldOut ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
           <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
         </div>
         <div class="card-body">
-          <div class="card-meta">
+          <div class="card-meta" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
             <span class="card-name">${p.name}</span>
             <span class="card-price">&#8358;${p.price.toLocaleString()}</span>
           </div>
@@ -372,6 +474,7 @@ document.getElementById('cart-close').addEventListener('click', closeCart);
 document.getElementById('overlay').addEventListener('click', () => {
     closeCart();
     closeCheckout();
+    closeProductDetail();
 });
 
 // -- TOAST --
