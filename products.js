@@ -1,5 +1,98 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// WearTee.ng — products.js
+// Features: location-based delivery fee + Paystack inline payment
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ══════════════════════════════════════════════════════════════════════════════
+// 🔑  PAYSTACK CONFIG
+//     1. Sign up free at https://paystack.com
+//     2. Go to Settings → API Keys & Webhooks
+//     3. Copy your PUBLIC key and paste it below (starts with "pk_live_" or "pk_test_")
+// ══════════════════════════════════════════════════════════════════════════════
+const PAYSTACK_PUBLIC_KEY = 'pk_test_REPLACE_WITH_YOUR_PAYSTACK_PUBLIC_KEY';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// 🚚  DELIVERY ZONES
+//     Add/edit zones here. Keywords are matched against what the buyer types.
+//     fee: 0 means free / pickup.
+// ══════════════════════════════════════════════════════════════════════════════
+const DELIVERY_ZONES = [
+    {
+        name: 'Lagos',
+        fee: 3000,
+        keywords: ['lagos', 'ikeja', 'lekki', 'ajah', 'victoria island', 'vi', 'surulere',
+            'yaba', 'mainland', 'island', 'mushin', 'oshodi', 'festac', 'agege',
+            'ojodu', 'berger', 'magodo', 'gbagada', 'maryland', 'ikorodu',
+            'badagry', 'epe', 'alimosho', 'iyana', 'ojota', 'mile 12',
+            'mile12', 'ketu', 'kosofe', 'ojo', 'apapa', 'amuwo', 'abule egba',
+            'ibeju', 'sangotedo', 'chevron', 'idumota', 'balogun'],
+    },
+    {
+        name: 'Ilorin',
+        fee: 2500,
+        keywords: ['ilorin', 'kwara', 'gra ilorin', 'tanke', 'fate', 'maraba',
+            'amilegbe', 'oloje', 'pakata', 'balogun fulani', 'sawmill'],
+    },
+    {
+        name: 'Abuja',
+        fee: 5000,
+        keywords: ['abuja', 'fct', 'garki', 'wuse', 'maitama', 'asokoro', 'gwarinpa',
+            'kubwa', 'nyanya', 'gwagwalada', 'kuje', 'bwari', 'jabi',
+            'lugbe', 'lokogoma', 'apo', 'gudu', 'life camp', 'lifecamp'],
+    },
+    {
+        name: 'Port Harcourt',
+        fee: 5000,
+        keywords: ['port harcourt', 'portharcourt', 'ph', 'rivers', 'rumuola',
+            'rumuokwuta', 'rumuola', 'diobu', 'ada george', 'trans-amadi',
+            'elekahia', 'gra ph'],
+    },
+    {
+        name: 'Ibadan',
+        fee: 4000,
+        keywords: ['ibadan', 'oyo', 'bodija', 'ui', 'challenge', 'ring road',
+            'mokola', 'agodi', 'felele', 'dugbe', 'ojoo', 'apata'],
+    },
+    {
+        name: 'Kano',
+        fee: 5500,
+        keywords: ['kano', 'sabon gari', 'bompai', 'nassarawa', 'fagge'],
+    },
+    {
+        name: 'Enugu',
+        fee: 5000,
+        keywords: ['enugu', 'independence layout', 'new haven', 'trans ekulu',
+            'abakpa', 'emene', 'uwani'],
+    },
+    {
+        name: 'Benin City',
+        fee: 5000,
+        keywords: ['benin', 'benin city', 'edo', 'upper sakponba', 'ugbowo',
+            'uselu', 'new benin', 'ikpoba'],
+    },
+    {
+        name: 'Warri',
+        fee: 5000,
+        keywords: ['warri', 'delta', 'effurun', 'ughelli', 'sapele', 'asaba'],
+    },
+    {
+        name: 'Ogun',
+        fee: 4000,
+        keywords: ['ogun', 'abeokuta', 'sagamu', 'ijebu ode', 'ota', 'sango',
+            'mowe', 'ofada', 'ifo', 'agbara'],
+    },
+    // Catch-all for every other Nigerian location
+    {
+        name: 'Other States (Nationwide)',
+        fee: 6000,
+        keywords: [], // matched last as fallback
+    },
+];
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PRODUCTS
+// ══════════════════════════════════════════════════════════════════════════════
 const PRODUCTS = [
-    // ── NEWEST ARRIVALS (tagged isNew: true) ──────────────────────────────
     { name: "Asymmetric Pleated Top (Black)", price: 10000, img: "images/Asymmetric Pleated Top(black).JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Asymmetric Pleated Top (Red)", price: 10000, img: "images/Asymmetric Pleated Top(red).JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Backless Top(black)", price: 10000, img: "images/Backless Top(black).JPG", stock: 0, cat: "basic tops", isNew: true },
@@ -27,7 +120,7 @@ const PRODUCTS = [
     { name: "Grey Tank Top", price: 6000, img: "images/Grey Tank Top.JPG", stock: 10, cat: "tee", isNew: true },
     { name: "Grey Tee", price: 15000, img: "images/Grey Tee.JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Basic Top", price: 9000, img: "images/Heart Shaped Basic Top(lotus).JPG", stock: 10, cat: "basic tops", isNew: true },
-    { name: "Basic Top(pink)", price: 9000, img: "images/Heart Shaped Basic Top(pink).JPG", stock: 10, cat: "basic topd", isNew: true },
+    { name: "Basic Top(pink)", price: 9000, img: "images/Heart Shaped Basic Top(pink).JPG", stock: 10, cat: "basic tops", isNew: true },
     { name: "Khaki Shirt", price: 15000, img: "images/Khaki Button-up Shirt (2).JPG", stock: 10, cat: "tee", isNew: true },
     { name: "Khaki Shirt", price: 15000, img: "images/Khaki Button-up Shirt.JPG", stock: 10, cat: "tee", isNew: true },
     { name: "Leopard Print Roundneck", price: 15000, img: "images/Leopard Print Roundneck.JPG", stock: 10, cat: "tee", isNew: true },
@@ -87,10 +180,11 @@ const SIZES_MAP = {
     "basic tops": ["S", "M", "L", "XL", "XXL"],
 };
 
-// Assign stable numeric IDs based on array index
 PRODUCTS.forEach((p, i) => { p.id = i; });
 
+// ══════════════════════════════════════════════════════════════════════════════
 // STATE
+// ══════════════════════════════════════════════════════════════════════════════
 let cart = JSON.parse(localStorage.getItem('wt_cart2')) || [];
 let selectedSizes = {};
 let activeCategory = 'all';
@@ -98,19 +192,129 @@ let searchQuery = '';
 let checkoutStep = 1;
 let deliveryFee = 0;
 let deliveryName = 'Pickup';
-let paymentMethod = 'bank';
+let detectedZone = null;        // zone object from DELIVERY_ZONES
+let paymentMethod = 'card';     // default to card (Paystack)
 let checkoutOrderRef = '';
 
-// -- PRODUCT DETAIL MODAL --
+// ══════════════════════════════════════════════════════════════════════════════
+// 🚚  DELIVERY ZONE DETECTION
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Match a user-typed location string to a delivery zone.
+ * Returns the matched zone object, or the catch-all (last zone) if nothing matches.
+ */
+function detectZone(locationText) {
+    if (!locationText || !locationText.trim()) return null;
+    const lower = locationText.toLowerCase().trim();
+    for (const zone of DELIVERY_ZONES) {
+        if (zone.keywords.length === 0) continue; // skip catch-all in main loop
+        if (zone.keywords.some(kw => lower.includes(kw))) return zone;
+    }
+    // fallback to catch-all (last entry)
+    return DELIVERY_ZONES[DELIVERY_ZONES.length - 1];
+}
+
+/**
+ * Called every time the buyer types in the location field.
+ * Updates the live delivery fee preview.
+ */
+function onLocationInput() {
+    const val = document.getElementById('f-location').value;
+    const preview = document.getElementById('delivery-fee-preview');
+    const zone = detectZone(val);
+
+    if (!val.trim()) {
+        detectedZone = null;
+        deliveryFee = 0;
+        deliveryName = 'Unknown';
+        preview.innerHTML = '';
+        return;
+    }
+
+    detectedZone = zone;
+    deliveryFee = zone.fee;
+    deliveryName = zone.name;
+
+    preview.innerHTML = `
+        <div class="fee-pill ${zone.fee === 0 ? 'free' : ''}">
+            <span class="fee-location">📍 ${zone.name}</span>
+            <span class="fee-amount">${zone.fee === 0 ? 'FREE' : '₦' + zone.fee.toLocaleString()} delivery</span>
+        </div>
+    `;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// 💳  PAYSTACK PAYMENT
+// ══════════════════════════════════════════════════════════════════════════════
+
+function loadPaystackScript(cb) {
+    if (window.PaystackPop) { cb(); return; }
+    const s = document.createElement('script');
+    s.src = 'https://js.paystack.co/v1/inline.js';
+    s.onload = cb;
+    document.head.appendChild(s);
+}
+
+function initiatePaystackPayment() {
+    const name = document.getElementById('f-name').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+
+    if (!email) {
+        showToast('Please enter your email address for payment receipt');
+        // scroll back to step 1
+        goStep(1);
+        setTimeout(() => document.getElementById('f-email').focus(), 300);
+        return;
+    }
+
+    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    const total = subtotal + deliveryFee;
+    const ref = 'WT-' + Date.now();
+    checkoutOrderRef = ref;
+
+    loadPaystackScript(() => {
+        const handler = PaystackPop.setup({
+            key: PAYSTACK_PUBLIC_KEY,
+            email: email,
+            amount: total * 100,           // Paystack uses kobo (multiply by 100)
+            currency: 'NGN',
+            ref: ref,
+            metadata: {
+                custom_fields: [
+                    { display_name: 'Customer Name', variable_name: 'name', value: name },
+                    { display_name: 'Phone', variable_name: 'phone', value: phone },
+                    { display_name: 'Delivery Zone', variable_name: 'zone', value: deliveryName },
+                    { display_name: 'Items', variable_name: 'items', value: cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(', ') },
+                ]
+            },
+            callback: function (response) {
+                // Payment successful — response.reference is the transaction ref
+                checkoutOrderRef = response.reference;
+                document.getElementById('order-ref-display').textContent = `Order Ref: ${response.reference}`;
+                cart = []; saveCart(); updateCartUI();
+                goStep('success');
+                showToast('Payment successful! 🎉');
+            },
+            onClose: function () {
+                showToast('Payment cancelled. You can try again.');
+            }
+        });
+        handler.openIframe();
+    });
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PRODUCT DETAIL MODAL
+// ══════════════════════════════════════════════════════════════════════════════
 function openProductDetail(id) {
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
-
     const sizes = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
     const soldOut = p.stock === 0;
     const lowStock = p.stock > 0 && p.stock <= 5;
     const selSize = selectedSizes[p.id] || sizes[0];
-
     const modal = document.getElementById('product-detail-modal');
     const content = document.getElementById('pd-content');
 
@@ -133,9 +337,8 @@ function openProductDetail(id) {
                 ${soldOut ? '&#10006; Out of Stock' : lowStock ? `&#9888; Only ${p.stock} left` : '&#10003; In Stock'}
             </div>
             <div class="pd-delivery-note">
-                <span>&#128666;</span> Delivery: Lagos &amp; Ilorin &bull; &#8358;5,000 &amp; above
+                <span>&#128666;</span> Delivery across Nigeria &bull; fee based on your location
             </div>
-
             ${sizes.length > 1 ? `
             <div class="pd-size-section">
                 <div class="pd-size-label">SELECT SIZE</div>
@@ -143,7 +346,6 @@ function openProductDetail(id) {
                     ${sizes.map(s => `<button class="pd-sz-btn${s === selSize ? ' selected' : ''}" onclick="pdSelectSize(${p.id}, '${s}')">${s}</button>`).join('')}
                 </div>
             </div>` : `<div class="pd-size-section"><div class="pd-size-label">SIZE</div><div class="pd-one-size">ONE SIZE</div></div>`}
-
             <div class="pd-actions">
                 <button class="pd-atc-btn" onclick="addToCartFromDetail(${p.id})" ${soldOut ? 'disabled' : ''}>
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -154,7 +356,6 @@ function openProductDetail(id) {
                     Order via WhatsApp
                 </button>
             </div>
-
             <div class="pd-details">
                 <div class="pd-detail-row"><span>Category</span><span>${p.cat.toUpperCase()}</span></div>
                 <div class="pd-detail-row"><span>Brand</span><span>WEARTEE.NG</span></div>
@@ -181,7 +382,6 @@ function pdSelectSize(id, size) {
     row.querySelectorAll('.pd-sz-btn').forEach(btn => {
         btn.classList.toggle('selected', btn.textContent === size);
     });
-    // Also sync main grid size selection
     const gridRow = document.getElementById(`sizes-${id}`);
     if (gridRow) {
         gridRow.querySelectorAll('.sz-btn').forEach(btn => {
@@ -204,7 +404,9 @@ function orderViaWhatsAppDirect(id) {
     window.open(`https://wa.me/2349067468815?text=${msg}`, '_blank');
 }
 
-// -- RENDER PRODUCTS --
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER PRODUCTS
+// ══════════════════════════════════════════════════════════════════════════════
 function getFilteredProducts() {
     return PRODUCTS.filter(p => {
         const matchCat = activeCategory === 'all' || p.cat === activeCategory;
@@ -216,8 +418,7 @@ function getFilteredProducts() {
 function renderProducts() {
     const grid = document.getElementById('product-grid');
     const filtered = getFilteredProducts();
-    const label = document.getElementById('results-label');
-    label.textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
+    document.getElementById('results-label').textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
 
     if (!filtered.length) {
         grid.innerHTML = `<div class="no-results"><strong>EMPTY</strong>No results for "${searchQuery}"</div>`;
@@ -231,28 +432,27 @@ function renderProducts() {
         const selSize = selectedSizes[p.id] || sizes[0];
 
         return `
-      <div class="card${soldOut ? ' disabled' : ''}">
-        <div class="img-box" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
-          ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
-          ${!p.isNew && lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
-          ${soldOut ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
-          <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
-        </div>
-        <div class="card-body">
-          <div class="card-meta" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
-            <span class="card-name">${p.name}</span>
-            <span class="card-price">&#8358;${p.price.toLocaleString()}</span>
-          </div>
-          ${sizes.length > 1 ? `
-          <div class="size-row" id="sizes-${p.id}">
-            ${sizes.map(s => `<button class="sz-btn${s === selSize ? ' selected' : ''}" onclick="selectSize(${p.id}, '${s}')">${s}</button>`).join('')}
-          </div>` : `<div style="font-size:11px;color:var(--mid);margin-bottom:10px;font-family:'DM Mono',monospace;">ONE SIZE</div>`}
-          <button class="atc-btn" onclick="addToCart(${p.id})" ${soldOut ? 'disabled' : ''}>
-            ${soldOut ? '&#8212; Sold Out &#8212;' : 'Add to Cart'}
-          </button>
-        </div>
-      </div>
-    `;
+        <div class="card${soldOut ? ' disabled' : ''}">
+            <div class="img-box" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
+                ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
+                ${!p.isNew && lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
+                ${soldOut ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
+                <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
+            </div>
+            <div class="card-body">
+                <div class="card-meta" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
+                    <span class="card-name">${p.name}</span>
+                    <span class="card-price">&#8358;${p.price.toLocaleString()}</span>
+                </div>
+                ${sizes.length > 1 ? `
+                <div class="size-row" id="sizes-${p.id}">
+                    ${sizes.map(s => `<button class="sz-btn${s === selSize ? ' selected' : ''}" onclick="selectSize(${p.id}, '${s}')">${s}</button>`).join('')}
+                </div>` : `<div style="font-size:11px;color:var(--mid);margin-bottom:10px;font-family:'DM Mono',monospace;">ONE SIZE</div>`}
+                <button class="atc-btn" onclick="addToCart(${p.id})" ${soldOut ? 'disabled' : ''}>
+                    ${soldOut ? '&#8212; Sold Out &#8212;' : 'Add to Cart'}
+                </button>
+            </div>
+        </div>`;
     }).join('');
 }
 
@@ -265,31 +465,27 @@ function selectSize(id, size) {
     });
 }
 
-// -- CART --
+// ══════════════════════════════════════════════════════════════════════════════
+// CART
+// ══════════════════════════════════════════════════════════════════════════════
 function addToCart(id) {
     const p = PRODUCTS.find(x => x.id === id);
     const sizes = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
     const size = sizes.length === 1 ? sizes[0] : (selectedSizes[id] || sizes[0]);
-
     const inCart = cart.filter(i => i.id === id && i.size === size).reduce((a, b) => a + b.qty, 0);
     if (p.stock !== undefined && inCart >= p.stock) {
         showToast(`Only ${p.stock} available in this size`);
         return;
     }
-
     const item = cart.find(i => i.id === id && i.size === size);
     if (item) { item.qty++; } else { cart.push({ ...p, size, qty: 1 }); }
-
-    saveCart();
-    updateCartUI();
-    openCart();
-    showToast(`${p.name.toUpperCase()} added \u2713`);
+    saveCart(); updateCartUI(); openCart();
+    showToast(`${p.name.toUpperCase()} added ✓`);
 }
 
 function removeFromCart(id, size) {
     cart = cart.filter(i => !(i.id === id && i.size === size));
-    saveCart();
-    updateCartUI();
+    saveCart(); updateCartUI();
 }
 
 function changeQty(id, size, delta) {
@@ -311,30 +507,30 @@ function updateCartUI() {
     const count = cart.reduce((a, b) => a + b.qty, 0);
     const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
     document.getElementById('cart-count').textContent = count;
-    document.getElementById('cart-subtotal').textContent = `\u20A6${subtotal.toLocaleString()}`;
-    document.getElementById('cart-total').textContent = `\u20A6${subtotal.toLocaleString()}`;
+    document.getElementById('cart-subtotal').textContent = `₦${subtotal.toLocaleString()}`;
+    document.getElementById('cart-total').textContent = `₦${subtotal.toLocaleString()}`;
 
     const list = document.getElementById('cart-list');
     if (!cart.length) {
-        list.innerHTML = `<div class="cart-empty"><div class="e-icon">&#128722;</div><div>Your cart is empty</div></div>`;
+        list.innerHTML = `<div class="cart-empty"><div class="e-icon">🛒</div><div>Your cart is empty</div></div>`;
         return;
     }
     list.innerHTML = cart.map(i => `
-    <div class="cart-item">
-      <img src="${i.img}" alt="${i.name}" onerror="this.style.background='#ece8e0'">
-      <div class="ci-info">
-        <div class="ci-name">${i.name}</div>
-        <div class="ci-size">SIZE: ${i.size}</div>
-        <div class="ci-qty">
-          <button class="qty-btn" onclick="changeQty(${i.id},'${i.size}',-1)">&#8722;</button>
-          <span class="qty-num">${i.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${i.id},'${i.size}',1)">+</button>
+        <div class="cart-item">
+            <img src="${i.img}" alt="${i.name}" onerror="this.style.background='#ece8e0'">
+            <div class="ci-info">
+                <div class="ci-name">${i.name}</div>
+                <div class="ci-size">SIZE: ${i.size}</div>
+                <div class="ci-qty">
+                    <button class="qty-btn" onclick="changeQty(${i.id},'${i.size}',-1)">−</button>
+                    <span class="qty-num">${i.qty}</span>
+                    <button class="qty-btn" onclick="changeQty(${i.id},'${i.size}',1)">+</button>
+                </div>
+                <button class="rm-btn" onclick="removeFromCart(${i.id},'${i.size}')">Remove</button>
+            </div>
+            <div class="ci-subtotal">₦${(i.price * i.qty).toLocaleString()}</div>
         </div>
-        <button class="rm-btn" onclick="removeFromCart(${i.id},'${i.size}')">Remove</button>
-      </div>
-      <div class="ci-subtotal">\u20A6${(i.price * i.qty).toLocaleString()}</div>
-    </div>
-  `).join('');
+    `).join('');
 }
 
 function openCart() {
@@ -346,7 +542,9 @@ function closeCart() {
     document.getElementById('overlay').classList.remove('show');
 }
 
-// -- CHECKOUT --
+// ══════════════════════════════════════════════════════════════════════════════
+// CHECKOUT
+// ══════════════════════════════════════════════════════════════════════════════
 function openCheckout() {
     if (!cart.length) { showToast("Your cart is empty"); return; }
     closeCart();
@@ -360,14 +558,17 @@ function closeCheckout() {
 }
 
 function goStep(n) {
-    if (n > 1) {
+    // Validate step 1
+    if (n === 2 || n === 3) {
         const name = document.getElementById('f-name').value.trim();
         const phone = document.getElementById('f-phone').value.trim();
         if (!name || !phone) { showToast("Please fill in your name and phone number"); return; }
     }
-    if (n > 2 && deliveryFee > 0) {
-        const addr = document.getElementById('f-address').value.trim();
-        if (!addr) { showToast("Please enter your delivery address"); return; }
+    // Validate step 2 — location required
+    if (n === 3) {
+        const loc = document.getElementById('f-location').value.trim();
+        if (!loc) { showToast("Please enter your delivery location"); return; }
+        if (!detectedZone) { showToast("We couldn't detect your zone. Please be more specific."); return; }
     }
 
     checkoutStep = n;
@@ -388,21 +589,14 @@ function goStep(n) {
     if (n === 'success') document.getElementById('steps-ui').style.display = 'none';
 }
 
-function selectDelivery(el, fee, name) {
-    document.querySelectorAll('.delivery-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    deliveryFee = fee;
-    deliveryName = name;
-    const addrSec = document.getElementById('address-section');
-    addrSec.style.display = fee > 0 ? 'block' : 'none';
-}
-
 function selectPayment(el, method) {
     document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
     el.classList.add('selected');
     paymentMethod = method;
     const btn = document.getElementById('place-order-btn');
-    btn.textContent = method === 'whatsapp' ? 'Open WhatsApp \u2192' : 'Place Order \u2192';
+    if (method === 'whatsapp') btn.textContent = 'Open WhatsApp →';
+    else if (method === 'card') btn.textContent = 'Pay with Card / Bank →';
+    else btn.textContent = 'Place Order →';
 }
 
 function buildOrderSummary() {
@@ -410,50 +604,62 @@ function buildOrderSummary() {
     const total = subtotal + deliveryFee;
     const box = document.getElementById('order-summary-box');
     box.innerHTML = `
-    <h4>Order Summary</h4>
-    ${cart.map(i => `<div class="os-item"><span>${i.name} (${i.size}) \u00D7${i.qty}</span><span>\u20A6${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}
-    <div class="os-item"><span>Delivery (${deliveryName})</span><span>${deliveryFee ? '₦' + deliveryFee.toLocaleString() : deliveryName === 'Pickup' ? 'Pickup' : 'Location-based'}</span></div>
-    <div class="os-total"><span>Total</span><span>\u20A6${total.toLocaleString()}</span></div>
-  `;
+        <h4>Order Summary</h4>
+        ${cart.map(i => `<div class="os-item"><span>${i.name} (${i.size}) ×${i.qty}</span><span>₦${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}
+        <div class="os-item"><span>Delivery (${deliveryName})</span><span>${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}</span></div>
+        <div class="os-total"><span>Total</span><span>₦${total.toLocaleString()}</span></div>
+    `;
 }
 
 function placeOrder() {
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total = subtotal + deliveryFee;
+    if (paymentMethod === 'card') {
+        initiatePaystackPayment();
+        return;
+    }
+    if (paymentMethod === 'whatsapp') {
+        sendWhatsApp();
+        return;
+    }
+    // Bank transfer / pay before delivery
     checkoutOrderRef = 'WT-' + Date.now().toString().slice(-6);
     document.getElementById('order-ref-display').textContent = `Order Ref: ${checkoutOrderRef}`;
-
-    if (paymentMethod === 'whatsapp') { sendWhatsApp(); return; }
+    cart = []; saveCart(); updateCartUI();
     goStep('success');
 }
 
 function sendWhatsApp() {
     const name = document.getElementById('f-name').value || 'Customer';
     const phone = document.getElementById('f-phone').value || '';
-    const addr = document.getElementById('f-address').value || 'Pickup';
+    const location = document.getElementById('f-location').value || 'Not specified';
+    const addr = document.getElementById('f-address') ? document.getElementById('f-address').value : '';
     const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
     const total = subtotal + deliveryFee;
     const ref = checkoutOrderRef || ('WT-' + Date.now().toString().slice(-6));
+    checkoutOrderRef = ref;
 
     let msg = `*New Order from WearTee.ng*%0A`;
     msg += `Ref: ${ref}%0A%0A`;
     msg += `*Customer:* ${name}%0A`;
     msg += `*Phone:* ${phone}%0A`;
-    msg += `*Delivery:* ${deliveryName}%0A`;
-    if (addr !== 'Pickup') msg += `*Address:* ${addr}%0A`;
+    msg += `*Location:* ${location}%0A`;
+    msg += `*Delivery Zone:* ${deliveryName}%0A`;
+    if (addr) msg += `*Address:* ${addr}%0A`;
     msg += `%0A*Items:*%0A`;
-    cart.forEach(i => { msg += `- ${i.name.toUpperCase()} [${i.size}] x${i.qty}: N${(i.price * i.qty).toLocaleString()}%0A`; });
-    msg += `%0ASubtotal: N${subtotal.toLocaleString()}%0A`;
-    msg += `Delivery: ${deliveryFee ? 'N' + deliveryFee.toLocaleString() : deliveryName === 'Pickup' ? 'Pickup (No Delivery)' : 'TBD (location-based)'}%0A`;
-    msg += `*Total: N${total.toLocaleString()}*%0A%0A`;
-    msg += `Payment: ${paymentMethod === 'bank' ? 'Bank Transfer' : paymentMethod === 'pod' ? 'Pay on Delivery' : 'WhatsApp'}`;
+    cart.forEach(i => { msg += `- ${i.name.toUpperCase()} [${i.size}] x${i.qty}: ₦${(i.price * i.qty).toLocaleString()}%0A`; });
+    msg += `%0ASubtotal: ₦${subtotal.toLocaleString()}%0A`;
+    msg += `Delivery (${deliveryName}): ${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}%0A`;
+    msg += `*Total: ₦${total.toLocaleString()}*%0A%0A`;
+    msg += `Payment: ${paymentMethod === 'bank' ? 'Bank Transfer' : paymentMethod === 'pod' ? 'Pay Before Delivery' : 'WhatsApp'}`;
 
     window.open(`https://wa.me/2349067468815?text=${msg}`, '_blank');
-    goStep('success');
+    document.getElementById('order-ref-display').textContent = `Order Ref: ${ref}`;
     cart = []; saveCart(); updateCartUI();
+    goStep('success');
 }
 
-// -- SEARCH & FILTER --
+// ══════════════════════════════════════════════════════════════════════════════
+// SEARCH & FILTER
+// ══════════════════════════════════════════════════════════════════════════════
 document.getElementById('search-input').addEventListener('input', e => {
     searchQuery = e.target.value;
     renderProducts();
@@ -468,7 +674,6 @@ document.getElementById('filter-bar').addEventListener('click', e => {
     renderProducts();
 });
 
-// -- CART OPEN/CLOSE --
 document.getElementById('cart-open').addEventListener('click', openCart);
 document.getElementById('cart-close').addEventListener('click', closeCart);
 document.getElementById('overlay').addEventListener('click', () => {
@@ -477,7 +682,9 @@ document.getElementById('overlay').addEventListener('click', () => {
     closeProductDetail();
 });
 
-// -- TOAST --
+// ══════════════════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════════════════
 let toastTimer;
 function showToast(msg) {
     const t = document.getElementById('toast');
@@ -487,6 +694,8 @@ function showToast(msg) {
     toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
 
+// ══════════════════════════════════════════════════════════════════════════════
 // INIT
+// ══════════════════════════════════════════════════════════════════════════════
 renderProducts();
 updateCartUI();
