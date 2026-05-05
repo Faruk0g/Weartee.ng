@@ -16,20 +16,10 @@
                 grid-template-columns: repeat(2, 1fr) !important;
                 gap: 10px !important;
             }
-            .card-name {
-                font-size: 11px !important;
-            }
-            .card-price {
-                font-size: 12px !important;
-            }
-            .sz-btn {
-                font-size: 9px !important;
-                padding: 3px 5px !important;
-            }
-            .atc-btn {
-                font-size: 11px !important;
-                padding: 9px 6px !important;
-            }
+            .card-name { font-size: 11px !important; }
+            .card-price { font-size: 12px !important; }
+            .sz-btn { font-size: 9px !important; padding: 3px 5px !important; }
+            .atc-btn { font-size: 11px !important; padding: 9px 6px !important; }
         }
 
         /* ── Product Detail Modal ──────────────────────────────────── */
@@ -41,9 +31,7 @@
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
-        .pd-modal.show {
-            display: block;
-        }
+        .pd-modal.show { display: block; }
         .pd-modal-box {
             background: var(--bg, #fff);
             min-height: 100vh;
@@ -67,7 +55,6 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 20px;
             color: #111;
             padding: 4px 8px 4px 0;
             line-height: 1;
@@ -86,9 +73,7 @@
             text-transform: uppercase;
             color: #888;
         }
-        #pd-content {
-            padding-bottom: 40px;
-        }
+        #pd-content { padding-bottom: 40px; }
         .pd-img-box {
             position: relative;
             width: 100%;
@@ -102,12 +87,7 @@
             object-fit: cover;
             object-position: top center;
         }
-        .pd-img-box .badge {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            z-index: 2;
-        }
+        .pd-img-box .badge { position: absolute; top: 12px; left: 12px; z-index: 2; }
         .pd-img-box .sold-overlay {
             position: absolute;
             inset: 0;
@@ -123,9 +103,7 @@
             font-size: 28px;
             letter-spacing: .1em;
         }
-        .pd-info {
-            padding: 20px 18px 10px;
-        }
+        .pd-info { padding: 20px 18px 10px; }
         .pd-brand {
             font-family: 'DM Mono', monospace;
             font-size: 10px;
@@ -183,9 +161,7 @@
             align-items: center;
             gap: 6px;
         }
-        .pd-size-section {
-            margin-bottom: 20px;
-        }
+        .pd-size-section { margin-bottom: 20px; }
         .pd-size-label {
             font-family: 'DM Mono', monospace;
             font-size: 10px;
@@ -194,11 +170,7 @@
             margin-bottom: 8px;
             text-transform: uppercase;
         }
-        .pd-size-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
+        .pd-size-row { display: flex; flex-wrap: wrap; gap: 8px; }
         .pd-sz-btn {
             border: 1.5px solid #ddd;
             background: none;
@@ -211,16 +183,8 @@
             color: #333;
         }
         .pd-sz-btn:hover { border-color: #111; }
-        .pd-sz-btn.selected {
-            border-color: #111;
-            background: #111;
-            color: #fff;
-        }
-        .pd-one-size {
-            font-family: 'DM Mono', monospace;
-            font-size: 12px;
-            color: #888;
-        }
+        .pd-sz-btn.selected { border-color: #111; background: #111; color: #fff; }
+        .pd-one-size { font-family: 'DM Mono', monospace; font-size: 12px; color: #888; }
         .pd-actions {
             display: flex;
             gap: 10px;
@@ -265,11 +229,7 @@
             transition: background .15s;
         }
         .pd-wa-btn:hover { background: #1ebe5b; }
-        .pd-details {
-            border-top: 1px solid #ece8e0;
-            padding-top: 16px;
-            margin-top: 4px;
-        }
+        .pd-details { border-top: 1px solid #ece8e0; padding-top: 16px; margin-top: 4px; }
         .pd-detail-row {
             display: flex;
             justify-content: space-between;
@@ -285,6 +245,47 @@
             font-family: 'DM Mono', monospace;
             font-size: 11px;
             letter-spacing: .06em;
+        }
+
+        /* ── Delivery fee live preview pill ──────────────────────── */
+        .fee-pill {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f0fdf4;
+            border: 1.5px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            animation: fadeIn .25s ease;
+        }
+        .fee-location {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: #166534;
+        }
+        .fee-amount {
+            font-family: 'DM Mono', monospace;
+            font-size: 13px;
+            font-weight: 700;
+            color: #15803d;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to   { opacity: 1; transform: none; }
+        }
+
+        /* ── Paystack badge ──────────────────────────────────────── */
+        .pay-badge-paystack {
+            font-size: 10px;
+            background: #0BA4DB;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -374,8 +375,7 @@
         <div class="cart-foot">
             <div class="cart-totals">
                 <div class="tot-row"><span>Subtotal</span><span id="cart-subtotal">₦0</span></div>
-                <div class="tot-row"><span>Delivery</span><span id="cart-delivery-note" class="note">Calculated at
-                        checkout</span></div>
+                <div class="tot-row"><span>Delivery</span><span id="cart-delivery-note" class="note">Calculated at checkout</span></div>
                 <div class="tot-row bold"><span>Total</span><span id="cart-total">₦0</span></div>
             </div>
             <button class="checkout-btn" onclick="openCheckout()">Proceed to Checkout →</button>
@@ -425,7 +425,7 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <label>Email Address</label>
+                        <label>Email Address *</label>
                         <input type="email" id="f-email" placeholder="john@email.com">
                     </div>
                     <div class="btn-row">
@@ -433,66 +433,30 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Delivery -->
+                <!-- Step 2: Delivery — location-based fee -->
                 <div class="form-section" id="step-2">
-                    <div class="delivery-options">
-                        <label class="delivery-option selected" onclick="selectDelivery(this, 0, 'Pickup')">
-                            <input type="radio" name="delivery" value="pickup" checked>
-                            <span class="del-icon">🏪</span>
-                            <div class="del-info">
-                                <div class="del-name">Delivery</div>
-                            </div>
-                            <span class="del-price">5000 & Above</span>
-                        </label>
-                        <label class="delivery-option"
-                            onclick="selectDelivery(this, 5000, 'Lagos, Ilorin, Delivery')">
-                            <input type="radio" name="delivery" value="lagos & ilorin">
-                            <span class="del-icon">🛵</span>
-                            <div class="del-info">
-                                <div class="del-name">Lagos & Ilorin Delivery</div>
-                                <div class="del-desc">Delivered within 4–5 business days</div>
-                            </div>
-                            <span class="del-price">₦5,000 & Above</span>
-                        </label>
-                        <label class="delivery-option" onclick="selectDelivery(this, 5000, 'Nationwide Shipping')">
-                            <input type="radio" name="delivery" value="national">
-                            <span class="del-icon">📦</span>
-                            <div class="del-info">
-                                <div class="del-name">Nationwide Shipping</div>
-                                <div class="del-desc">GIG / DHL — 3–5 business days anywhere in Nigeria</div>
-                            </div>
-                            <span class="del-price">₦5,000</span>
-                        </label>
+
+                    <div class="form-row">
+                        <label>Your City / Area *</label>
+                        <input
+                            type="text"
+                            id="f-location"
+                            placeholder="e.g. Lekki Lagos, Tanke Ilorin, Wuse Abuja..."
+                            autocomplete="off"
+                            oninput="onLocationInput()"
+                        >
+                        <!-- Live delivery fee preview renders here -->
+                        <div id="delivery-fee-preview"></div>
                     </div>
 
-                    <div id="address-section" style="display:none">
-                        <div class="form-row">
-                            <label>Delivery Address *</label>
-                            <input type="text" id="f-address" placeholder="House number, street name">
-                        </div>
-                        <div class="form-grid">
-                            <div class="form-row">
-                                <label>City / Area</label>
-                                <input type="text" id="f-city" placeholder="Ikeja">
-                            </div>
-                            <div class="form-row">
-                                <label>State</label>
-                                <select id="f-state">
-                                    <option>Lagos</option>
-                                    <option>Ilorin</option>
-                                    <option>Ogun</option>
-                                    <option>Ikeja</option>
-                                    <option>Magodo</option>
-                                    <option>Ajah</option>
-                                    <option>Other</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <label>Delivery Notes</label>
-                            <textarea id="f-notes"
-                                placeholder="Landmark, gate code, or any special instructions..."></textarea>
-                        </div>
+                    <div class="form-row">
+                        <label>Full Delivery Address *</label>
+                        <input type="text" id="f-address" placeholder="House number, street name, landmark">
+                    </div>
+
+                    <div class="form-row">
+                        <label>Delivery Notes</label>
+                        <textarea id="f-notes" placeholder="Gate code, landmark, or any special instructions..."></textarea>
                     </div>
 
                     <div class="btn-row">
@@ -505,36 +469,49 @@
                 <div class="form-section" id="step-3">
                     <div class="order-summary" id="order-summary-box"></div>
 
-                    <h4
-                        style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:14px;">
-                        Select Payment Method</h4>
+                    <h4 style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:14px;">
+                        Select Payment Method
+                    </h4>
+
                     <div class="payment-options">
-                        <label class="pay-option selected" onclick="selectPayment(this, 'bank')">
-                            <input type="radio" name="payment" value="bank" checked>
+
+                        <!-- Pay with Card / Bank via Paystack (DEFAULT) -->
+                        <label class="pay-option selected" onclick="selectPayment(this, 'card')">
+                            <input type="radio" name="payment" value="card" checked>
+                            <span class="pay-icon">💳</span>
+                            <div class="pay-name">
+                                Pay with Card / Bank Transfer
+                                <span class="pay-sub">Debit card, USSD, bank transfer — secured by Paystack</span>
+                            </div>
+                            <span class="pay-badge-paystack">PAYSTACK</span>
+                        </label>
+
+                        <!-- Manual Bank Transfer -->
+                        <label class="pay-option" onclick="selectPayment(this, 'bank')">
+                            <input type="radio" name="payment" value="bank">
                             <span class="pay-icon">🏦</span>
-                            <div class="pay-name">Bank Transfer<span class="pay-sub">Transfer to our account — details
-                                    sent via WhatsApp</span></div>
+                            <div class="pay-name">
+                                Manual Bank Transfer
+                                <span class="pay-sub">We'll send our account details via WhatsApp</span>
+                            </div>
                             <span class="pay-badge">POPULAR</span>
                         </label>
-                        <label class="pay-option" onclick="selectPayment(this, 'pod')">
-                            <input type="radio" name="payment" value="pod">
-                            <span class="pay-icon">💵</span>
-                            <div class="pay-name">Pay Before Delivery<span class="pay-sub">Lagos & Ilorin only —
-                                    transfer
-                                    before
-                                    arrival</span></div>
-                        </label>
+
+                        <!-- WhatsApp Order -->
                         <label class="pay-option" onclick="selectPayment(this, 'whatsapp')">
                             <input type="radio" name="payment" value="whatsapp">
                             <span class="pay-icon">💬</span>
-                            <div class="pay-name">Order via WhatsApp<span class="pay-sub">Chat directly with us to
-                                    complete your order</span></div>
+                            <div class="pay-name">
+                                Order via WhatsApp
+                                <span class="pay-sub">Chat directly with us to complete your order</span>
+                            </div>
                         </label>
+
                     </div>
 
                     <div class="btn-row">
                         <button class="btn-back" onclick="goStep(2)">← Back</button>
-                        <button class="btn-next" id="place-order-btn" onclick="placeOrder()">Place Order →</button>
+                        <button class="btn-next" id="place-order-btn" onclick="placeOrder()">Pay with Card / Bank →</button>
                     </div>
                 </div>
 
@@ -543,22 +520,18 @@
                     <div class="success-screen">
                         <div class="success-icon">🎉</div>
                         <h3>ORDER PLACED!</h3>
-                        <p>Thank you for shopping with WearTee.ng!<br>We'll contact you shortly via WhatsApp to confirm
-                            your order.</p>
+                        <p>Thank you for shopping with WearTee.ng!<br>We'll contact you shortly via WhatsApp to confirm your order.</p>
                         <div class="order-ref" id="order-ref-display"></div>
                         <div style="margin-bottom:20px;">
                             <button class="btn-whatsapp" onclick="sendWhatsApp()" style="width:100%;">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                                    <path
-                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
-                                    <path
-                                        d="M11.998 0C5.373 0 0 5.373 0 12c0 2.115.554 4.1 1.522 5.823L0 24l6.335-1.508C8.025 23.452 9.975 24 11.998 24 18.625 24 24 18.627 24 12S18.625 0 11.998 0zm0 21.818c-1.872 0-3.633-.505-5.148-1.384l-.369-.219-3.761.895.952-3.652-.24-.378A9.79 9.79 0 0 1 2.18 12c0-5.413 4.406-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818S17.411 21.818 11.998 21.818z" />
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
+                                    <path d="M11.998 0C5.373 0 0 5.373 0 12c0 2.115.554 4.1 1.522 5.823L0 24l6.335-1.508C8.025 23.452 9.975 24 11.998 24 18.625 24 24 18.627 24 12S18.625 0 11.998 0zm0 21.818c-1.872 0-3.633-.505-5.148-1.384l-.369-.219-3.761.895.952-3.652-.24-.378A9.79 9.79 0 0 1 2.18 12c0-5.413 4.406-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818S17.411 21.818 11.998 21.818z" />
                                 </svg>
                                 Open WhatsApp Chat
                             </button>
                         </div>
-                        <button class="btn-next" onclick="closeCheckout()" style="width:100%;">Continue
-                            Shopping</button>
+                        <button class="btn-next" onclick="closeCheckout()" style="width:100%;">Continue Shopping</button>
                     </div>
                 </div>
 
