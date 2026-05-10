@@ -152,7 +152,7 @@ const PRODUCTS = [
     { name: "Tom & Jerry Round Neck Tee", price: 15000, img: "images/Mickey Round Neck Tee.JPG", stock: 0, cat: "tee", isNew: true },
     { name: "Navy Blue Tee", price: 15000, img: "images/Navy Blue Tee.JPG", stock: 1, cat: "basic tops", isNew: true },
     { name: "One Piece Black Tee", price: 15000, img: "images/One Piece Black Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Printed Tee(black)", price: 15000, img: "images/Printed Tee(black).JPG", stock: 1, cat: "tee", isNew: true },
+    { name: "Printed Tee(black)", price: 15000, img: "images/Printed Tee(black).JPG", stock: 0, cat: "tee", isNew: true },
     { name: "Ripped Top(caramel)", price: 10000, img: "images/Ribbed Top(camel).JPG", stock: 1, cat: "basic tops", isNew: true },
     { name: "Ripped Top(purple)", price: 10000, img: "images/Ribbed Top(purple).JPG", stock: 0, cat: "basic tops", isNew: true },
     { name: "Short Basic Top(black)", price: 10000, img: "images/Short Basic Top(black).JPG", stock: 0, cat: "basic tops", isNew: true },
