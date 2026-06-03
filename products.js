@@ -14,7 +14,12 @@
 //         /transaction/verify/:reference endpoint before fulfilling any order.
 // ══════════════════════════════════════════════════════════════════════════════
 const PAYSTACK_PUBLIC_KEY = 'pk_test_REPLACE_WITH_YOUR_PAYSTACK_PUBLIC_KEY';
-
+// ══════════════════════════════════════════════════════════════════════════════
+// 🗄️  SUPABASE CONFIG
+//     Paste your Project URL and anon/public key from Supabase → Settings → API
+// ══════════════════════════════════════════════════════════════════════════════
+const SUPABASE_URL    = 'https://sb_publishable_fAKvuWjKpJTZiJmJpbIugw_sekP1mqU.supabase.co'; // ← your Project URL
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vb21ydWNkaGVjaGRzZmhveHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NDkzODYsImV4cCI6MjA5NjAyNTM4Nn0.oq8L6VoFUTiDVZ-nSaISDotGUSSv0nvaWTep3A1cobU';        // ← your anon key
 // ══════════════════════════════════════════════════════════════════════════════
 // 🚚  DELIVERY ZONES
 // ══════════════════════════════════════════════════════════════════════════════
@@ -784,9 +789,37 @@ function showToast(msg) {
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
+// ══════════════════════════════════════════════════════════════════════════════
+// 🗄️  LIVE STOCK SYNC
+// ══════════════════════════════════════════════════════════════════════════════
+async function syncStockFromSupabase() {
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/products?select=id,stock`,
+            {
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                }
+            }
+        );
+        if (!res.ok) throw new Error('Stock fetch failed');
+        const rows = await res.json();
+        rows.forEach(row => {
+            const p = PRODUCTS.find(x => x.id === row.id);
+            if (p) p.stock = row.stock;
+        });
+        renderProducts(); // re-render with live stock numbers
+    } catch (err) {
+        console.warn('Could not sync stock from Supabase:', err);
+        // Fails silently — page still works with the default stock values
+    }
+}
 
 // ══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════════════════
+// INIT
 renderProducts();
 updateCartUI();
+syncStockFromSupabase(); // ← add this
