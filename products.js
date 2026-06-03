@@ -326,17 +326,40 @@ function initiatePaystackPayment() {
                     { display_name: 'Items',          variable_name: 'items', value: cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(', ') },
                 ]
             },
-            callback: function (response) {
-                // ⚠️  IMPORTANT: response.reference should be verified on your
-                //     server via GET https://api.paystack.co/transaction/verify/:reference
-                //     before marking the order as paid. This frontend callback
-                //     alone is NOT sufficient proof of payment.
-                checkoutOrderRef = response.reference;
-                document.getElementById('order-ref-display').textContent = `Order Ref: ${response.reference}`;
-                cart = []; saveCart(); updateCartUI();
-                goStep('success');
-                showToast('Payment successful! 🎉');
-            },
+           callback: async function (response) {
+    // Show a verifying message while we confirm with our backend
+    showToast('Verifying payment... please wait');
+
+    try {
+        const verify = await fetch('https://weartee-ng.vercel.app/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                reference: response.reference,
+                cartItems: cart.map(i => ({ id: i.id, qty: i.qty }))
+            })
+        });
+
+        const result = await verify.json();
+
+        if (!verify.ok || !result.ok) {
+            // Payment could not be confirmed
+            showToast('Payment could not be verified. Please contact us with ref: ' + response.reference);
+            return;
+        }
+
+        // Payment confirmed by backend — now safe to clear cart and show success
+        checkoutOrderRef = response.reference;
+        document.getElementById('order-ref-display').textContent = `Order Ref: ${response.reference}`;
+        cart = []; saveCart(); updateCartUI();
+        goStep('success');
+        showToast('Payment successful! 🎉');
+
+    } catch (err) {
+        console.error('Verification error:', err);
+        showToast('Network error during verification. Please contact us with ref: ' + response.reference);
+    }
+},
             onClose: function () {
                 showToast('Payment cancelled. You can try again.');
             }
