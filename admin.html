@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WearTee.ng — Admin</title>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+        --bg:       #f5f3ef;
+        --surface:  #ffffff;
+        --border:   #e8e4dc;
+        --text:     #1a1a1a;
+        --mid:      #888;
+        --accent:   #1a1a1a;
+        --green:    #3B6D11;
+        --green-bg: #EAF3DE;
+        --red:      #A32D2D;
+        --red-bg:   #FCEBEB;
+        --blue:     #185FA5;
+        --blue-bg:  #E6F1FB;
+        --yellow:   #854F0B;
+        --yellow-bg:#FAEEDA;
+    }
+
+    body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+    }
+
+    /* ── LOGIN ── */
+    #login-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1rem;
+    }
+    .login-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 40px;
+        width: 100%;
+        max-width: 380px;
+        text-align: center;
+    }
+    .login-box h1 { font-size: 22px; margin-bottom: 6px; }
+    .login-box p  { font-size: 13px; color: var(--mid); margin-bottom: 24px; }
+    .login-box input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        margin-bottom: 12px;
+        outline: none;
+    }
+    .login-box input:focus { border-color: var(--accent); }
+    .login-box button {
+        width: 100%;
+        padding: 12px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .login-error {
+        font-size: 12px;
+        color: var(--red);
+        margin-top: 8px;
+        display: none;
+    }
+
+    /* ── DASHBOARD ── */
+    #dashboard { display: none; }
+
+    .topbar {
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: 0 24px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .topbar-brand { font-size: 15px; font-weight: 600; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .topbar-right span { font-size: 12px; color: var(--mid); }
+    .logout-btn {
+        font-size: 12px;
+        color: var(--red);
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .main { padding: 24px; max-width: 1200px; margin: 0 auto; }
+
+    /* ── TABS ── */
+    .tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 24px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 4px;
+        width: fit-content;
+    }
+    .tab-btn {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 7px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        background: none;
+        color: var(--mid);
+        transition: all 0.15s;
+    }
+    .tab-btn.active { background: var(--accent); color: #fff; }
+
+    /* ── STAT CARDS ── */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .stat-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+    }
+    .stat-label { font-size: 11px; color: var(--mid); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+    .stat-value { font-size: 26px; font-weight: 600; }
+    .stat-sub   { font-size: 12px; color: var(--mid); margin-top: 4px; }
+
+    /* ── TABLE ── */
+    .table-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    .table-header {
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .table-title { font-size: 14px; font-weight: 600; }
+    .table-search {
+        padding: 8px 12px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        outline: none;
+        width: 220px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--mid);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        padding: 12px 20px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg);
+    }
+    td {
+        padding: 14px 20px;
+        font-size: 13px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: var(--bg); }
+
+    .status-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 100px;
+        font-size: 11px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .status-paid      { background: var(--blue-bg);   color: var(--blue); }
+    .status-shipped   { background: var(--yellow-bg);  color: var(--yellow); }
+    .status-delivered { background: var(--green-bg);   color: var(--green); }
+    .status-cancelled { background: var(--red-bg);     color: var(--red); }
+
+    .items-cell { font-size: 12px; color: var(--mid); max-width: 220px; }
+
+    /* ── STOCK TABLE ── */
+    .stock-input {
+        width: 70px;
+        padding: 6px 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        font-size: 13px;
+        text-align: center;
+    }
+    .save-stock-btn {
+        padding: 6px 14px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .save-stock-btn:hover { opacity: 0.85; }
+    .stock-low  { color: var(--red);    font-weight: 500; }
+    .stock-zero { color: var(--red);    font-weight: 600; }
+    .stock-ok   { color: var(--green);  }
+
+    /* ── TOP PRODUCTS ── */
+    .top-product-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+    }
+    .top-product-row:last-child { border-bottom: none; }
+    .top-rank { font-size: 18px; font-weight: 700; color: var(--border); width: 28px; }
+    .top-name { flex: 1; font-size: 13px; font-weight: 500; }
+    .top-sales { font-size: 13px; color: var(--mid); }
+    .top-revenue { font-size: 13px; font-weight: 600; }
+
+    .loading-row td { text-align: center; color: var(--mid); padding: 40px; }
+    .empty-row  td { text-align: center; color: var(--mid); padding: 40px; }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .refresh-btn {
+        padding: 7px 14px;
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 12px;
+        cursor: pointer;
+        color: var(--text);
+    }
+    .refresh-btn:hover { background: var(--bg); }
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="login-screen">
+    <div class="login-box">
+        <h1>WearTee.ng</h1>
+        <p>Admin Dashboard</p>
+        <input type="password" id="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') doLogin()">
+        <button onclick="doLogin()">Sign In</button>
+        <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+    </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div id="dashboard">
+    <div class="topbar">
+        <div class="topbar-brand">WearTee.ng Admin</div>
+        <div class="topbar-right">
+            <span id="last-updated"></span>
+            <button class="logout-btn" onclick="doLogout()">Sign Out</button>
+        </div>
+    </div>
+
+    <div class="main">
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('orders')">📦 Orders</button>
+            <button class="tab-btn"        onclick="switchTab('stock')">🏷️ Stock</button>
+            <button class="tab-btn"        onclick="switchTab('summary')">📊 Summary</button>
+        </div>
+
+        <!-- ── ORDERS PANEL ── -->
+        <div class="panel active" id="panel-orders">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value" id="s-total-orders">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Today's Orders</div>
+                    <div class="stat-value" id="s-today-orders">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value" id="s-revenue">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Shipment</div>
+                    <div class="stat-value" id="s-pending">—</div>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <div class="table-header">
+                    <span class="table-title">All Orders</span>
+                    <div style="display:flex;gap:8px;align-items:center;">
+                        <input class="table-search" type="text" placeholder="Search ref or location…" oninput="filterOrders(this.value)">
+                        <button class="refresh-btn" onclick="loadOrders()">↻ Refresh</button>
+                    </div>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ref</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr class="loading-row"><td colspan="6">Loading orders…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── STOCK PANEL ── -->
+        <div class="panel" id="panel-stock">
+            <div class="table-wrap">
+                <div class="table-header">
+                    <span class="table-title">Stock Management</span>
+                    <input class="table-search" type="text" placeholder="Search product…" oninput="filterStock(this.value)">
+                </div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Current Stock</th>
+                                <th>Update</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-tbody">
+                            <tr class="loading-row"><td colspan="5">Loading stock…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── SUMMARY PANEL ── -->
+        <div class="panel" id="panel-summary">
+            <div class="stats-grid" style="margin-bottom:24px;">
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value" id="sum-revenue">—</div>
+                    <div class="stat-sub">all time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Items Sold</div>
+                    <div class="stat-value" id="sum-items">—</div>
+                    <div class="stat-sub">all time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Order Value</div>
+                    <div class="stat-value" id="sum-avg">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Top Zone</div>
+                    <div class="stat-value" style="font-size:16px;" id="sum-top-zone">—</div>
+                </div>
+            </div>
+
+            <div class="table-wrap">
+                <div class="table-header">
+                    <span class="table-title">Top Selling Products</span>
+                </div>
+                <div id="top-products-list">
+                    <div style="text-align:center;padding:40px;color:var(--mid);">Loading…</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// CONFIG — paste your Supabase details here
+// ══════════════════════════════════════════════════════════════════════════════
+const SUPABASE_URL      = 'https://xxxxxxxxxxxxxx.supabase.co'; // ← your project URL
+const SUPABASE_ANON_KEY = 'your-anon-key-here';                 // ← your anon key
+
+// ⚠️  Change this to a strong password — this is what protects your dashboard
+const ADMIN_PASSWORD = 'weartee2024admin';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════════════════════════════════════════
+function doLogin() {
+    const pw = document.getElementById('password-input').value;
+    if (pw === ADMIN_PASSWORD) {
+        sessionStorage.setItem('wt_admin', '1');
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('dashboard').style.display    = 'block';
+        loadOrders();
+        loadStock();
+    } else {
+        document.getElementById('login-error').style.display = 'block';
+    }
+}
+
+function doLogout() {
+    sessionStorage.removeItem('wt_admin');
+    location.reload();
+}
+
+// Auto-login if session exists
+if (sessionStorage.getItem('wt_admin') === '1') {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display    = 'block';
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TABS
+// ══════════════════════════════════════════════════════════════════════════════
+function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', ['orders','stock','summary'][i] === tab);
+    });
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(`panel-${tab}`).classList.add('active');
+    if (tab === 'summary') buildSummary();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SUPABASE FETCH HELPER
+// ══════════════════════════════════════════════════════════════════════════════
+async function sbFetch(path, options = {}) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+        ...options,
+        headers: {
+            apikey:        SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type':'application/json',
+            Prefer:        'return=representation',
+            ...(options.headers || {}),
+        }
+    });
+    return res.json();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ORDERS
+// ══════════════════════════════════════════════════════════════════════════════
+let allOrders = [];
+
+async function loadOrders() {
+    document.getElementById('orders-tbody').innerHTML =
+        '<tr class="loading-row"><td colspan="6">Loading orders…</td></tr>';
+
+    allOrders = await sbFetch('orders?select=*&order=created_at.desc');
+    renderOrders(allOrders);
+    updateOrderStats(allOrders);
+
+    document.getElementById('last-updated').textContent =
+        'Updated ' + new Date().toLocaleTimeString();
+}
+
+function renderOrders(orders) {
+    const tbody = document.getElementById('orders-tbody');
+    if (!orders.length) {
+        tbody.innerHTML = '<tr class="empty-row"><td colspan="6">No orders yet</td></tr>';
+        return;
+    }
+    tbody.innerHTML = orders.map(o => {
+        const date  = new Date(o.created_at).toLocaleDateString('en-NG', { day:'numeric', month:'short', year:'numeric' });
+        const items = Array.isArray(o.items)
+            ? o.items.map(i => `${i.name} (${i.size}) ×${i.qty}`).join(', ')
+            : '—';
+        return `
+        <tr>
+            <td><code style="font-size:11px;">${o.ref}</code></td>
+            <td style="white-space:nowrap;">${date}</td>
+            <td>${o.location || '—'}<br><span style="font-size:11px;color:var(--mid);">${o.zone || ''}</span></td>
+            <td class="items-cell">${items}</td>
+            <td style="white-space:nowrap;font-weight:500;">₦${(o.total || 0).toLocaleString()}</td>
+            <td>
+                <select class="status-badge status-${o.status}" onchange="updateStatus(${o.id}, this.value, this)">
+                    <option value="paid"      ${o.status==='paid'      ? 'selected':''}>Paid</option>
+                    <option value="shipped"   ${o.status==='shipped'   ? 'selected':''}>Shipped</option>
+                    <option value="delivered" ${o.status==='delivered' ? 'selected':''}>Delivered</option>
+                    <option value="cancelled" ${o.status==='cancelled' ? 'selected':''}>Cancelled</option>
+                </select>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function filterOrders(q) {
+    const filtered = allOrders.filter(o =>
+        o.ref.toLowerCase().includes(q.toLowerCase()) ||
+        (o.location || '').toLowerCase().includes(q.toLowerCase())
+    );
+    renderOrders(filtered);
+}
+
+async function updateStatus(id, status, selectEl) {
+    selectEl.className = `status-badge status-${status}`;
+    await sbFetch(`orders?id=eq.${id}`, {
+        method:  'PATCH',
+        body:    JSON.stringify({ status }),
+    });
+}
+
+function updateOrderStats(orders) {
+    const today     = new Date().toDateString();
+    const todayOrders = orders.filter(o => new Date(o.created_at).toDateString() === today);
+    const revenue   = orders.reduce((a, b) => a + (b.total || 0), 0);
+    const pending   = orders.filter(o => o.status === 'paid').length;
+
+    document.getElementById('s-total-orders').textContent = orders.length;
+    document.getElementById('s-today-orders').textContent = todayOrders.length;
+    document.getElementById('s-revenue').textContent      = '₦' + revenue.toLocaleString();
+    document.getElementById('s-pending').textContent      = pending;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// STOCK
+// ══════════════════════════════════════════════════════════════════════════════
+let allStock = [];
+
+async function loadStock() {
+    allStock = await sbFetch('products?select=id,stock&order=id.asc');
+    renderStock(allStock);
+}
+
+// Product names from your JS — used to label rows
+const PRODUCT_NAMES = [
+    "Asymmetric Pleated Top (Black)","Asymmetric Pleated Top (Red)","Backless Top (Black)",
+    "Backless Top (Wine)","Basic Top (Lotus)","Basic Top (Pink)","Black Tank Top",
+    "Black V-Neck Short Sleeve Basic Top","Brown Tank Top","Grey Tank Top",
+    "Long Basic Top (Blue)","Long Basic Top (Rose Red)","Long Off Shoulder Top (Grey)",
+    "Long Off Shoulder Top (Red)","Long Sleeve Basic Top","Long Sleeve Basic Top (Brown)",
+    "Long Sleeve Wrap Top","Long Sleeve Wrap Top (Black Stripe)","Long Sleeve Wrap Top (Pink)",
+    "Long Sleeve Wrap Top (Style 2)","Mesh Top (Style 1)","Mesh Top (Style 2)",
+    "Mesh Top (Style 3)","Mesh Top (Style 4)","Navy Blue Tee","Ribbed Top (Caramel)",
+    "Ribbed Top (Purple)","Short Basic Top (Black)","Short Basic Top (Grey)",
+    "Short Basic Top (Pink)","U-Neck Basic Top","V-Neck Short Sleeve Basic Top (Yellow)",
+    "Black Graphic Tee","Black Plain Tee","Black Tee (Style 1)","Black Tee (Style 2)",
+    "Blue Tee","Cream Color Tee","Green Tee","Grey Tee","Jerry Graphics Tee",
+    "Khaki Button-Up Shirt (Style 1)","Khaki Button-Up Shirt (Style 2)",
+    "Leopard Print Roundneck","Leopard Print Roundneck (Pink)",
+    "Long Sleeve Button-Up Shirt (Black)","Long Sleeve Button-Up Shirt (Brown)",
+    "Long Sleeve Graphics Tee","Long Sleeve Graphics Tee (Brown)","Long Sleeve Graphics Tee (Wine)",
+    "One Piece Black Tee","Printed Tee (Black)","Tom & Jerry Round Neck Tee",
+    "White Button-Up Shirt","White Plain Tee","Black Strapless Cap (Style 1)",
+    "Black Strapless Cap (Style 2)","Black Strapless Cap (Style 3)",
+    "Blue Strapless Cap (Style 1)","Blue Strapless Cap (Style 2)","Cream Strapless Cap",
+    "Green Strapless Cap","Blue Velvet Joggers","Brown Velvet Joggers",
+    "Velvet Joggers (Burgundy)","Blue Wide Leg Pant","Linen Free Pant (Black)",
+    "Linen Free Pant (Brown)","Linen Free Pant (Caramel)","Linen Free Pant (Grey)",
+    "Unisex Cargo (Black) Style 1","Unisex Cargo (Black) Style 2",
+    "Unisex Cargo (Green) Style 1","Unisex Cargo (Green) Style 2",
+    "Unisex Cargo (Grey)","Unisex Cargo (Khaki)","Wide Leg Pant (Yellow)",
+];
+
+const PRODUCT_CATS = [
+    ...Array(32).fill('Basic Tops'),
+    ...Array(23).fill('Tee'),
+    ...Array(7).fill('Snapback'),
+    ...Array(3).fill('Joggers'),
+    ...Array(12).fill('Pant'),
+];
+
+function renderStock(stockRows) {
+    const tbody = document.getElementById('stock-tbody');
+    tbody.innerHTML = stockRows.map(row => {
+        const name  = PRODUCT_NAMES[row.id] || `Product #${row.id}`;
+        const cat   = PRODUCT_CATS[row.id]  || '—';
+        const cls   = row.stock === 0 ? 'stock-zero' : row.stock <= 3 ? 'stock-low' : 'stock-ok';
+        return `
+        <tr id="stock-row-${row.id}">
+            <td style="color:var(--mid);font-size:12px;">${row.id}</td>
+            <td style="font-weight:500;">${name}</td>
+            <td style="color:var(--mid);font-size:12px;">${cat}</td>
+            <td><span class="${cls}">${row.stock}</span></td>
+            <td style="display:flex;gap:8px;align-items:center;">
+                <input class="stock-input" type="number" min="0" value="${row.stock}" id="stock-input-${row.id}">
+                <button class="save-stock-btn" onclick="saveStock(${row.id})">Save</button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+function filterStock(q) {
+    document.querySelectorAll('#stock-tbody tr').forEach(row => {
+        const name = row.querySelector('td:nth-child(2)');
+        if (!name) return;
+        row.style.display = name.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+    });
+}
+
+async function saveStock(id) {
+    const input  = document.getElementById(`stock-input-${id}`);
+    const newQty = parseInt(input.value);
+    if (isNaN(newQty) || newQty < 0) { alert('Invalid stock number'); return; }
+
+    await sbFetch(`products?id=eq.${id}`, {
+        method: 'PATCH',
+        body:   JSON.stringify({ stock: newQty }),
+    });
+
+    // Update display
+    const row = document.getElementById(`stock-row-${id}`);
+    const cls = newQty === 0 ? 'stock-zero' : newQty <= 3 ? 'stock-low' : 'stock-ok';
+    row.querySelector('td:nth-child(4)').innerHTML = `<span class="${cls}">${newQty}</span>`;
+
+    // Flash feedback
+    const btn = row.querySelector('.save-stock-btn');
+    btn.textContent = '✓ Saved';
+    setTimeout(() => btn.textContent = 'Save', 1500);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SUMMARY
+// ══════════════════════════════════════════════════════════════════════════════
+function buildSummary() {
+    if (!allOrders.length) return;
+
+    const revenue  = allOrders.reduce((a, b) => a + (b.total || 0), 0);
+    const avgOrder = Math.round(revenue / allOrders.length);
+
+    // Count items sold per product
+    const productSales = {};
+    allOrders.forEach(o => {
+        if (!Array.isArray(o.items)) return;
+        o.items.forEach(item => {
+            if (!productSales[item.name]) productSales[item.name] = { qty: 0, revenue: 0 };
+            productSales[item.name].qty     += item.qty;
+            productSales[item.name].revenue += item.price * item.qty;
+        });
+    });
+
+    const totalItems = Object.values(productSales).reduce((a, b) => a + b.qty, 0);
+
+    // Top delivery zone
+    const zoneCounts = {};
+    allOrders.forEach(o => {
+        if (o.zone) zoneCounts[o.zone] = (zoneCounts[o.zone] || 0) + 1;
+    });
+    const topZone = Object.entries(zoneCounts).sort((a, b) => b[1] - a[1])[0];
+
+    document.getElementById('sum-revenue').textContent  = '₦' + revenue.toLocaleString();
+    document.getElementById('sum-items').textContent    = totalItems;
+    document.getElementById('sum-avg').textContent      = '₦' + avgOrder.toLocaleString();
+    document.getElementById('sum-top-zone').textContent = topZone ? topZone[0] : '—';
+
+    // Top products list
+    const sorted = Object.entries(productSales)
+        .sort((a, b) => b[1].qty - a[1].qty)
+        .slice(0, 10);
+
+    document.getElementById('top-products-list').innerHTML = sorted.map(([name, data], i) => `
+        <div class="top-product-row">
+            <div class="top-rank">${i + 1}</div>
+            <div class="top-name">${name}</div>
+            <div class="top-sales">${data.qty} sold</div>
+            <div class="top-revenue">₦${data.revenue.toLocaleString()}</div>
+        </div>
+    `).join('');
+}
+
+// Init
+if (sessionStorage.getItem('wt_admin') === '1') {
+    loadOrders();
+    loadStock();
+}
+</script>
+</body>
+</html>
