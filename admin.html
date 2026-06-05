@@ -607,7 +607,6 @@ const PRODUCT_CATS = [
     ...Array(3).fill('Joggers'),
     ...Array(12).fill('Pant'),
 ];
-
 function renderStock(stockRows) {
     const tbody = document.getElementById('stock-tbody');
     tbody.innerHTML = stockRows.map(row => {
@@ -626,6 +625,29 @@ function renderStock(stockRows) {
             </td>
         </tr>`;
     }).join('');
+
+    // ── Show low stock banner ──────────────────────────────────────────────
+    const lowItems = stockRows.filter(r => r.stock <= 3);
+    const banner   = document.getElementById('low-stock-banner');
+    const list     = document.getElementById('low-stock-list');
+
+    if (lowItems.length) {
+        banner.style.display = 'block';
+        list.innerHTML = lowItems.map(r => {
+            const name = PRODUCT_NAMES[r.id] || `Product #${r.id}`;
+            const color = r.stock === 0 ? '#A32D2D' : '#854F0B';
+            const label = r.stock === 0 ? 'SOLD OUT' : `${r.stock} left`;
+            return `
+            <div style="display:flex;align-items:center;justify-content:space-between;
+                        background:#fff;border-radius:8px;padding:8px 14px;">
+                <span style="font-size:13px;font-weight:500;">${name}</span>
+                <span style="font-size:12px;font-weight:600;color:${color};">${label}</span>
+            </div>`;
+        }).join('');
+    } else {
+        banner.style.display = 'none';
+        list.innerHTML = '';
+    }
 }
 
 function filterStock(q) {
