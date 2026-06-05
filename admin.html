@@ -347,8 +347,20 @@
         </div>
 
         <!-- ── STOCK PANEL ── -->
-        <div class="panel" id="panel-stock">
-            <div class="table-wrap">
+        <!-- ── STOCK PANEL ── -->
+<div class="panel" id="panel-stock">
+
+    <!-- Low stock alert banner -->
+    <div id="low-stock-banner" style="display:none;margin-bottom:16px;">
+        <div style="background:#FCEBEB;border:1px solid #f5c6c6;border-radius:12px;padding:16px 20px;">
+            <div style="font-size:13px;font-weight:600;color:#A32D2D;margin-bottom:10px;">
+                ⚠️ Low Stock Alert — These products need restocking
+            </div>
+            <div id="low-stock-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+        </div>
+    </div>
+
+    <div class="table-wrap">
                 <div class="table-header">
                     <span class="table-title">Stock Management</span>
                     <input class="table-search" type="text" placeholder="Search product…" oninput="filterStock(this.value)">
