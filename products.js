@@ -19,7 +19,7 @@ const PAYSTACK_PUBLIC_KEY = 'pk_test_REPLACE_WITH_YOUR_PAYSTACK_PUBLIC_KEY';
 //     Paste your Project URL and anon/public key from Supabase → Settings → API
 // ══════════════════════════════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://noomrucdhechdsfhoxzr.supabase.co'; // ← your Project URL
-const SUPABASE_ANON_KEY = 'sb_publishable_fAKvuWjKpJTZiJmJpbIugw_sekP1mqU';        // ← your anon key
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vb21ydWNkaGVjaGRzZmhveHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NDkzODYsImV4cCI6MjA5NjAyNTM4Nn0.oq8L6VoFUTiDVZ-nSaISDotGUSSv0nvaWTep3A1cobU';        // ← your anon key
 // ══════════════════════════════════════════════════════════════════════════════
 // 🚚  DELIVERY ZONES
 // ══════════════════════════════════════════════════════════════════════════════
