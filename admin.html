@@ -521,12 +521,14 @@ function renderOrders(orders) {
             <td class="items-cell">${items}</td>
             <td style="white-space:nowrap;font-weight:500;">₦${(o.total || 0).toLocaleString()}</td>
             <td>
-                <select class="status-badge status-${o.status}" onchange="updateStatus(${o.id}, this.value, this)">
-                    <option value="paid"      ${o.status==='paid'      ? 'selected':''}>Paid</option>
-                    <option value="shipped"   ${o.status==='shipped'   ? 'selected':''}>Shipped</option>
-                    <option value="delivered" ${o.status==='delivered' ? 'selected':''}>Delivered</option>
-                    <option value="cancelled" ${o.status==='cancelled' ? 'selected':''}>Cancelled</option>
-                </select>
+              <select class="status-badge status-${o.status}" onchange="updateStatus(${o.id}, this.value, this)">
+    <option value="paid"         ${o.status==='paid'         ? 'selected':''}>Paid</option>
+    <option value="pending_bank" ${o.status==='pending_bank' ? 'selected':''}>Pending Bank</option>
+    <option value="whatsapp"     ${o.status==='whatsapp'     ? 'selected':''}>WhatsApp</option>
+    <option value="shipped"      ${o.status==='shipped'      ? 'selected':''}>Shipped</option>
+    <option value="delivered"    ${o.status==='delivered'    ? 'selected':''}>Delivered</option>
+    <option value="cancelled"    ${o.status==='cancelled'    ? 'selected':''}>Cancelled</option>
+</select>
             </td>
         </tr>`;
     }).join('');
