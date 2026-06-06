@@ -571,6 +571,22 @@
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
+    <div id="success-modal" class="modal">
+    <div class="modal-content">
+        <div style="text-align:center;padding:20px 0 10px;">🎉</div>
+        <h2 style="text-align:center;margin-bottom:6px;">Order Placed!</h2>
+        <p style="text-align:center;color:#888;font-size:13px;margin-bottom:16px;">
+            Thank you for shopping with WearTee.ng
+        </p>
+        <div id="order-ref-display" style="text-align:center;font-family:monospace;background:#f5f3ef;padding:10px;border-radius:8px;margin-bottom:16px;"></div>
+        <div id="success-summary"></div>
+        <div id="success-method-msg" style="margin-top:12px;"></div>
+        <button onclick="closeSuccess()" style="width:100%;margin-top:16px;padding:14px;background:#1a1a1a;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;">
+            Continue Shopping
+        </button>
+    </div>
+</div>
+
     <script src="products.js"></script>
 </body>
 
