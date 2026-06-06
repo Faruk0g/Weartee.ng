@@ -1,99 +1,79 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// WearTee.ng — products.js  (fixed & improved)
-// Fixes: WhatsApp encoding, cart hydration, stale zone, stock guard,
-//        duplicate keyword, image name mismatches noted, input sanitization,
-//        goStep sequential validation, address field guard
+// WearTee.ng — products.js (streamlined checkout + all 3 payment methods)
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ══════════════════════════════════════════════════════════════════════════════
 // 🔑  PAYSTACK CONFIG
-//     1. Sign up free at https://paystack.com
-//     2. Go to Settings → API Keys & Webhooks
-//     3. Copy your PUBLIC key and paste below (starts with "pk_live_" or "pk_test_")
-//     ⚠️  IMPORTANT: Always verify payment on your backend using Paystack's
-//         /transaction/verify/:reference endpoint before fulfilling any order.
 // ══════════════════════════════════════════════════════════════════════════════
 const PAYSTACK_PUBLIC_KEY = 'pk_test_REPLACE_WITH_YOUR_PAYSTACK_PUBLIC_KEY';
+
 // ══════════════════════════════════════════════════════════════════════════════
 // 🗄️  SUPABASE CONFIG
-//     Paste your Project URL and anon/public key from Supabase → Settings → API
 // ══════════════════════════════════════════════════════════════════════════════
-const SUPABASE_URL = 'https://noomrucdhechdsfhoxzr.supabase.co'; // ← your Project URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vb21ydWNkaGVjaGRzZmhveHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NDkzODYsImV4cCI6MjA5NjAyNTM4Nn0.oq8L6VoFUTiDVZ-nSaISDotGUSSv0nvaWTep3A1cobU';        // ← your anon key
+const SUPABASE_URL      = 'https://noomrucdhechdsfhoxzr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vb21ydWNkaGVjaGRzZmhveHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NDkzODYsImV4cCI6MjA5NjAyNTM4Nn0.oq8L6VoFUTiDVZ-nSaISDotGUSSv0nvaWTep3A1cobU';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// 🏦  BANK DETAILS (shown to buyer when they select Manual Bank Transfer)
+// ══════════════════════════════════════════════════════════════════════════════
+const BANK_DETAILS = {
+    bank:    'Moniepoint',
+    account: '6650194873',
+    name:    'Olowoeyo Fatima Bukola',
+};
+
 // ══════════════════════════════════════════════════════════════════════════════
 // 🚚  DELIVERY ZONES
 // ══════════════════════════════════════════════════════════════════════════════
 const DELIVERY_ZONES = [
     {
-        name: 'Lagos',
-        fee: 3000,
-        keywords: ['lagos', 'ikeja', 'lekki', 'ajah', 'victoria island', 'vi', 'surulere',
-            'yaba', 'mainland', 'island', 'mushin', 'oshodi', 'festac', 'agege',
-            'ojodu', 'berger', 'magodo', 'gbagada', 'maryland', 'ikorodu',
-            'badagry', 'epe', 'alimosho', 'iyana', 'ojota', 'mile 12',
-            'mile12', 'ketu', 'kosofe', 'ojo', 'apapa', 'amuwo', 'abule egba',
-            'ibeju', 'sangotedo', 'chevron', 'idumota', 'balogun'],
+        name: 'Lagos', fee: 3000,
+        keywords: ['lagos','ikeja','lekki','ajah','victoria island','vi','surulere',
+            'yaba','mainland','island','mushin','oshodi','festac','agege',
+            'ojodu','berger','magodo','gbagada','maryland','ikorodu',
+            'badagry','epe','alimosho','iyana','ojota','mile 12',
+            'mile12','ketu','kosofe','ojo','apapa','amuwo','abule egba',
+            'ibeju','sangotedo','chevron','idumota','balogun'],
     },
     {
-        name: 'Ilorin',
-        fee: 2500,
-        keywords: ['ilorin', 'kwara', 'gra ilorin', 'tanke', 'fate', 'maraba',
-            'amilegbe', 'oloje', 'pakata', 'balogun fulani', 'sawmill'],
+        name: 'Ilorin', fee: 2500,
+        keywords: ['ilorin','kwara','gra ilorin','tanke','fate','maraba',
+            'amilegbe','oloje','pakata','balogun fulani','sawmill'],
     },
     {
-        name: 'Abuja',
-        fee: 5000,
-        keywords: ['abuja', 'fct', 'garki', 'wuse', 'maitama', 'asokoro', 'gwarinpa',
-            'kubwa', 'nyanya', 'gwagwalada', 'kuje', 'bwari', 'jabi',
-            'lugbe', 'lokogoma', 'apo', 'gudu', 'life camp', 'lifecamp'],
+        name: 'Abuja', fee: 5000,
+        keywords: ['abuja','fct','garki','wuse','maitama','asokoro','gwarinpa',
+            'kubwa','nyanya','gwagwalada','kuje','bwari','jabi',
+            'lugbe','lokogoma','apo','gudu','life camp','lifecamp'],
     },
     {
-        name: 'Port Harcourt',
-        fee: 5000,
-        keywords: ['port harcourt', 'portharcourt', 'ph', 'rivers', 'rumuola',
-            'rumuokwuta', 'diobu', 'ada george', 'trans-amadi',
-            'elekahia', 'gra ph'],
+        name: 'Port Harcourt', fee: 5000,
+        keywords: ['port harcourt','portharcourt','ph','rivers','rumuola',
+            'rumuokwuta','diobu','ada george','trans-amadi','elekahia','gra ph'],
     },
     {
-        name: 'Ibadan',
-        fee: 4000,
-        keywords: ['ibadan', 'oyo', 'bodija', 'ui', 'challenge', 'ring road',
-            'mokola', 'agodi', 'felele', 'dugbe', 'ojoo', 'apata'],
+        name: 'Ibadan', fee: 4000,
+        keywords: ['ibadan','oyo','bodija','ui','challenge','ring road',
+            'mokola','agodi','felele','dugbe','ojoo','apata'],
+    },
+    { name: 'Kano', fee: 5500, keywords: ['kano','sabon gari','bompai','nassarawa','fagge'] },
+    {
+        name: 'Enugu', fee: 5000,
+        keywords: ['enugu','independence layout','new haven','trans ekulu','abakpa','emene','uwani'],
     },
     {
-        name: 'Kano',
-        fee: 5500,
-        keywords: ['kano', 'sabon gari', 'bompai', 'nassarawa', 'fagge'],
+        name: 'Benin City', fee: 5000,
+        keywords: ['benin','benin city','edo','upper sakponba','ugbowo','uselu','new benin','ikpoba'],
     },
     {
-        name: 'Enugu',
-        fee: 5000,
-        keywords: ['enugu', 'independence layout', 'new haven', 'trans ekulu',
-            'abakpa', 'emene', 'uwani'],
+        name: 'Warri', fee: 5000,
+        keywords: ['warri','delta','effurun','ughelli','sapele','asaba'],
     },
     {
-        name: 'Benin City',
-        fee: 5000,
-        keywords: ['benin', 'benin city', 'edo', 'upper sakponba', 'ugbowo',
-            'uselu', 'new benin', 'ikpoba'],
+        name: 'Ogun', fee: 4000,
+        keywords: ['ogun','abeokuta','sagamu','ijebu ode','ota','sango','mowe','ofada','ifo','agbara'],
     },
-    {
-        name: 'Warri',
-        fee: 5000,
-        keywords: ['warri', 'delta', 'effurun', 'ughelli', 'sapele', 'asaba'],
-    },
-    {
-        name: 'Ogun',
-        fee: 4000,
-        keywords: ['ogun', 'abeokuta', 'sagamu', 'ijebu ode', 'ota', 'sango',
-            'mowe', 'ofada', 'ifo', 'agbara'],
-    },
-    // Catch-all for every other Nigerian location (must remain last)
-    {
-        name: 'Other States (Nationwide)',
-        fee: 6000,
-        keywords: [],
-    },
+    { name: 'Other States (Nationwide)', fee: 6000, keywords: [] },
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -133,10 +113,7 @@ const PRODUCTS = [
     { name: "Short Basic Top (Pink)", price: 10000, img: "images/Short Basic Top(pink).JPG", stock: 0, cat: "basic tops", isNew: true },
     { name: "U-Neck Basic Top", price: 9000, img: "images/U NEck Basic Top.JPG", stock: 1, cat: "basic tops", isNew: true },
     { name: "V-Neck Short Sleeve Basic Top (Yellow)", price: 9000, img: "images/Yellow V-neck Short Sleeve Basic Top.JPG", stock: 1, cat: "basic tops", isNew: true },
-
     // TEES
-    // NOTE: "Jerry Graphics Tee" and "Tom & Jerry Round Neck Tee" were pointing to
-    // Mickey image files. Filenames kept as-is — update if your actual files differ.
     { name: "Black Graphic Tee", price: 10000, img: "images/Black Graphics Tee.JPG", stock: 0, cat: "tee", isNew: true },
     { name: "Black Plain Tee", price: 9500, img: "images/Black Plain Tee.JPG", stock: 1, cat: "tee", isNew: true },
     { name: "Black Tee (Style 1)", price: 10000, img: "images/Black Tee.JPG", stock: 1, cat: "tee", isNew: true },
@@ -160,7 +137,6 @@ const PRODUCTS = [
     { name: "Tom & Jerry Round Neck Tee", price: 15000, img: "images/Mickey Round Neck Tee.JPG", stock: 0, cat: "tee", isNew: true },
     { name: "White Button-Up Shirt", price: 15000, img: "images/White Button-up Shirt.JPG", stock: 1, cat: "tee", isNew: true },
     { name: "White Plain Tee", price: 10000, img: "images/White Plain Tee.JPG", stock: 0, cat: "tee", isNew: true },
-
     // SNAPBACKS
     { name: "Black Strapless Cap (Style 1)", price: 15000, img: "images/Black Strapless Cap.JPG", stock: 1, cat: "snapback", isNew: true },
     { name: "Black Strapless Cap (Style 2)", price: 15000, img: "images/Black Strapless Cap (2).JPG", stock: 1, cat: "snapback", isNew: true },
@@ -169,12 +145,10 @@ const PRODUCTS = [
     { name: "Blue Strapless Cap (Style 2)", price: 15000, img: "images/Blue Strapless Cap (2).JPG", stock: 1, cat: "snapback", isNew: true },
     { name: "Cream Strapless Cap", price: 15000, img: "images/Cream Strapless Cap.JPG", stock: 1, cat: "snapback", isNew: true },
     { name: "Green Strapless Cap", price: 15000, img: "images/Green Strapless Cap.JPG", stock: 1, cat: "snapback", isNew: true },
-
     // JOGGERS
     { name: "Blue Velvet Joggers", price: 15000, img: "images/Blue Velvet Joggers.JPG", stock: 0, cat: "joggers", isNew: true },
     { name: "Brown Velvet Joggers", price: 15000, img: "images/Brown Velvet Joggers.JPG", stock: 0, cat: "joggers", isNew: true },
     { name: "Velvet Joggers (Burgundy)", price: 15000, img: "images/Velvet Joggers(burgundy).JPG", stock: 1, cat: "joggers", isNew: true },
-
     // PANTS
     { name: "Blue Wide Leg Pant", price: 9000, img: "images/Blue Wide Leg Pant.JPG", stock: 1, cat: "pant", isNew: true },
     { name: "Linen Free Pant (Black)", price: 9000, img: "images/Linen Free Pant(black).JPG", stock: 1, cat: "pant", isNew: true },
@@ -191,11 +165,11 @@ const PRODUCTS = [
 ];
 
 const SIZES_MAP = {
-    tee: ["S", "M", "L", "XL", "XXL"],
-    snapback: ["One Size"],
-    pant: ["S", "M", "L", "XL", "XXL"],
-    joggers: ["S", "M", "L", "XL", "XXL"],
-    "basic tops": ["S", "M", "L", "XL", "XXL"],
+    tee:          ["S","M","L","XL","XXL"],
+    snapback:     ["One Size"],
+    pant:         ["S","M","L","XL","XXL"],
+    joggers:      ["S","M","L","XL","XXL"],
+    "basic tops": ["S","M","L","XL","XXL"],
 };
 
 PRODUCTS.forEach((p, i) => { p.id = i; });
@@ -203,8 +177,6 @@ PRODUCTS.forEach((p, i) => { p.id = i; });
 // ══════════════════════════════════════════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════════════════════════════════════════
-// FIX: Rehydrate cart from PRODUCTS on load so price/name changes are reflected.
-// We only persist { id, size, qty } in localStorage — not the full product object.
 function hydrateCart(saved) {
     return (saved || []).map(s => {
         const p = PRODUCTS.find(x => x.id === s.id);
@@ -214,26 +186,53 @@ function hydrateCart(saved) {
 }
 
 const _savedCart = JSON.parse(localStorage.getItem('wt_cart2')) || [];
-let cart = hydrateCart(_savedCart);
+let cart          = hydrateCart(_savedCart);
 let selectedSizes = {};
 let activeCategory = 'all';
-let searchQuery = '';
-let checkoutStep = 1;
-let deliveryFee = 0;
-let deliveryName = 'Pickup';
-let detectedZone = null;
-let paymentMethod = 'card';
+let searchQuery    = '';
+let deliveryFee    = 0;
+let deliveryName   = 'Pickup';
+let detectedZone   = null;
+let paymentMethod  = 'card';
 let checkoutOrderRef = '';
 
 // ══════════════════════════════════════════════════════════════════════════════
 // HELPERS
 // ══════════════════════════════════════════════════════════════════════════════
-
-// FIX: Sanitize user input before inserting into messages or metadata.
-// Strips WhatsApp markdown characters and trims whitespace.
 function sanitize(str) {
     if (!str) return '';
     return String(str).replace(/[*_~`]/g, '').trim();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// 🗄️  SAVE ORDER TO SUPABASE (used by all 3 payment methods)
+// ══════════════════════════════════════════════════════════════════════════════
+async function saveOrderToSupabase(ref, status, locationVal) {
+    try {
+        const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+        const total    = subtotal + deliveryFee;
+        await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+            method:  'POST',
+            headers: {
+                apikey:         SUPABASE_ANON_KEY,
+                Authorization:  `Bearer ${SUPABASE_ANON_KEY}`,
+                'Content-Type': 'application/json',
+                Prefer:         'return=minimal',
+            },
+            body: JSON.stringify({
+                ref:          ref,
+                location:     locationVal || 'Not provided',
+                zone:         deliveryName,
+                items:        cart.map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty, price: i.price })),
+                subtotal:     subtotal,
+                delivery_fee: deliveryFee,
+                total:        total,
+                status:       status,
+            }),
+        });
+    } catch (err) {
+        console.warn('Could not save order to Supabase:', err);
+    }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -250,62 +249,116 @@ function detectZone(locationText) {
 }
 
 function onLocationInput() {
-    const val = document.getElementById('f-location').value;
+    const val     = document.getElementById('f-location').value;
     const preview = document.getElementById('delivery-fee-preview');
-    const zone = detectZone(val);
+    const payBtn  = document.getElementById('pay-now-btn');
+    const zone    = detectZone(val);
 
     if (!val.trim()) {
         detectedZone = null;
-        deliveryFee = 0;
+        deliveryFee  = 0;
         deliveryName = 'Unknown';
-        preview.innerHTML = '';
+        preview.innerHTML   = '';
+        if (payBtn) payBtn.disabled = true;
         return;
     }
 
     detectedZone = zone;
-    deliveryFee = zone.fee;
+    deliveryFee  = zone.fee;
     deliveryName = zone.name;
 
+    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    const total    = subtotal + deliveryFee;
+
     preview.innerHTML = `
-        <div class="fee-pill ${zone.fee === 0 ? 'free' : ''}">
+        <div class="fee-pill">
             <span class="fee-location">📍 ${zone.name}</span>
             <span class="fee-amount">${zone.fee === 0 ? 'FREE' : '₦' + zone.fee.toLocaleString()} delivery</span>
         </div>
+        <div class="fee-total">Total: <strong>₦${total.toLocaleString()}</strong></div>
     `;
+    if (payBtn) payBtn.disabled = false;
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// 💳  PAYSTACK PAYMENT
+// 🛒  CHECKOUT — streamlined: location → payment method → done
 // ══════════════════════════════════════════════════════════════════════════════
+function openCheckout() {
+    if (!cart.length) { showToast("Your cart is empty"); return; }
+    closeCart();
+
+    // Reset state
+    document.getElementById('f-location').value        = '';
+    document.getElementById('delivery-fee-preview').innerHTML = '';
+    detectedZone  = null;
+    deliveryFee   = 0;
+    deliveryName  = 'Pickup';
+    paymentMethod = 'card';
+
+    // Reset payment method selection UI
+    document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+    const cardOption = document.querySelector('.pay-option[data-method="card"]');
+    if (cardOption) cardOption.classList.add('selected');
+
+    const payBtn = document.getElementById('pay-now-btn');
+    if (payBtn) payBtn.disabled = true;
+
+    document.getElementById('checkout-modal').classList.add('show');
+    document.getElementById('overlay').classList.add('show');
+}
+
+function closeCheckout() {
+    document.getElementById('checkout-modal').classList.remove('show');
+    document.getElementById('overlay').classList.remove('show');
+}
+
+function selectPayment(el, method) {
+    document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    paymentMethod = method;
+
+    // Update button text
+    const btn = document.getElementById('pay-now-btn');
+    if (!btn) return;
+    if (method === 'card')     btn.textContent = 'Pay with Card / Bank →';
+    else if (method === 'bank') btn.textContent = 'Get Bank Details →';
+    else                        btn.textContent = 'Order via WhatsApp →';
+}
+
+function placeOrder() {
+    // Validate location first
+    const locVal    = sanitize(document.getElementById('f-location').value);
+    const freshZone = detectZone(locVal);
+
+    if (!locVal) {
+        showToast('Please enter your delivery location');
+        document.getElementById('f-location').focus();
+        return;
+    }
+    if (!freshZone) {
+        showToast("We couldn't detect your zone. Please be more specific.");
+        return;
+    }
+
+    detectedZone = freshZone;
+    deliveryFee  = freshZone.fee;
+    deliveryName = freshZone.name;
+
+    if (paymentMethod === 'card')     { initiatePaystackPayment(locVal); return; }
+    if (paymentMethod === 'bank')     { handleBankTransfer(locVal);      return; }
+    if (paymentMethod === 'whatsapp') { handleWhatsAppOrder(locVal);     return; }
+}
+
+// ── 1. PAYSTACK ───────────────────────────────────────────────────────────────
 function loadPaystackScript(cb) {
     if (window.PaystackPop) { cb(); return; }
-    const s = document.createElement('script');
-    s.src = 'https://js.paystack.co/v1/inline.js';
+    const s  = document.createElement('script');
+    s.src    = 'https://js.paystack.co/v1/inline.js';
     s.onload = cb;
     document.head.appendChild(s);
 }
 
-function initiatePaystackPayment() {
-    const name  = sanitize(document.getElementById('f-name').value);
-    const email = sanitize(document.getElementById('f-email').value);
-    const phone = sanitize(document.getElementById('f-phone').value);
-
-    if (!email) {
-        showToast('Please enter your email address for payment receipt');
-        goStep(1);
-        setTimeout(() => document.getElementById('f-email').focus(), 300);
-        return;
-    }
-
-    // FIX: Re-derive zone fresh from the current field value before charging.
-    const locVal = document.getElementById('f-location').value;
-    const freshZone = detectZone(locVal);
-    if (freshZone) {
-        detectedZone = freshZone;
-        deliveryFee  = freshZone.fee;
-        deliveryName = freshZone.name;
-    }
-
+function initiatePaystackPayment(locVal) {
     const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
     const total    = subtotal + deliveryFee;
     const ref      = 'WT-' + Date.now();
@@ -314,52 +367,45 @@ function initiatePaystackPayment() {
     loadPaystackScript(() => {
         const handler = PaystackPop.setup({
             key:      PAYSTACK_PUBLIC_KEY,
-            email:    email,
-            amount:   total * 100,  // kobo
+            email:    'orders@weartee.ng',
+            amount:   total * 100,
             currency: 'NGN',
             ref:      ref,
             metadata: {
                 custom_fields: [
-                    { display_name: 'Customer Name',  variable_name: 'name',  value: name },
-                    { display_name: 'Phone',          variable_name: 'phone', value: phone },
-                    { display_name: 'Delivery Zone',  variable_name: 'zone',  value: deliveryName },
-                    { display_name: 'Items',          variable_name: 'items', value: cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(', ') },
+                    { display_name: 'Delivery Zone',     variable_name: 'zone',     value: deliveryName },
+                    { display_name: 'Delivery Location', variable_name: 'location', value: locVal },
+                    { display_name: 'Items',             variable_name: 'items',    value: cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(', ') },
                 ]
             },
-           callback: async function (response) {
-    // Show a verifying message while we confirm with our backend
-    showToast('Verifying payment... please wait');
-
-    try {
-        const verify = await fetch('https://weartee-ng.vercel.app/api/verify-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                reference: response.reference,
-                cartItems: cart.map(i => ({ id: i.id, qty: i.qty }))
-            })
-        });
-
-        const result = await verify.json();
-
-        if (!verify.ok || !result.ok) {
-            // Payment could not be confirmed
-            showToast('Payment could not be verified. Please contact us with ref: ' + response.reference);
-            return;
-        }
-
-        // Payment confirmed by backend — now safe to clear cart and show success
-        checkoutOrderRef = response.reference;
-        document.getElementById('order-ref-display').textContent = `Order Ref: ${response.reference}`;
-        cart = []; saveCart(); updateCartUI();
-        goStep('success');
-        showToast('Payment successful! 🎉');
-
-    } catch (err) {
-        console.error('Verification error:', err);
-        showToast('Network error during verification. Please contact us with ref: ' + response.reference);
-    }
-},
+            callback: async function (response) {
+                showToast('Verifying payment... please wait');
+                try {
+                    const verify = await fetch('https://weartee-ng.vercel.app/api/verify-payment', {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            reference:   response.reference,
+                            cartItems:   cart.map(i => ({ id: i.id, qty: i.qty, price: i.price, name: i.name, size: i.size })),
+                            location:    locVal,
+                            zone:        deliveryName,
+                            deliveryFee: deliveryFee,
+                        })
+                    });
+                    const result = await verify.json();
+                    if (!verify.ok || !result.ok) {
+                        showToast('Payment could not be verified. Contact us with ref: ' + response.reference);
+                        return;
+                    }
+                    checkoutOrderRef = response.reference;
+                    showSuccessScreen(response.reference, 'card', locVal);
+                    cart = []; saveCart(); updateCartUI();
+                    showToast('Payment successful! 🎉');
+                } catch (err) {
+                    console.error('Verification error:', err);
+                    showToast('Network error. Contact us with ref: ' + response.reference);
+                }
+            },
             onClose: function () {
                 showToast('Payment cancelled. You can try again.');
             }
@@ -368,15 +414,140 @@ function initiatePaystackPayment() {
     });
 }
 
+// ── 2. BANK TRANSFER ──────────────────────────────────────────────────────────
+async function handleBankTransfer(locVal) {
+    const ref        = 'WT-' + Date.now().toString().slice(-6);
+    checkoutOrderRef = ref;
+
+    // Save to admin as pending_bank
+    await saveOrderToSupabase(ref, 'pending_bank', locVal);
+
+    // Notify store owner via WhatsApp
+    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    const total    = subtotal + deliveryFee;
+    let msg = `New Bank Transfer Order — WearTee.ng\n`;
+    msg += `Ref: ${ref}\n`;
+    msg += `Location: ${locVal}\n`;
+    msg += `Zone: ${deliveryName}\n\n`;
+    msg += `Items:\n`;
+    cart.forEach(i => { msg += `- ${i.name} [${i.size}] x${i.qty}: ₦${(i.price * i.qty).toLocaleString()}\n`; });
+    msg += `\nDelivery: ${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}\n`;
+    msg += `Total: ₦${total.toLocaleString()}\n\n`;
+    msg += `Please send them your bank details and confirm payment.`;
+    window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
+
+    // Show success with bank details
+    showSuccessScreen(ref, 'bank', locVal);
+    cart = []; saveCart(); updateCartUI();
+}
+
+// ── 3. WHATSAPP ORDER ─────────────────────────────────────────────────────────
+async function handleWhatsAppOrder(locVal) {
+    const ref        = 'WT-' + Date.now().toString().slice(-6);
+    checkoutOrderRef = ref;
+
+    // Save to admin as whatsapp
+    await saveOrderToSupabase(ref, 'whatsapp', locVal);
+
+    // Open WhatsApp with full order details
+    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    const total    = subtotal + deliveryFee;
+    let msg = `New Order — WearTee.ng\n`;
+    msg += `Ref: ${ref}\n`;
+    msg += `Location: ${locVal}\n`;
+    msg += `Zone: ${deliveryName}\n\n`;
+    msg += `Items:\n`;
+    cart.forEach(i => { msg += `- ${i.name} [${i.size}] x${i.qty}: ₦${(i.price * i.qty).toLocaleString()}\n`; });
+    msg += `\nDelivery: ${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}\n`;
+    msg += `Total: ₦${total.toLocaleString()}\n\n`;
+    msg += `Payment: WhatsApp Order`;
+    window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
+
+    showSuccessScreen(ref, 'whatsapp', locVal);
+    cart = []; saveCart(); updateCartUI();
+}
+
+// ── SUCCESS SCREEN ────────────────────────────────────────────────────────────
+function showSuccessScreen(ref, method, locVal) {
+    closeCheckout();
+
+    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
+    const total    = subtotal + deliveryFee;
+
+    // Build method-specific message
+    let methodMsg = '';
+    if (method === 'card') {
+        methodMsg = `<div style="background:#EAF3DE;border-radius:10px;padding:14px;text-align:center;font-size:13px;color:#3B6D11;">
+            ✅ Payment confirmed! Your order is being processed.
+        </div>`;
+    } else if (method === 'bank') {
+        methodMsg = `<div style="background:#E6F1FB;border-radius:10px;padding:16px;font-size:13px;">
+            <div style="font-weight:600;margin-bottom:10px;color:#185FA5;">🏦 Bank Transfer Details</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;justify-content:space-between;"><span>Bank</span><strong>${BANK_DETAILS.bank}</strong></div>
+                <div style="display:flex;justify-content:space-between;"><span>Account Number</span><strong>${BANK_DETAILS.account}</strong></div>
+                <div style="display:flex;justify-content:space-between;"><span>Account Name</span><strong>${BANK_DETAILS.name}</strong></div>
+                <div style="display:flex;justify-content:space-between;"><span>Amount</span><strong>₦${total.toLocaleString()}</strong></div>
+            </div>
+            <div style="margin-top:10px;font-size:12px;color:#185FA5;">
+                After payment, send your proof of payment to our WhatsApp and we'll confirm your order.
+            </div>
+        </div>`;
+    } else {
+        methodMsg = `<div style="background:#EAF3DE;border-radius:10px;padding:14px;text-align:center;font-size:13px;color:#3B6D11;">
+            ✅ Your order has been sent to our WhatsApp. We'll confirm shortly!
+        </div>`;
+    }
+
+    // Build order summary
+    const summaryHTML = `
+        <div style="background:#f5f3ef;border-radius:10px;padding:14px;margin-bottom:12px;">
+            <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Order Summary</div>
+            ${cart.map(i => `
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+                    <span>${i.name} (${i.size}) ×${i.qty}</span>
+                    <span>₦${(i.price * i.qty).toLocaleString()}</span>
+                </div>`).join('')}
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
+                <span>Delivery (${deliveryName})</span>
+                <span>${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600;border-top:1px solid #e8e4dc;padding-top:8px;margin-top:8px;">
+                <span>Total</span><span>₦${total.toLocaleString()}</span>
+            </div>
+        </div>
+    `;
+
+    const successModal = document.getElementById('success-modal');
+    const refEl        = document.getElementById('order-ref-display');
+    const summaryEl    = document.getElementById('success-summary');
+    const methodEl     = document.getElementById('success-method-msg');
+
+    if (refEl)     refEl.textContent  = `Order Ref: ${ref}`;
+    if (summaryEl) summaryEl.innerHTML = summaryHTML;
+    if (methodEl)  methodEl.innerHTML  = methodMsg;
+
+    if (successModal) {
+        successModal.classList.add('show');
+        document.getElementById('overlay').classList.add('show');
+    }
+}
+
+function closeSuccess() {
+    const m = document.getElementById('success-modal');
+    if (m) m.classList.remove('show');
+    document.getElementById('overlay').classList.remove('show');
+}
+
 // ══════════════════════════════════════════════════════════════════════════════
 // PRODUCT DETAIL MODAL
 // ══════════════════════════════════════════════════════════════════════════════
 function openProductDetail(id) {
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
-    const sizes    = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
+    const sizes    = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
     const soldOut  = p.stock === 0;
-    const lowStock = p.stock > 0 && p.stock <= 5;
+    const lowStock = p.stock > 0 && p.stock <= 3;
     const selSize  = selectedSizes[p.id] || sizes[0];
     const modal    = document.getElementById('product-detail-modal');
     const content  = document.getElementById('pd-content');
@@ -461,10 +632,9 @@ function addToCartFromDetail(id) {
 function orderViaWhatsAppDirect(id) {
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
-    const sizes = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
+    const sizes = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
     const size  = sizes.length === 1 ? sizes[0] : (selectedSizes[id] || sizes[0]);
-    // FIX: Use encodeURIComponent for the full message — no manual %0A mixing.
-    const msg = `Enquiry from WearTee.ng\n\nProduct: ${p.name}\nSize: ${size}\nPrice: ₦${p.price.toLocaleString()}\n\nI'd like to order this item.`;
+    const msg   = `Enquiry from WearTee.ng\n\nProduct: ${p.name}\nSize: ${size}\nPrice: ₦${p.price.toLocaleString()}\n\nI'd like to order this item.`;
     window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -494,15 +664,15 @@ function renderProducts() {
 
     grid.innerHTML = filtered.map(p => {
         const soldOut  = p.stock === 0;
-        const lowStock = p.stock > 0 && p.stock <= 5;
-        const sizes    = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
+        const lowStock = p.stock > 0 && p.stock <= 3;
+        const sizes    = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
         const selSize  = selectedSizes[p.id] || sizes[0];
 
         return `
         <div class="card${soldOut ? ' disabled' : ''}">
             <div class="img-box" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
                 ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
-                ${!p.isNew && lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
+                ${lowStock && !soldOut ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
                 ${soldOut ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
                 <img src="${p.img}" alt="${p.name}" loading="lazy"
                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
@@ -539,7 +709,7 @@ function selectSize(id, size) {
 function addToCart(id) {
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
-    const sizes  = SIZES_MAP[p.cat] || ["S", "M", "L", "XL", "XXL"];
+    const sizes  = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
     const size   = sizes.length === 1 ? sizes[0] : (selectedSizes[id] || sizes[0]);
     const inCart = cart.filter(i => i.id === id && i.size === size).reduce((a, b) => a + b.qty, 0);
 
@@ -549,50 +719,31 @@ function addToCart(id) {
     }
 
     const item = cart.find(i => i.id === id && i.size === size);
-    if (item) {
-        item.qty++;
-    } else {
-        cart.push({ ...p, size, qty: 1 });
-    }
-
-    saveCart();
-    updateCartUI();
-    openCart();
+    if (item) { item.qty++; } else { cart.push({ ...p, size, qty: 1 }); }
+    saveCart(); updateCartUI(); openCart();
     showToast(`${p.name.toUpperCase()} added ✓`);
 }
 
 function removeFromCart(id, size) {
     cart = cart.filter(i => !(i.id === id && i.size === size));
-    saveCart();
-    updateCartUI();
+    saveCart(); updateCartUI();
 }
 
 function changeQty(id, size, delta) {
     const item = cart.find(i => i.id === id && i.size === size);
     if (!item) return;
     item.qty += delta;
-    if (item.qty <= 0) {
-        removeFromCart(id, size);
-    } else {
-        saveCart();
-        updateCartUI();
-    }
+    if (item.qty <= 0) removeFromCart(id, size);
+    else { saveCart(); updateCartUI(); }
 }
 
 function clearCart() {
     if (!cart.length) return;
-    if (confirm("Clear all items?")) {
-        cart = [];
-        saveCart();
-        updateCartUI();
-    }
+    if (confirm("Clear all items?")) { cart = []; saveCart(); updateCartUI(); }
 }
 
-// FIX: Only persist { id, size, qty } — not the full product object.
-// This ensures price/name changes in PRODUCTS are always reflected on reload.
 function saveCart() {
-    const slim = cart.map(i => ({ id: i.id, size: i.size, qty: i.qty }));
-    localStorage.setItem('wt_cart2', JSON.stringify(slim));
+    localStorage.setItem('wt_cart2', JSON.stringify(cart.map(i => ({ id: i.id, size: i.size, qty: i.qty }))));
 }
 
 function updateCartUI() {
@@ -635,148 +786,6 @@ function closeCart() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// CHECKOUT
-// ══════════════════════════════════════════════════════════════════════════════
-function openCheckout() {
-    if (!cart.length) { showToast("Your cart is empty"); return; }
-    closeCart();
-    document.getElementById('checkout-modal').classList.add('show');
-    document.getElementById('overlay').classList.add('show');
-    goStep(1);
-}
-function closeCheckout() {
-    document.getElementById('checkout-modal').classList.remove('show');
-    document.getElementById('overlay').classList.remove('show');
-}
-
-// FIX: Strict sequential validation — each step validates only when moving forward.
-// Going backward (lower step number) always succeeds with no validation.
-function goStep(n) {
-    const isForward = typeof n === 'number' && n > checkoutStep;
-
-    if (isForward) {
-        // Validate step 1 fields before moving to step 2 or beyond
-        if (checkoutStep === 1) {
-            const name  = document.getElementById('f-name').value.trim();
-            const phone = document.getElementById('f-phone').value.trim();
-            if (!name || !phone) {
-                showToast("Please fill in your name and phone number");
-                return;
-            }
-        }
-        // Validate step 2 fields before moving to step 3
-        if (checkoutStep === 2) {
-            const loc = document.getElementById('f-location').value.trim();
-            if (!loc) {
-                showToast("Please enter your delivery location");
-                return;
-            }
-            // Re-derive zone from current input value (prevents stale zone bug)
-            const freshZone = detectZone(loc);
-            if (!freshZone) {
-                showToast("We couldn't detect your zone. Please be more specific.");
-                return;
-            }
-            detectedZone = freshZone;
-            deliveryFee  = freshZone.fee;
-            deliveryName = freshZone.name;
-        }
-    }
-
-    checkoutStep = n;
-    document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
-    const sec = document.getElementById(n === 'success' ? 'step-success' : `step-${n}`);
-    if (sec) sec.classList.add('active');
-
-    document.querySelectorAll('.step').forEach((el, i) => {
-        el.classList.remove('active', 'done');
-        if (i + 1 < n)  el.classList.add('done');
-        if (i + 1 == n) el.classList.add('active');
-    });
-
-    if (n === 3) buildOrderSummary();
-
-    const titles = { 1: 'Your Details', 2: 'Delivery', 3: 'Review & Pay', success: 'Order Confirmed' };
-    document.getElementById('modal-title').textContent = titles[n] || 'Checkout';
-    if (n === 'success') document.getElementById('steps-ui').style.display = 'none';
-}
-
-function selectPayment(el, method) {
-    document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    paymentMethod = method;
-    const btn = document.getElementById('place-order-btn');
-    if (method === 'whatsapp')    btn.textContent = 'Open WhatsApp →';
-    else if (method === 'card')   btn.textContent = 'Pay with Card / Bank →';
-    else                          btn.textContent = 'Place Order →';
-}
-
-function buildOrderSummary() {
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total    = subtotal + deliveryFee;
-    const box      = document.getElementById('order-summary-box');
-    box.innerHTML  = `
-        <h4>Order Summary</h4>
-        ${cart.map(i => `<div class="os-item"><span>${i.name} (${i.size}) ×${i.qty}</span><span>₦${(i.price * i.qty).toLocaleString()}</span></div>`).join('')}
-        <div class="os-item"><span>Delivery (${deliveryName})</span><span>${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}</span></div>
-        <div class="os-total"><span>Total</span><span>₦${total.toLocaleString()}</span></div>
-    `;
-}
-
-function placeOrder() {
-    if (paymentMethod === 'card') {
-        initiatePaystackPayment();
-        return;
-    }
-    if (paymentMethod === 'whatsapp') {
-        sendWhatsApp();
-        return;
-    }
-    // Bank transfer / pay before delivery
-    checkoutOrderRef = 'WT-' + Date.now().toString().slice(-6);
-    document.getElementById('order-ref-display').textContent = `Order Ref: ${checkoutOrderRef}`;
-    cart = []; saveCart(); updateCartUI();
-    goStep('success');
-}
-
-// FIX: Full encodeURIComponent on the message — no manual %0A mixing.
-// FIX: Sanitize all user inputs before including in the message.
-// FIX: Safe guard for optional f-address field.
-function sendWhatsApp() {
-    const name     = sanitize(document.getElementById('f-name').value)     || 'Customer';
-    const phone    = sanitize(document.getElementById('f-phone').value)    || '';
-    const location = sanitize(document.getElementById('f-location').value) || 'Not specified';
-    const addrEl   = document.getElementById('f-address');
-    const addr     = addrEl ? sanitize(addrEl.value) : '';
-
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total    = subtotal + deliveryFee;
-    const ref      = checkoutOrderRef || ('WT-' + Date.now().toString().slice(-6));
-    checkoutOrderRef = ref;
-
-    let msg = `New Order from WearTee.ng\n`;
-    msg += `Ref: ${ref}\n\n`;
-    msg += `Customer: ${name}\n`;
-    msg += `Phone: ${phone}\n`;
-    msg += `Location: ${location}\n`;
-    msg += `Delivery Zone: ${deliveryName}\n`;
-    if (addr) msg += `Address: ${addr}\n`;
-    msg += `\nItems:\n`;
-    cart.forEach(i => {
-        msg += `- ${i.name} [${i.size}] x${i.qty}: ₦${(i.price * i.qty).toLocaleString()}\n`;
-    });
-    msg += `\nSubtotal: ₦${subtotal.toLocaleString()}\n`;
-    msg += `Delivery (${deliveryName}): ${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}\n`;
-    msg += `Total: ₦${total.toLocaleString()}\n\n`;
-    msg += `Payment: ${paymentMethod === 'bank' ? 'Bank Transfer' : paymentMethod === 'pod' ? 'Pay Before Delivery' : 'WhatsApp'}`;
-
-    window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
-    document.getElementById('order-ref-display').textContent = `Order Ref: ${ref}`;
-    cart = []; saveCart(); updateCartUI();
-    goStep('success');
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
 // SEARCH & FILTER
 // ══════════════════════════════════════════════════════════════════════════════
 document.getElementById('search-input').addEventListener('input', e => {
@@ -799,6 +808,7 @@ document.getElementById('overlay').addEventListener('click', () => {
     closeCart();
     closeCheckout();
     closeProductDetail();
+    closeSuccess();
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -812,37 +822,30 @@ function showToast(msg) {
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
 }
+
 // ══════════════════════════════════════════════════════════════════════════════
 // 🗄️  LIVE STOCK SYNC
 // ══════════════════════════════════════════════════════════════════════════════
 async function syncStockFromSupabase() {
     try {
-        const res = await fetch(
-            `${SUPABASE_URL}/rest/v1/products?select=id,stock`,
-            {
-                headers: {
-                    apikey: SUPABASE_ANON_KEY,
-                    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-                }
-            }
-        );
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=id,stock`, {
+            headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }
+        });
         if (!res.ok) throw new Error('Stock fetch failed');
         const rows = await res.json();
         rows.forEach(row => {
             const p = PRODUCTS.find(x => x.id === row.id);
             if (p) p.stock = row.stock;
         });
-        renderProducts(); // re-render with live stock numbers
+        renderProducts();
     } catch (err) {
         console.warn('Could not sync stock from Supabase:', err);
-        // Fails silently — page still works with the default stock values
     }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════════════════
-// INIT
 renderProducts();
 updateCartUI();
-syncStockFromSupabase(); // ← add this
+syncStockFromSupabase();
