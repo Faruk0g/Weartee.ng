@@ -434,17 +434,30 @@
                 </div>
 
                 <!-- Step 2: Delivery — location-based fee -->
-                <div class="form-section" id="step-2">
+               <!-- Location field -->
+<div class="form-group">
+    <label>Delivery Location</label>
+    <input type="text" id="f-location" placeholder="e.g. Lekki, Lagos" oninput="onLocationInput()" autocomplete="off">
+    <div id="delivery-fee-preview"></div>
+</div>
 
-                    <div class="form-row">
-                        <label>Your City / Area *</label>
-                        <input
-                            type="text"
-                            id="f-location"
-                            placeholder="e.g. Lekki Lagos, Tanke Ilorin, Wuse Abuja..."
-                            autocomplete="off"
-                            oninput="onLocationInput()"
-                        >
+<!-- Payment method selection -->
+<div class="pay-methods">
+    <div class="pay-option selected" data-method="card" onclick="selectPayment(this, 'card')">
+        <strong>Pay with Card / Bank Transfer</strong>
+        <span>Debit card, USSD, bank transfer — secured by Paystack</span>
+    </div>
+    <div class="pay-option" data-method="bank" onclick="selectPayment(this, 'bank')">
+        <strong>Manual Bank Transfer</strong>
+        <span>We'll show you our account details after</span>
+    </div>
+    <div class="pay-option" data-method="whatsapp" onclick="selectPayment(this, 'whatsapp')">
+        <strong>Order via WhatsApp</strong>
+        <span>Chat directly with us to complete your order</span>
+    </div>
+</div>
+
+<button id="pay-now-btn" onclick="placeOrder()" disabled>Pay with Card / Bank →</button>
                         <!-- Live delivery fee preview renders here -->
                         <div id="delivery-fee-preview"></div>
                     </div>
