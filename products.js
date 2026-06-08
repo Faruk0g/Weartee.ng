@@ -777,12 +777,10 @@ function updateCartUI() {
 }
 
 function openCart() {
-    document.getElementById('sidebar').classList.add('show');
-    document.getElementById('overlay').classList.add('show');
+    window.location.href = 'cart.html';
 }
 function closeCart() {
-    document.getElementById('sidebar').classList.remove('show');
-    document.getElementById('overlay').classList.remove('show');
+    // no sidebar anymore
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
