@@ -1,5 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// WearTee.ng — products.js (streamlined checkout + all 3 payment methods)
+// WearTee.ng — products.js
+// Product page only — cart lives in cart.html
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -14,66 +15,20 @@ const SUPABASE_URL      = 'https://noomrucdhechdsfhoxzr.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vb21ydWNkaGVjaGRzZmhveHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NDkzODYsImV4cCI6MjA5NjAyNTM4Nn0.oq8L6VoFUTiDVZ-nSaISDotGUSSv0nvaWTep3A1cobU';
 
 // ══════════════════════════════════════════════════════════════════════════════
-// 🏦  BANK DETAILS (shown to buyer when they select Manual Bank Transfer)
-// ══════════════════════════════════════════════════════════════════════════════
-const BANK_DETAILS = {
-    bank:    'Moniepoint',
-    account: '6650194873',
-    name:    'Olowoeyo Fatima Bukola',
-};
-
-// ══════════════════════════════════════════════════════════════════════════════
 // 🚚  DELIVERY ZONES
 // ══════════════════════════════════════════════════════════════════════════════
 const DELIVERY_ZONES = [
-    {
-        name: 'Lagos', fee: 3000,
-        keywords: ['lagos','ikeja','lekki','ajah','victoria island','vi','surulere',
-            'yaba','mainland','island','mushin','oshodi','festac','agege',
-            'ojodu','berger','magodo','gbagada','maryland','ikorodu',
-            'badagry','epe','alimosho','iyana','ojota','mile 12',
-            'mile12','ketu','kosofe','ojo','apapa','amuwo','abule egba',
-            'ibeju','sangotedo','chevron','idumota','balogun'],
-    },
-    {
-        name: 'Ilorin', fee: 2500,
-        keywords: ['ilorin','kwara','gra ilorin','tanke','fate','maraba',
-            'amilegbe','oloje','pakata','balogun fulani','sawmill'],
-    },
-    {
-        name: 'Abuja', fee: 5000,
-        keywords: ['abuja','fct','garki','wuse','maitama','asokoro','gwarinpa',
-            'kubwa','nyanya','gwagwalada','kuje','bwari','jabi',
-            'lugbe','lokogoma','apo','gudu','life camp','lifecamp'],
-    },
-    {
-        name: 'Port Harcourt', fee: 5000,
-        keywords: ['port harcourt','portharcourt','ph','rivers','rumuola',
-            'rumuokwuta','diobu','ada george','trans-amadi','elekahia','gra ph'],
-    },
-    {
-        name: 'Ibadan', fee: 4000,
-        keywords: ['ibadan','oyo','bodija','ui','challenge','ring road',
-            'mokola','agodi','felele','dugbe','ojoo','apata'],
-    },
-    { name: 'Kano', fee: 5500, keywords: ['kano','sabon gari','bompai','nassarawa','fagge'] },
-    {
-        name: 'Enugu', fee: 5000,
-        keywords: ['enugu','independence layout','new haven','trans ekulu','abakpa','emene','uwani'],
-    },
-    {
-        name: 'Benin City', fee: 5000,
-        keywords: ['benin','benin city','edo','upper sakponba','ugbowo','uselu','new benin','ikpoba'],
-    },
-    {
-        name: 'Warri', fee: 5000,
-        keywords: ['warri','delta','effurun','ughelli','sapele','asaba'],
-    },
-    {
-        name: 'Ogun', fee: 4000,
-        keywords: ['ogun','abeokuta','sagamu','ijebu ode','ota','sango','mowe','ofada','ifo','agbara'],
-    },
-    { name: 'Other States (Nationwide)', fee: 6000, keywords: [] },
+    { name:'Lagos',      fee:3000, keywords:['lagos','ikeja','lekki','ajah','victoria island','vi','surulere','yaba','mainland','island','mushin','oshodi','festac','agege','ojodu','berger','magodo','gbagada','maryland','ikorodu','badagry','epe','alimosho','iyana','ojota','mile 12','mile12','ketu','kosofe','ojo','apapa','amuwo','abule egba','ibeju','sangotedo','chevron','idumota','balogun'] },
+    { name:'Ilorin',     fee:2500, keywords:['ilorin','kwara','gra ilorin','tanke','fate','maraba','amilegbe','oloje','pakata','balogun fulani','sawmill'] },
+    { name:'Abuja',      fee:5000, keywords:['abuja','fct','garki','wuse','maitama','asokoro','gwarinpa','kubwa','nyanya','gwagwalada','kuje','bwari','jabi','lugbe','lokogoma','apo','gudu','life camp','lifecamp'] },
+    { name:'Port Harcourt', fee:5000, keywords:['port harcourt','portharcourt','ph','rivers','rumuola','rumuokwuta','diobu','ada george','trans-amadi','elekahia','gra ph'] },
+    { name:'Ibadan',     fee:4000, keywords:['ibadan','oyo','bodija','ui','challenge','ring road','mokola','agodi','felele','dugbe','ojoo','apata'] },
+    { name:'Kano',       fee:5500, keywords:['kano','sabon gari','bompai','nassarawa','fagge'] },
+    { name:'Enugu',      fee:5000, keywords:['enugu','independence layout','new haven','trans ekulu','abakpa','emene','uwani'] },
+    { name:'Benin City', fee:5000, keywords:['benin','benin city','edo','upper sakponba','ugbowo','uselu','new benin','ikpoba'] },
+    { name:'Warri',      fee:5000, keywords:['warri','delta','effurun','ughelli','sapele','asaba'] },
+    { name:'Ogun',       fee:4000, keywords:['ogun','abeokuta','sagamu','ijebu ode','ota','sango','mowe','ofada','ifo','agbara'] },
+    { name:'Other States (Nationwide)', fee:6000, keywords:[] },
 ];
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -81,87 +36,87 @@ const DELIVERY_ZONES = [
 // ══════════════════════════════════════════════════════════════════════════════
 const PRODUCTS = [
     // BASIC TOPS
-    { name: "Asymmetric Pleated Top (Black)", price: 12000, img: "images/Asymmetric Pleated Top(black).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Asymmetric Pleated Top (Red)", price: 12000, img: "images/Asymmetric Pleated Top(red).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Backless Top (Black)", price: 10000, img: "images/Backless Top(black).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Backless Top (Wine)", price: 10000, img: "images/Backless Top(wine).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Basic Top (Lotus)", price: 10000, img: "images/Heart Shaped Basic Top(lotus).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Basic Top (Pink)", price: 10000, img: "images/Heart Shaped Basic Top(pink).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Black Tank Top", price: 7000, img: "images/Black Tank Top.JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Black V-Neck Short Sleeve Basic Top", price: 10000, img: "images/Black V-neck Short Sleeve Basic Top.JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Brown Tank Top", price: 7000, img: "images/Brown Tank Top.JPG", stock: 10, cat: "basic tops", isNew: true },
-    { name: "Grey Tank Top", price: 7000, img: "images/Grey Tank Top.JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Long Basic Top (Blue)", price: 10000, img: "images/Long Basic Top(blue).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Long Basic Top (Rose Red)", price: 10000, img: "images/Long Basic Top(rose red).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Long Off Shoulder Top (Grey)", price: 10000, img: "images/Long Off Shoulder Top(grey).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Long Off Shoulder Top (Red)", price: 10000, img: "images/Long Off Shoulder Top(red).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Long Sleeve Basic Top", price: 10000, img: "images/Long Sleeve Basic Top.JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Long Sleeve Basic Top (Brown)", price: 10000, img: "images/Long Sleeve Basic Top(brown).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Long Sleeve Wrap Top", price: 12000, img: "images/Long Sleeve Wrap Top.JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Long Sleeve Wrap Top (Black Stripe)", price: 12000, img: "images/Long sleeve Wrap Top (black stripe).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Long Sleeve Wrap Top (Pink)", price: 12000, img: "images/Long Sleeve Wrap Top(pink).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Long Sleeve Wrap Top (Style 2)", price: 12000, img: "images/Long Sleeve Wrap-Top.JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Mesh Top (Style 1)", price: 8000, img: "images/Mesh Top.JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Mesh Top (Style 2)", price: 8000, img: "images/Mesh Top (2).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Mesh Top (Style 3)", price: 8000, img: "images/Mesh Top (3).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Mesh Top (Style 4)", price: 8000, img: "images/Mesh Top (4).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Navy Blue Tee", price: 15000, img: "images/Navy Blue Tee.JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Ribbed Top (Caramel)", price: 10000, img: "images/Ribbed Top(camel).JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "Ribbed Top (Purple)", price: 10000, img: "images/Ribbed Top(purple).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Short Basic Top (Black)", price: 10000, img: "images/Short Basic Top(black).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Short Basic Top (Grey)", price: 10000, img: "images/Short Basic Top(grey).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "Short Basic Top (Pink)", price: 10000, img: "images/Short Basic Top(pink).JPG", stock: 0, cat: "basic tops", isNew: true },
-    { name: "U-Neck Basic Top", price: 9000, img: "images/U NEck Basic Top.JPG", stock: 1, cat: "basic tops", isNew: true },
-    { name: "V-Neck Short Sleeve Basic Top (Yellow)", price: 9000, img: "images/Yellow V-neck Short Sleeve Basic Top.JPG", stock: 1, cat: "basic tops", isNew: true },
+    { name:"Asymmetric Pleated Top (Black)",        price:12000, img:"images/Asymmetric Pleated Top(black).JPG",        stock:1,  cat:"basic tops", isNew:true },
+    { name:"Asymmetric Pleated Top (Red)",          price:12000, img:"images/Asymmetric Pleated Top(red).JPG",          stock:1,  cat:"basic tops", isNew:true },
+    { name:"Backless Top (Black)",                  price:10000, img:"images/Backless Top(black).JPG",                  stock:0,  cat:"basic tops", isNew:true },
+    { name:"Backless Top (Wine)",                   price:10000, img:"images/Backless Top(wine).JPG",                   stock:1,  cat:"basic tops", isNew:true },
+    { name:"Basic Top (Lotus)",                     price:10000, img:"images/Heart Shaped Basic Top(lotus).JPG",        stock:1,  cat:"basic tops", isNew:true },
+    { name:"Basic Top (Pink)",                      price:10000, img:"images/Heart Shaped Basic Top(pink).JPG",         stock:1,  cat:"basic tops", isNew:true },
+    { name:"Black Tank Top",                        price:7000,  img:"images/Black Tank Top.JPG",                       stock:1,  cat:"basic tops", isNew:true },
+    { name:"Black V-Neck Short Sleeve Basic Top",   price:10000, img:"images/Black V-neck Short Sleeve Basic Top.JPG",  stock:0,  cat:"basic tops", isNew:true },
+    { name:"Brown Tank Top",                        price:7000,  img:"images/Brown Tank Top.JPG",                       stock:10, cat:"basic tops", isNew:true },
+    { name:"Grey Tank Top",                         price:7000,  img:"images/Grey Tank Top.JPG",                        stock:1,  cat:"basic tops", isNew:true },
+    { name:"Long Basic Top (Blue)",                 price:10000, img:"images/Long Basic Top(blue).JPG",                 stock:1,  cat:"basic tops", isNew:true },
+    { name:"Long Basic Top (Rose Red)",             price:10000, img:"images/Long Basic Top(rose red).JPG",             stock:1,  cat:"basic tops", isNew:true },
+    { name:"Long Off Shoulder Top (Grey)",          price:10000, img:"images/Long Off Shoulder Top(grey).JPG",          stock:0,  cat:"basic tops", isNew:true },
+    { name:"Long Off Shoulder Top (Red)",           price:10000, img:"images/Long Off Shoulder Top(red).JPG",           stock:0,  cat:"basic tops", isNew:true },
+    { name:"Long Sleeve Basic Top",                 price:10000, img:"images/Long Sleeve Basic Top.JPG",                stock:1,  cat:"basic tops", isNew:true },
+    { name:"Long Sleeve Basic Top (Brown)",         price:10000, img:"images/Long Sleeve Basic Top(brown).JPG",         stock:1,  cat:"basic tops", isNew:true },
+    { name:"Long Sleeve Wrap Top",                  price:12000, img:"images/Long Sleeve Wrap Top.JPG",                 stock:0,  cat:"basic tops", isNew:true },
+    { name:"Long Sleeve Wrap Top (Black Stripe)",   price:12000, img:"images/Long sleeve Wrap Top (black stripe).JPG",  stock:0,  cat:"basic tops", isNew:true },
+    { name:"Long Sleeve Wrap Top (Pink)",           price:12000, img:"images/Long Sleeve Wrap Top(pink).JPG",           stock:1,  cat:"basic tops", isNew:true },
+    { name:"Long Sleeve Wrap Top (Style 2)",        price:12000, img:"images/Long Sleeve Wrap-Top.JPG",                 stock:1,  cat:"basic tops", isNew:true },
+    { name:"Mesh Top (Style 1)",                    price:8000,  img:"images/Mesh Top.JPG",                             stock:1,  cat:"basic tops", isNew:true },
+    { name:"Mesh Top (Style 2)",                    price:8000,  img:"images/Mesh Top (2).JPG",                         stock:1,  cat:"basic tops", isNew:true },
+    { name:"Mesh Top (Style 3)",                    price:8000,  img:"images/Mesh Top (3).JPG",                         stock:1,  cat:"basic tops", isNew:true },
+    { name:"Mesh Top (Style 4)",                    price:8000,  img:"images/Mesh Top (4).JPG",                         stock:1,  cat:"basic tops", isNew:true },
+    { name:"Navy Blue Tee",                         price:15000, img:"images/Navy Blue Tee.JPG",                        stock:1,  cat:"basic tops", isNew:true },
+    { name:"Ribbed Top (Caramel)",                  price:10000, img:"images/Ribbed Top(camel).JPG",                    stock:1,  cat:"basic tops", isNew:true },
+    { name:"Ribbed Top (Purple)",                   price:10000, img:"images/Ribbed Top(purple).JPG",                   stock:0,  cat:"basic tops", isNew:true },
+    { name:"Short Basic Top (Black)",               price:10000, img:"images/Short Basic Top(black).JPG",               stock:0,  cat:"basic tops", isNew:true },
+    { name:"Short Basic Top (Grey)",                price:10000, img:"images/Short Basic Top(grey).JPG",                stock:0,  cat:"basic tops", isNew:true },
+    { name:"Short Basic Top (Pink)",                price:10000, img:"images/Short Basic Top(pink).JPG",                stock:0,  cat:"basic tops", isNew:true },
+    { name:"U-Neck Basic Top",                      price:9000,  img:"images/U NEck Basic Top.JPG",                     stock:1,  cat:"basic tops", isNew:true },
+    { name:"V-Neck Short Sleeve Basic Top (Yellow)",price:9000,  img:"images/Yellow V-neck Short Sleeve Basic Top.JPG", stock:1,  cat:"basic tops", isNew:true },
     // TEES
-    { name: "Black Graphic Tee", price: 10000, img: "images/Black Graphics Tee.JPG", stock: 0, cat: "tee", isNew: true },
-    { name: "Black Plain Tee", price: 9500, img: "images/Black Plain Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Black Tee (Style 1)", price: 10000, img: "images/Black Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Black Tee (Style 2)", price: 15000, img: "images/Black Tee (2).JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Blue Tee", price: 15000, img: "images/Blue Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Cream Color Tee", price: 10000, img: "images/Cream Color Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Green Tee", price: 15000, img: "images/Green TEe.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Grey Tee", price: 15000, img: "images/Grey Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Jerry Graphics Tee", price: 15000, img: "images/Mickey Graphics Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Khaki Button-Up Shirt (Style 1)", price: 15000, img: "images/Khaki Button-up Shirt.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Khaki Button-Up Shirt (Style 2)", price: 15000, img: "images/Khaki Button-up Shirt (2).JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Leopard Print Roundneck", price: 15000, img: "images/Leopard Print Roundneck.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Leopard Print Roundneck (Pink)", price: 15000, img: "images/Leopard Print Roundneck(pink).JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Long Sleeve Button-Up Shirt (Black)", price: 20000, img: "images/Long Sleeve Button-up Shirt(black).JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Long Sleeve Button-Up Shirt (Brown)", price: 20000, img: "images/Long Sleeve Button-up Shirt(brown).JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Long Sleeve Graphics Tee", price: 20000, img: "images/Long Sleeve Graphics Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Long Sleeve Graphics Tee (Brown)", price: 20000, img: "images/Long Sleeve Graphics Tee(brown).JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Long Sleeve Graphics Tee (Wine)", price: 20000, img: "images/Long Sleeve Graphics Tee(wine).JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "One Piece Black Tee", price: 15000, img: "images/One Piece Black Tee.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "Printed Tee (Black)", price: 15000, img: "images/Printed Tee(black).JPG", stock: 0, cat: "tee", isNew: true },
-    { name: "Tom & Jerry Round Neck Tee", price: 15000, img: "images/Mickey Round Neck Tee.JPG", stock: 0, cat: "tee", isNew: true },
-    { name: "White Button-Up Shirt", price: 15000, img: "images/White Button-up Shirt.JPG", stock: 1, cat: "tee", isNew: true },
-    { name: "White Plain Tee", price: 10000, img: "images/White Plain Tee.JPG", stock: 0, cat: "tee", isNew: true },
+    { name:"Black Graphic Tee",                     price:10000, img:"images/Black Graphics Tee.JPG",                   stock:0,  cat:"tee", isNew:true },
+    { name:"Black Plain Tee",                       price:9500,  img:"images/Black Plain Tee.JPG",                      stock:1,  cat:"tee", isNew:true },
+    { name:"Black Tee (Style 1)",                   price:10000, img:"images/Black Tee.JPG",                            stock:1,  cat:"tee", isNew:true },
+    { name:"Black Tee (Style 2)",                   price:15000, img:"images/Black Tee (2).JPG",                        stock:1,  cat:"tee", isNew:true },
+    { name:"Blue Tee",                              price:15000, img:"images/Blue Tee.JPG",                             stock:1,  cat:"tee", isNew:true },
+    { name:"Cream Color Tee",                       price:10000, img:"images/Cream Color Tee.JPG",                      stock:1,  cat:"tee", isNew:true },
+    { name:"Green Tee",                             price:15000, img:"images/Green TEe.JPG",                            stock:1,  cat:"tee", isNew:true },
+    { name:"Grey Tee",                              price:15000, img:"images/Grey Tee.JPG",                             stock:1,  cat:"tee", isNew:true },
+    { name:"Jerry Graphics Tee",                    price:15000, img:"images/Mickey Graphics Tee.JPG",                  stock:1,  cat:"tee", isNew:true },
+    { name:"Khaki Button-Up Shirt (Style 1)",       price:15000, img:"images/Khaki Button-up Shirt.JPG",               stock:1,  cat:"tee", isNew:true },
+    { name:"Khaki Button-Up Shirt (Style 2)",       price:15000, img:"images/Khaki Button-up Shirt (2).JPG",           stock:1,  cat:"tee", isNew:true },
+    { name:"Leopard Print Roundneck",               price:15000, img:"images/Leopard Print Roundneck.JPG",              stock:1,  cat:"tee", isNew:true },
+    { name:"Leopard Print Roundneck (Pink)",        price:15000, img:"images/Leopard Print Roundneck(pink).JPG",        stock:1,  cat:"tee", isNew:true },
+    { name:"Long Sleeve Button-Up Shirt (Black)",   price:20000, img:"images/Long Sleeve Button-up Shirt(black).JPG",  stock:1,  cat:"tee", isNew:true },
+    { name:"Long Sleeve Button-Up Shirt (Brown)",   price:20000, img:"images/Long Sleeve Button-up Shirt(brown).JPG",  stock:1,  cat:"tee", isNew:true },
+    { name:"Long Sleeve Graphics Tee",              price:20000, img:"images/Long Sleeve Graphics Tee.JPG",             stock:1,  cat:"tee", isNew:true },
+    { name:"Long Sleeve Graphics Tee (Brown)",      price:20000, img:"images/Long Sleeve Graphics Tee(brown).JPG",     stock:1,  cat:"tee", isNew:true },
+    { name:"Long Sleeve Graphics Tee (Wine)",       price:20000, img:"images/Long Sleeve Graphics Tee(wine).JPG",      stock:1,  cat:"tee", isNew:true },
+    { name:"One Piece Black Tee",                   price:15000, img:"images/One Piece Black Tee.JPG",                  stock:1,  cat:"tee", isNew:true },
+    { name:"Printed Tee (Black)",                   price:15000, img:"images/Printed Tee(black).JPG",                   stock:0,  cat:"tee", isNew:true },
+    { name:"Tom & Jerry Round Neck Tee",            price:15000, img:"images/Mickey Round Neck Tee.JPG",                stock:0,  cat:"tee", isNew:true },
+    { name:"White Button-Up Shirt",                 price:15000, img:"images/White Button-up Shirt.JPG",                stock:1,  cat:"tee", isNew:true },
+    { name:"White Plain Tee",                       price:10000, img:"images/White Plain Tee.JPG",                      stock:0,  cat:"tee", isNew:true },
     // SNAPBACKS
-    { name: "Black Strapless Cap (Style 1)", price: 15000, img: "images/Black Strapless Cap.JPG", stock: 1, cat: "snapback", isNew: true },
-    { name: "Black Strapless Cap (Style 2)", price: 15000, img: "images/Black Strapless Cap (2).JPG", stock: 1, cat: "snapback", isNew: true },
-    { name: "Black Strapless Cap (Style 3)", price: 15000, img: "images/Black Strapless Cap (3).JPG", stock: 1, cat: "snapback", isNew: true },
-    { name: "Blue Strapless Cap (Style 1)", price: 15000, img: "images/Blue Strapless Cap.JPG", stock: 1, cat: "snapback", isNew: true },
-    { name: "Blue Strapless Cap (Style 2)", price: 15000, img: "images/Blue Strapless Cap (2).JPG", stock: 1, cat: "snapback", isNew: true },
-    { name: "Cream Strapless Cap", price: 15000, img: "images/Cream Strapless Cap.JPG", stock: 1, cat: "snapback", isNew: true },
-    { name: "Green Strapless Cap", price: 15000, img: "images/Green Strapless Cap.JPG", stock: 1, cat: "snapback", isNew: true },
+    { name:"Black Strapless Cap (Style 1)", price:15000, img:"images/Black Strapless Cap.JPG",      stock:1, cat:"snapback", isNew:true },
+    { name:"Black Strapless Cap (Style 2)", price:15000, img:"images/Black Strapless Cap (2).JPG",  stock:1, cat:"snapback", isNew:true },
+    { name:"Black Strapless Cap (Style 3)", price:15000, img:"images/Black Strapless Cap (3).JPG",  stock:1, cat:"snapback", isNew:true },
+    { name:"Blue Strapless Cap (Style 1)",  price:15000, img:"images/Blue Strapless Cap.JPG",       stock:1, cat:"snapback", isNew:true },
+    { name:"Blue Strapless Cap (Style 2)",  price:15000, img:"images/Blue Strapless Cap (2).JPG",   stock:1, cat:"snapback", isNew:true },
+    { name:"Cream Strapless Cap",           price:15000, img:"images/Cream Strapless Cap.JPG",      stock:1, cat:"snapback", isNew:true },
+    { name:"Green Strapless Cap",           price:15000, img:"images/Green Strapless Cap.JPG",      stock:1, cat:"snapback", isNew:true },
     // JOGGERS
-    { name: "Blue Velvet Joggers", price: 15000, img: "images/Blue Velvet Joggers.JPG", stock: 0, cat: "joggers", isNew: true },
-    { name: "Brown Velvet Joggers", price: 15000, img: "images/Brown Velvet Joggers.JPG", stock: 0, cat: "joggers", isNew: true },
-    { name: "Velvet Joggers (Burgundy)", price: 15000, img: "images/Velvet Joggers(burgundy).JPG", stock: 1, cat: "joggers", isNew: true },
+    { name:"Blue Velvet Joggers",     price:15000, img:"images/Blue Velvet Joggers.JPG",      stock:0, cat:"joggers", isNew:true },
+    { name:"Brown Velvet Joggers",    price:15000, img:"images/Brown Velvet Joggers.JPG",     stock:0, cat:"joggers", isNew:true },
+    { name:"Velvet Joggers (Burgundy)", price:15000, img:"images/Velvet Joggers(burgundy).JPG", stock:1, cat:"joggers", isNew:true },
     // PANTS
-    { name: "Blue Wide Leg Pant", price: 9000, img: "images/Blue Wide Leg Pant.JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Linen Free Pant (Black)", price: 9000, img: "images/Linen Free Pant(black).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Linen Free Pant (Brown)", price: 9000, img: "images/Linen Free Pant(brown).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Linen Free Pant (Caramel)", price: 9000, img: "images/Linen Free Pant(caramel).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Linen Free Pant (Grey)", price: 9000, img: "images/Linen Free Pant (grey).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Unisex Cargo (Black) Style 1", price: 15000, img: "images/Unisex Cargo(black).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Unisex Cargo (Black) Style 2", price: 15000, img: "images/Unisex Cargo(black 2).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Unisex Cargo (Green) Style 1", price: 15000, img: "images/Unisex Cargo(green).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Unisex Cargo (Green) Style 2", price: 15000, img: "images/Unisex Cargo(green) (2).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Unisex Cargo (Grey)", price: 15000, img: "images/Unisex Cargo(grey).JPG", stock: 0, cat: "pant", isNew: true },
-    { name: "Unisex Cargo (Khaki)", price: 15000, img: "images/Unisex Cargo(khaki).JPG", stock: 1, cat: "pant", isNew: true },
-    { name: "Wide Leg Pant (Yellow)", price: 9000, img: "images/Yellow Wide Leg Pant.JPG", stock: 1, cat: "pant", isNew: true },
+    { name:"Blue Wide Leg Pant",            price:9000,  img:"images/Blue Wide Leg Pant.JPG",          stock:1, cat:"pant", isNew:true },
+    { name:"Linen Free Pant (Black)",       price:9000,  img:"images/Linen Free Pant(black).JPG",      stock:1, cat:"pant", isNew:true },
+    { name:"Linen Free Pant (Brown)",       price:9000,  img:"images/Linen Free Pant(brown).JPG",      stock:1, cat:"pant", isNew:true },
+    { name:"Linen Free Pant (Caramel)",     price:9000,  img:"images/Linen Free Pant(caramel).JPG",    stock:1, cat:"pant", isNew:true },
+    { name:"Linen Free Pant (Grey)",        price:9000,  img:"images/Linen Free Pant (grey).JPG",      stock:1, cat:"pant", isNew:true },
+    { name:"Unisex Cargo (Black) Style 1",  price:15000, img:"images/Unisex Cargo(black).JPG",         stock:1, cat:"pant", isNew:true },
+    { name:"Unisex Cargo (Black) Style 2",  price:15000, img:"images/Unisex Cargo(black 2).JPG",       stock:1, cat:"pant", isNew:true },
+    { name:"Unisex Cargo (Green) Style 1",  price:15000, img:"images/Unisex Cargo(green).JPG",         stock:1, cat:"pant", isNew:true },
+    { name:"Unisex Cargo (Green) Style 2",  price:15000, img:"images/Unisex Cargo(green) (2).JPG",     stock:1, cat:"pant", isNew:true },
+    { name:"Unisex Cargo (Grey)",           price:15000, img:"images/Unisex Cargo(grey).JPG",          stock:0, cat:"pant", isNew:true },
+    { name:"Unisex Cargo (Khaki)",          price:15000, img:"images/Unisex Cargo(khaki).JPG",         stock:1, cat:"pant", isNew:true },
+    { name:"Wide Leg Pant (Yellow)",        price:9000,  img:"images/Yellow Wide Leg Pant.JPG",        stock:1, cat:"pant", isNew:true },
 ];
 
 const SIZES_MAP = {
@@ -185,16 +140,11 @@ function hydrateCart(saved) {
     }).filter(Boolean);
 }
 
-const _savedCart = JSON.parse(localStorage.getItem('wt_cart2')) || [];
+const _savedCart  = JSON.parse(localStorage.getItem('wt_cart2')) || [];
 let cart          = hydrateCart(_savedCart);
 let selectedSizes = {};
 let activeCategory = 'all';
 let searchQuery    = '';
-let deliveryFee    = 0;
-let deliveryName   = 'Pickup';
-let detectedZone   = null;
-let paymentMethod  = 'card';
-let checkoutOrderRef = '';
 
 // ══════════════════════════════════════════════════════════════════════════════
 // HELPERS
@@ -204,339 +154,60 @@ function sanitize(str) {
     return String(str).replace(/[*_~`]/g, '').trim();
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// 🗄️  SAVE ORDER TO SUPABASE (used by all 3 payment methods)
-// ══════════════════════════════════════════════════════════════════════════════
-async function saveOrderToSupabase(ref, status, locationVal) {
-    try {
-        const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-        const total    = subtotal + deliveryFee;
-        await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
-            method:  'POST',
-            headers: {
-                apikey:         SUPABASE_ANON_KEY,
-                Authorization:  `Bearer ${SUPABASE_ANON_KEY}`,
-                'Content-Type': 'application/json',
-                Prefer:         'return=minimal',
-            },
-            body: JSON.stringify({
-                ref:          ref,
-                location:     locationVal || 'Not provided',
-                zone:         deliveryName,
-                items:        cart.map(i => ({ id: i.id, name: i.name, size: i.size, qty: i.qty, price: i.price })),
-                subtotal:     subtotal,
-                delivery_fee: deliveryFee,
-                total:        total,
-                status:       status,
-            }),
-        });
-    } catch (err) {
-        console.warn('Could not save order to Supabase:', err);
-    }
+function saveCart() {
+    localStorage.setItem('wt_cart2', JSON.stringify(
+        cart.map(i => ({ id: i.id, size: i.size, qty: i.qty }))
+    ));
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// 🚚  DELIVERY ZONE DETECTION
+// CART — now just updates the count badge and navigates to cart.html
 // ══════════════════════════════════════════════════════════════════════════════
-function detectZone(locationText) {
-    if (!locationText || !locationText.trim()) return null;
-    const lower = locationText.toLowerCase().trim();
-    for (const zone of DELIVERY_ZONES) {
-        if (zone.keywords.length === 0) continue;
-        if (zone.keywords.some(kw => lower.includes(kw))) return zone;
-    }
-    return DELIVERY_ZONES[DELIVERY_ZONES.length - 1];
+function updateCartUI() {
+    const count = cart.reduce((a, b) => a + b.qty, 0);
+    const el    = document.getElementById('cart-count');
+    if (el) el.textContent = count;
 }
 
-function onLocationInput() {
-    const val     = document.getElementById('f-location').value;
-    const preview = document.getElementById('delivery-fee-preview');
-    const payBtn  = document.getElementById('pay-now-btn');
-    const zone    = detectZone(val);
+// FIX: openCart now navigates to cart.html instead of opening a sidebar
+function openCart() {
+    window.location.href = 'cart.html';
+}
 
-    if (!val.trim()) {
-        detectedZone = null;
-        deliveryFee  = 0;
-        deliveryName = 'Unknown';
-        preview.innerHTML   = '';
-        if (payBtn) payBtn.disabled = true;
+function closeCart() {
+    // No sidebar — nothing to close
+}
+
+function addToCart(id) {
+    const p = PRODUCTS.find(x => x.id === id);
+    if (!p) return;
+    const sizes  = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
+    const size   = sizes.length === 1 ? sizes[0] : (selectedSizes[id] || sizes[0]);
+    const inCart = cart.filter(i => i.id === id && i.size === size).reduce((a, b) => a + b.qty, 0);
+
+    if (p.stock !== undefined && inCart >= p.stock) {
+        showToast(`Only ${p.stock} available in this size`);
         return;
     }
 
-    detectedZone = zone;
-    deliveryFee  = zone.fee;
-    deliveryName = zone.name;
-
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total    = subtotal + deliveryFee;
-
-    preview.innerHTML = `
-        <div class="fee-pill">
-            <span class="fee-location">📍 ${zone.name}</span>
-            <span class="fee-amount">${zone.fee === 0 ? 'FREE' : '₦' + zone.fee.toLocaleString()} delivery</span>
-        </div>
-        <div class="fee-total">Total: <strong>₦${total.toLocaleString()}</strong></div>
-    `;
-    if (payBtn) payBtn.disabled = false;
+    const item = cart.find(i => i.id === id && i.size === size);
+    if (item) { item.qty++; } else { cart.push({ ...p, size, qty: 1 }); }
+    saveCart();
+    updateCartUI();
+    showToast(`${p.name.toUpperCase()} added ✓ — tap cart to checkout`);
 }
 
-// ══════════════════════════════════════════════════════════════════════════════
-// 🛒  CHECKOUT — streamlined: location → payment method → done
-// ══════════════════════════════════════════════════════════════════════════════
-function openCheckout() {
-    if (!cart.length) { showToast("Your cart is empty"); return; }
-    closeCart();
-
-    // Reset state
-    document.getElementById('f-location').value        = '';
-    document.getElementById('delivery-fee-preview').innerHTML = '';
-    detectedZone  = null;
-    deliveryFee   = 0;
-    deliveryName  = 'Pickup';
-    paymentMethod = 'card';
-
-    // Reset payment method selection UI
-    document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
-    const cardOption = document.querySelector('.pay-option[data-method="card"]');
-    if (cardOption) cardOption.classList.add('selected');
-
-    const payBtn = document.getElementById('pay-now-btn');
-    if (payBtn) payBtn.disabled = true;
-
-    document.getElementById('checkout-modal').classList.add('show');
-    document.getElementById('overlay').classList.add('show');
+function removeFromCart(id, size) {
+    cart = cart.filter(i => !(i.id === id && i.size === size));
+    saveCart(); updateCartUI();
 }
 
-function closeCheckout() {
-    document.getElementById('checkout-modal').classList.remove('show');
-    document.getElementById('overlay').classList.remove('show');
-}
-
-function selectPayment(el, method) {
-    document.querySelectorAll('.pay-option').forEach(o => o.classList.remove('selected'));
-    el.classList.add('selected');
-    paymentMethod = method;
-
-    // Update button text
-    const btn = document.getElementById('pay-now-btn');
-    if (!btn) return;
-    if (method === 'card')     btn.textContent = 'Pay with Card / Bank →';
-    else if (method === 'bank') btn.textContent = 'Get Bank Details →';
-    else                        btn.textContent = 'Order via WhatsApp →';
-}
-
-function placeOrder() {
-    // Validate location first
-    const locVal    = sanitize(document.getElementById('f-location').value);
-    const freshZone = detectZone(locVal);
-
-    if (!locVal) {
-        showToast('Please enter your delivery location');
-        document.getElementById('f-location').focus();
-        return;
-    }
-    if (!freshZone) {
-        showToast("We couldn't detect your zone. Please be more specific.");
-        return;
-    }
-
-    detectedZone = freshZone;
-    deliveryFee  = freshZone.fee;
-    deliveryName = freshZone.name;
-
-    if (paymentMethod === 'card')     { initiatePaystackPayment(locVal); return; }
-    if (paymentMethod === 'bank')     { handleBankTransfer(locVal);      return; }
-    if (paymentMethod === 'whatsapp') { handleWhatsAppOrder(locVal);     return; }
-}
-
-// ── 1. PAYSTACK ───────────────────────────────────────────────────────────────
-function loadPaystackScript(cb) {
-    if (window.PaystackPop) { cb(); return; }
-    const s  = document.createElement('script');
-    s.src    = 'https://js.paystack.co/v1/inline.js';
-    s.onload = cb;
-    document.head.appendChild(s);
-}
-
-function initiatePaystackPayment(locVal) {
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total    = subtotal + deliveryFee;
-    const ref      = 'WT-' + Date.now();
-    checkoutOrderRef = ref;
-
-    loadPaystackScript(() => {
-        const handler = PaystackPop.setup({
-            key:      PAYSTACK_PUBLIC_KEY,
-            email:    'orders@weartee.ng',
-            amount:   total * 100,
-            currency: 'NGN',
-            ref:      ref,
-            metadata: {
-                custom_fields: [
-                    { display_name: 'Delivery Zone',     variable_name: 'zone',     value: deliveryName },
-                    { display_name: 'Delivery Location', variable_name: 'location', value: locVal },
-                    { display_name: 'Items',             variable_name: 'items',    value: cart.map(i => `${i.name} (${i.size}) x${i.qty}`).join(', ') },
-                ]
-            },
-            callback: async function (response) {
-                showToast('Verifying payment... please wait');
-                try {
-                    const verify = await fetch('https://weartee-ng.vercel.app/api/verify-payment', {
-                        method:  'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            reference:   response.reference,
-                            cartItems:   cart.map(i => ({ id: i.id, qty: i.qty, price: i.price, name: i.name, size: i.size })),
-                            location:    locVal,
-                            zone:        deliveryName,
-                            deliveryFee: deliveryFee,
-                        })
-                    });
-                    const result = await verify.json();
-                    if (!verify.ok || !result.ok) {
-                        showToast('Payment could not be verified. Contact us with ref: ' + response.reference);
-                        return;
-                    }
-                    checkoutOrderRef = response.reference;
-                    showSuccessScreen(response.reference, 'card', locVal);
-                    cart = []; saveCart(); updateCartUI();
-                    showToast('Payment successful! 🎉');
-                } catch (err) {
-                    console.error('Verification error:', err);
-                    showToast('Network error. Contact us with ref: ' + response.reference);
-                }
-            },
-            onClose: function () {
-                showToast('Payment cancelled. You can try again.');
-            }
-        });
-        handler.openIframe();
-    });
-}
-
-// ── 2. BANK TRANSFER ──────────────────────────────────────────────────────────
-async function handleBankTransfer(locVal) {
-    const ref        = 'WT-' + Date.now().toString().slice(-6);
-    checkoutOrderRef = ref;
-
-    // Save to admin as pending_bank
-    await saveOrderToSupabase(ref, 'pending_bank', locVal);
-
-    // Notify store owner via WhatsApp
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total    = subtotal + deliveryFee;
-    let msg = `New Bank Transfer Order — WearTee.ng\n`;
-    msg += `Ref: ${ref}\n`;
-    msg += `Location: ${locVal}\n`;
-    msg += `Zone: ${deliveryName}\n\n`;
-    msg += `Items:\n`;
-    cart.forEach(i => { msg += `- ${i.name} [${i.size}] x${i.qty}: ₦${(i.price * i.qty).toLocaleString()}\n`; });
-    msg += `\nDelivery: ${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}\n`;
-    msg += `Total: ₦${total.toLocaleString()}\n\n`;
-    msg += `Please send them your bank details and confirm payment.`;
-    window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
-
-    // Show success with bank details
-    showSuccessScreen(ref, 'bank', locVal);
-    cart = []; saveCart(); updateCartUI();
-}
-
-// ── 3. WHATSAPP ORDER ─────────────────────────────────────────────────────────
-async function handleWhatsAppOrder(locVal) {
-    const ref        = 'WT-' + Date.now().toString().slice(-6);
-    checkoutOrderRef = ref;
-
-    // Save to admin as whatsapp
-    await saveOrderToSupabase(ref, 'whatsapp', locVal);
-
-    // Open WhatsApp with full order details
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total    = subtotal + deliveryFee;
-    let msg = `New Order — WearTee.ng\n`;
-    msg += `Ref: ${ref}\n`;
-    msg += `Location: ${locVal}\n`;
-    msg += `Zone: ${deliveryName}\n\n`;
-    msg += `Items:\n`;
-    cart.forEach(i => { msg += `- ${i.name} [${i.size}] x${i.qty}: ₦${(i.price * i.qty).toLocaleString()}\n`; });
-    msg += `\nDelivery: ${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}\n`;
-    msg += `Total: ₦${total.toLocaleString()}\n\n`;
-    msg += `Payment: WhatsApp Order`;
-    window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
-
-    showSuccessScreen(ref, 'whatsapp', locVal);
-    cart = []; saveCart(); updateCartUI();
-}
-
-// ── SUCCESS SCREEN ────────────────────────────────────────────────────────────
-function showSuccessScreen(ref, method, locVal) {
-    closeCheckout();
-
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    const total    = subtotal + deliveryFee;
-
-    // Build method-specific message
-    let methodMsg = '';
-    if (method === 'card') {
-        methodMsg = `<div style="background:#EAF3DE;border-radius:10px;padding:14px;text-align:center;font-size:13px;color:#3B6D11;">
-            ✅ Payment confirmed! Your order is being processed.
-        </div>`;
-    } else if (method === 'bank') {
-        methodMsg = `<div style="background:#E6F1FB;border-radius:10px;padding:16px;font-size:13px;">
-            <div style="font-weight:600;margin-bottom:10px;color:#185FA5;">🏦 Bank Transfer Details</div>
-            <div style="display:flex;flex-direction:column;gap:6px;">
-                <div style="display:flex;justify-content:space-between;"><span>Bank</span><strong>${BANK_DETAILS.bank}</strong></div>
-                <div style="display:flex;justify-content:space-between;"><span>Account Number</span><strong>${BANK_DETAILS.account}</strong></div>
-                <div style="display:flex;justify-content:space-between;"><span>Account Name</span><strong>${BANK_DETAILS.name}</strong></div>
-                <div style="display:flex;justify-content:space-between;"><span>Amount</span><strong>₦${total.toLocaleString()}</strong></div>
-            </div>
-            <div style="margin-top:10px;font-size:12px;color:#185FA5;">
-                After payment, send your proof of payment to our WhatsApp and we'll confirm your order.
-            </div>
-        </div>`;
-    } else {
-        methodMsg = `<div style="background:#EAF3DE;border-radius:10px;padding:14px;text-align:center;font-size:13px;color:#3B6D11;">
-            ✅ Your order has been sent to our WhatsApp. We'll confirm shortly!
-        </div>`;
-    }
-
-    // Build order summary
-    const summaryHTML = `
-        <div style="background:#f5f3ef;border-radius:10px;padding:14px;margin-bottom:12px;">
-            <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;">Order Summary</div>
-            ${cart.map(i => `
-                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
-                    <span>${i.name} (${i.size}) ×${i.qty}</span>
-                    <span>₦${(i.price * i.qty).toLocaleString()}</span>
-                </div>`).join('')}
-            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;">
-                <span>Delivery (${deliveryName})</span>
-                <span>${deliveryFee ? '₦' + deliveryFee.toLocaleString() : 'FREE'}</span>
-            </div>
-            <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:600;border-top:1px solid #e8e4dc;padding-top:8px;margin-top:8px;">
-                <span>Total</span><span>₦${total.toLocaleString()}</span>
-            </div>
-        </div>
-    `;
-
-    const successModal = document.getElementById('success-modal');
-    const refEl        = document.getElementById('order-ref-display');
-    const summaryEl    = document.getElementById('success-summary');
-    const methodEl     = document.getElementById('success-method-msg');
-
-    if (refEl)     refEl.textContent  = `Order Ref: ${ref}`;
-    if (summaryEl) summaryEl.innerHTML = summaryHTML;
-    if (methodEl)  methodEl.innerHTML  = methodMsg;
-
-    if (successModal) {
-        successModal.classList.add('show');
-        document.getElementById('overlay').classList.add('show');
-    }
-}
-
-function closeSuccess() {
-    const m = document.getElementById('success-modal');
-    if (m) m.classList.remove('show');
-    document.getElementById('overlay').classList.remove('show');
+function changeQty(id, size, delta) {
+    const item = cart.find(i => i.id === id && i.size === size);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) removeFromCart(id, size);
+    else { saveCart(); updateCartUI(); }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -571,7 +242,7 @@ function openProductDetail(id) {
                 ${soldOut ? '&#10006; Out of Stock' : lowStock ? `&#9888; Only ${p.stock} left` : '&#10003; In Stock'}
             </div>
             <div class="pd-delivery-note">
-                <span>&#128666;</span> Delivery across Nigeria &bull; fee based on your location
+                <span>&#128666;</span> Delivery across Nigeria &bull; fee calculated in cart
             </div>
             ${sizes.length > 1 ? `
             <div class="pd-size-section">
@@ -582,7 +253,10 @@ function openProductDetail(id) {
             </div>` : `<div class="pd-size-section"><div class="pd-size-label">SIZE</div><div class="pd-one-size">ONE SIZE</div></div>`}
             <div class="pd-actions">
                 <button class="pd-atc-btn" onclick="addToCartFromDetail(${p.id})" ${soldOut ? 'disabled' : ''}>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
                     ${soldOut ? 'Sold Out' : 'Add to Cart'}
                 </button>
                 <button class="pd-wa-btn" onclick="orderViaWhatsAppDirect(${p.id})">
@@ -604,8 +278,10 @@ function openProductDetail(id) {
 }
 
 function closeProductDetail() {
-    document.getElementById('product-detail-modal').classList.remove('show');
-    document.getElementById('overlay').classList.remove('show');
+    const modal = document.getElementById('product-detail-modal');
+    if (modal) modal.classList.remove('show');
+    const overlay = document.getElementById('overlay');
+    if (overlay) overlay.classList.remove('show');
     document.body.style.overflow = '';
 }
 
@@ -625,8 +301,8 @@ function pdSelectSize(id, size) {
 }
 
 function addToCartFromDetail(id) {
-    closeProductDetail();
     addToCart(id);
+    closeProductDetail();
 }
 
 function orderViaWhatsAppDirect(id) {
@@ -704,86 +380,6 @@ function selectSize(id, size) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// CART
-// ══════════════════════════════════════════════════════════════════════════════
-function addToCart(id) {
-    const p = PRODUCTS.find(x => x.id === id);
-    if (!p) return;
-    const sizes  = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
-    const size   = sizes.length === 1 ? sizes[0] : (selectedSizes[id] || sizes[0]);
-    const inCart = cart.filter(i => i.id === id && i.size === size).reduce((a, b) => a + b.qty, 0);
-
-    if (p.stock !== undefined && inCart >= p.stock) {
-        showToast(`Only ${p.stock} available in this size`);
-        return;
-    }
-
-    const item = cart.find(i => i.id === id && i.size === size);
-    if (item) { item.qty++; } else { cart.push({ ...p, size, qty: 1 }); }
-    saveCart(); updateCartUI(); openCart();
-    showToast(`${p.name.toUpperCase()} added ✓`);
-}
-
-function removeFromCart(id, size) {
-    cart = cart.filter(i => !(i.id === id && i.size === size));
-    saveCart(); updateCartUI();
-}
-
-function changeQty(id, size, delta) {
-    const item = cart.find(i => i.id === id && i.size === size);
-    if (!item) return;
-    item.qty += delta;
-    if (item.qty <= 0) removeFromCart(id, size);
-    else { saveCart(); updateCartUI(); }
-}
-
-function clearCart() {
-    if (!cart.length) return;
-    if (confirm("Clear all items?")) { cart = []; saveCart(); updateCartUI(); }
-}
-
-function saveCart() {
-    localStorage.setItem('wt_cart2', JSON.stringify(cart.map(i => ({ id: i.id, size: i.size, qty: i.qty }))));
-}
-
-function updateCartUI() {
-    const count    = cart.reduce((a, b) => a + b.qty, 0);
-    const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-    document.getElementById('cart-count').textContent    = count;
-    document.getElementById('cart-subtotal').textContent = `₦${subtotal.toLocaleString()}`;
-    document.getElementById('cart-total').textContent    = `₦${subtotal.toLocaleString()}`;
-
-    const list = document.getElementById('cart-list');
-    if (!cart.length) {
-        list.innerHTML = `<div class="cart-empty"><div class="e-icon">🛒</div><div>Your cart is empty</div></div>`;
-        return;
-    }
-    list.innerHTML = cart.map(i => `
-        <div class="cart-item">
-            <img src="${i.img}" alt="${i.name}" onerror="this.style.background='#ece8e0'">
-            <div class="ci-info">
-                <div class="ci-name">${i.name}</div>
-                <div class="ci-size">SIZE: ${i.size}</div>
-                <div class="ci-qty">
-                    <button class="qty-btn" onclick="changeQty(${i.id},'${i.size}',-1)">−</button>
-                    <span class="qty-num">${i.qty}</span>
-                    <button class="qty-btn" onclick="changeQty(${i.id},'${i.size}',1)">+</button>
-                </div>
-                <button class="rm-btn" onclick="removeFromCart(${i.id},'${i.size}')">Remove</button>
-            </div>
-            <div class="ci-subtotal">₦${(i.price * i.qty).toLocaleString()}</div>
-        </div>
-    `).join('');
-}
-
-function openCart() {
-    window.location.href = 'cart.html';
-}
-function closeCart() {
-    // no sidebar anymore
-}
-
-// ══════════════════════════════════════════════════════════════════════════════
 // SEARCH & FILTER
 // ══════════════════════════════════════════════════════════════════════════════
 document.getElementById('search-input').addEventListener('input', e => {
@@ -800,13 +396,9 @@ document.getElementById('filter-bar').addEventListener('click', e => {
     renderProducts();
 });
 
-document.getElementById('cart-open').addEventListener('click', openCart);
-document.getElementById('cart-close').addEventListener('click', closeCart);
+// Overlay closes product detail modal only
 document.getElementById('overlay').addEventListener('click', () => {
-    closeCart();
-    closeCheckout();
     closeProductDetail();
-    closeSuccess();
 });
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -837,7 +429,7 @@ async function syncStockFromSupabase() {
         });
         renderProducts();
     } catch (err) {
-        console.warn('Could not sync stock from Supabase:', err);
+        console.warn('Could not sync stock:', err);
     }
 }
 
