@@ -55,6 +55,29 @@
         .pd-details { border-top: 1px solid #ece8e0; padding-top: 16px; margin-top: 4px; }
         .pd-detail-row { display: flex; justify-content: space-between; font-family: 'DM Sans', sans-serif; font-size: 13px; padding: 8px 0; border-bottom: 1px solid #f0ece6; color: #555; }
         .pd-detail-row span:last-child { font-weight: 600; color: #111; font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .06em; }
+             .cart-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            text-decoration: none;
+            /* removes underline */
+            color: #111;
+
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+
+            padding: 8px 12px;
+            border-radius: 999px;
+
+            background: rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        .cart-btn:hover {
+            background: rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
