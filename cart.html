@@ -393,11 +393,17 @@ function renderCart() {
     const emptyEl  = document.getElementById('empty-state');
     const panel    = document.getElementById('order-panel');
 
+    // FIX: Always clear existing items before re-rendering
+    box.querySelectorAll('.cart-item').forEach(el => el.remove());
+
     if (!cart.length) {
         emptyEl.style.display = 'block';
         panel.style.display   = 'none';
         return;
     }
+
+    emptyEl.style.display = 'none';
+    panel.style.display   = 'block';
 
     emptyEl.style.display = 'none';
     panel.style.display   = 'block';
