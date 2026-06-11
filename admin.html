@@ -22,6 +22,10 @@
         --blue-bg:  #E6F1FB;
         --yellow:   #854F0B;
         --yellow-bg:#FAEEDA;
+        --purple:   #5B21B6;
+        --purple-bg:#EDE9FE;
+        --teal:     #0F766E;
+        --teal-bg:  #CCFBF1;
     }
 
     body {
@@ -194,18 +198,22 @@
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: var(--bg); }
 
-    .status-badge {
-        display: inline-block;
-        padding: 3px 10px;
+    /* ── STATUS BADGES ── */
+    .status-select {
+        padding: 4px 10px;
         border-radius: 100px;
         font-size: 11px;
         font-weight: 500;
         cursor: pointer;
+        border: none;
+        outline: none;
     }
-    .status-paid      { background: var(--blue-bg);   color: var(--blue); }
-    .status-shipped   { background: var(--yellow-bg);  color: var(--yellow); }
-    .status-delivered { background: var(--green-bg);   color: var(--green); }
-    .status-cancelled { background: var(--red-bg);     color: var(--red); }
+    .status-paid         { background: var(--blue-bg);   color: var(--blue); }
+    .status-pending_bank { background: var(--yellow-bg);  color: var(--yellow); }
+    .status-whatsapp     { background: var(--teal-bg);    color: var(--teal); }
+    .status-shipped      { background: var(--purple-bg);  color: var(--purple); }
+    .status-delivered    { background: var(--green-bg);   color: var(--green); }
+    .status-cancelled    { background: var(--red-bg);     color: var(--red); }
 
     .items-cell { font-size: 12px; color: var(--mid); max-width: 220px; }
 
@@ -229,7 +237,7 @@
         cursor: pointer;
     }
     .save-stock-btn:hover { opacity: 0.85; }
-    .stock-low  { color: var(--red);    font-weight: 500; }
+    .stock-low  { color: var(--yellow); font-weight: 500; }
     .stock-zero { color: var(--red);    font-weight: 600; }
     .stock-ok   { color: var(--green);  }
 
@@ -242,13 +250,13 @@
         border-bottom: 1px solid var(--border);
     }
     .top-product-row:last-child { border-bottom: none; }
-    .top-rank { font-size: 18px; font-weight: 700; color: var(--border); width: 28px; }
-    .top-name { flex: 1; font-size: 13px; font-weight: 500; }
-    .top-sales { font-size: 13px; color: var(--mid); }
+    .top-rank    { font-size: 18px; font-weight: 700; color: var(--border); width: 28px; }
+    .top-name    { flex: 1; font-size: 13px; font-weight: 500; }
+    .top-sales   { font-size: 13px; color: var(--mid); }
     .top-revenue { font-size: 13px; font-weight: 600; }
 
     .loading-row td { text-align: center; color: var(--mid); padding: 40px; }
-    .empty-row  td { text-align: center; color: var(--mid); padding: 40px; }
+    .empty-row   td { text-align: center; color: var(--mid); padding: 40px; }
 
     .panel { display: none; }
     .panel.active { display: block; }
@@ -272,7 +280,8 @@
     <div class="login-box">
         <h1>WearTee.ng</h1>
         <p>Admin Dashboard</p>
-        <input type="password" id="password-input" placeholder="Enter password" onkeydown="if(event.key==='Enter') doLogin()">
+        <input type="password" id="password-input" placeholder="Enter password"
+               onkeydown="if(event.key==='Enter') doLogin()">
         <button onclick="doLogin()">Sign In</button>
         <div class="login-error" id="login-error">Incorrect password. Try again.</div>
     </div>
@@ -313,7 +322,7 @@
                     <div class="stat-value" id="s-revenue">—</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-label">Pending Shipment</div>
+                    <div class="stat-label">Awaiting Action</div>
                     <div class="stat-value" id="s-pending">—</div>
                 </div>
             </div>
@@ -322,7 +331,9 @@
                 <div class="table-header">
                     <span class="table-title">All Orders</span>
                     <div style="display:flex;gap:8px;align-items:center;">
-                        <input class="table-search" type="text" placeholder="Search ref or location…" oninput="filterOrders(this.value)">
+                        <input class="table-search" type="text"
+                               placeholder="Search ref or location…"
+                               oninput="filterOrders(this.value)">
                         <button class="refresh-btn" onclick="loadOrders()">↻ Refresh</button>
                     </div>
                 </div>
@@ -347,23 +358,24 @@
         </div>
 
         <!-- ── STOCK PANEL ── -->
-        <!-- ── STOCK PANEL ── -->
-<div class="panel" id="panel-stock">
+        <div class="panel" id="panel-stock">
 
-    <!-- Low stock alert banner -->
-    <div id="low-stock-banner" style="display:none;margin-bottom:16px;">
-        <div style="background:#FCEBEB;border:1px solid #f5c6c6;border-radius:12px;padding:16px 20px;">
-            <div style="font-size:13px;font-weight:600;color:#A32D2D;margin-bottom:10px;">
-                ⚠️ Low Stock Alert — These products need restocking
+            <!-- Low stock alert banner -->
+            <div id="low-stock-banner" style="display:none;margin-bottom:16px;">
+                <div style="background:#FCEBEB;border:1px solid #f5c6c6;border-radius:12px;padding:16px 20px;">
+                    <div style="font-size:13px;font-weight:600;color:#A32D2D;margin-bottom:10px;">
+                        ⚠️ Low Stock Alert — These products need restocking
+                    </div>
+                    <div id="low-stock-list" style="display:flex;flex-direction:column;gap:6px;"></div>
+                </div>
             </div>
-            <div id="low-stock-list" style="display:flex;flex-direction:column;gap:6px;"></div>
-        </div>
-    </div>
 
-    <div class="table-wrap">
+            <div class="table-wrap">
                 <div class="table-header">
                     <span class="table-title">Stock Management</span>
-                    <input class="table-search" type="text" placeholder="Search product…" oninput="filterStock(this.value)">
+                    <input class="table-search" type="text"
+                           placeholder="Search product…"
+                           oninput="filterStock(this.value)">
                 </div>
                 <div style="overflow-x:auto;">
                     <table>
@@ -422,12 +434,11 @@
 
 <script>
 // ══════════════════════════════════════════════════════════════════════════════
-// CONFIG — paste your Supabase details here
+// CONFIG
 // ══════════════════════════════════════════════════════════════════════════════
-const SUPABASE_URL = 'https://noomrucdhechdsfhoxzr.supabase.co'; // ← your Project URL
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vb21ydWNkaGVjaGRzZmhveHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NDkzODYsImV4cCI6MjA5NjAyNTM4Nn0.oq8L6VoFUTiDVZ-nSaISDotGUSSv0nvaWTep3A1cobU';        // ← your anon key';
-// ⚠️  Change this to a strong password — this is what protects your dashboard
-const ADMIN_PASSWORD = 'wearteeadmin';
+const SUPABASE_URL      = 'https://noomrucdhechdsfhoxzr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5vb21ydWNkaGVjaGRzZmhveHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0NDkzODYsImV4cCI6MjA5NjAyNTM4Nn0.oq8L6VoFUTiDVZ-nSaISDotGUSSv0nvaWTep3A1cobU';
+const ADMIN_PASSWORD    = 'wearteeadmin'; // ← change this to something strong!
 
 // ══════════════════════════════════════════════════════════════════════════════
 // AUTH
@@ -450,7 +461,6 @@ function doLogout() {
     location.reload();
 }
 
-// Auto-login if session exists
 if (sessionStorage.getItem('wt_admin') === '1') {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('dashboard').style.display    = 'block';
@@ -475,13 +485,18 @@ async function sbFetch(path, options = {}) {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
         ...options,
         headers: {
-            apikey:        SUPABASE_ANON_KEY,
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-            'Content-Type':'application/json',
-            Prefer:        'return=representation',
+            apikey:         SUPABASE_ANON_KEY,
+            Authorization:  `Bearer ${SUPABASE_ANON_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer:         'return=representation',
             ...(options.headers || {}),
         }
     });
+    if (!res.ok) {
+        const err = await res.text();
+        console.error('Supabase error:', res.status, err);
+        return [];
+    }
     return res.json();
 }
 
@@ -493,14 +508,22 @@ let allOrders = [];
 async function loadOrders() {
     document.getElementById('orders-tbody').innerHTML =
         '<tr class="loading-row"><td colspan="6">Loading orders…</td></tr>';
-
     allOrders = await sbFetch('orders?select=*&order=created_at.desc');
     renderOrders(allOrders);
     updateOrderStats(allOrders);
-
     document.getElementById('last-updated').textContent =
         'Updated ' + new Date().toLocaleTimeString();
 }
+
+// Status label map
+const STATUS_LABELS = {
+    paid:         '💳 Paid',
+    pending_bank: '🏦 Pending Bank',
+    whatsapp:     '💬 WhatsApp',
+    shipped:      '🚚 Shipped',
+    delivered:    '✅ Delivered',
+    cancelled:    '❌ Cancelled',
+};
 
 function renderOrders(orders) {
     const tbody = document.getElementById('orders-tbody');
@@ -509,26 +532,31 @@ function renderOrders(orders) {
         return;
     }
     tbody.innerHTML = orders.map(o => {
-        const date  = new Date(o.created_at).toLocaleDateString('en-NG', { day:'numeric', month:'short', year:'numeric' });
+        const date  = new Date(o.created_at).toLocaleDateString('en-NG',
+            { day:'numeric', month:'short', year:'numeric' });
         const items = Array.isArray(o.items)
             ? o.items.map(i => `${i.name} (${i.size}) ×${i.qty}`).join(', ')
             : '—';
+        const status = o.status || 'paid';
         return `
         <tr>
             <td><code style="font-size:11px;">${o.ref}</code></td>
             <td style="white-space:nowrap;">${date}</td>
-            <td>${o.location || '—'}<br><span style="font-size:11px;color:var(--mid);">${o.zone || ''}</span></td>
+            <td>${o.location || '—'}<br>
+                <span style="font-size:11px;color:var(--mid);">${o.zone || ''}</span>
+            </td>
             <td class="items-cell">${items}</td>
             <td style="white-space:nowrap;font-weight:500;">₦${(o.total || 0).toLocaleString()}</td>
             <td>
-              <select class="status-badge status-${o.status}" onchange="updateStatus(${o.id}, this.value, this)">
-    <option value="paid"         ${o.status==='paid'         ? 'selected':''}>Paid</option>
-    <option value="pending_bank" ${o.status==='pending_bank' ? 'selected':''}>Pending Bank</option>
-    <option value="whatsapp"     ${o.status==='whatsapp'     ? 'selected':''}>WhatsApp</option>
-    <option value="shipped"      ${o.status==='shipped'      ? 'selected':''}>Shipped</option>
-    <option value="delivered"    ${o.status==='delivered'    ? 'selected':''}>Delivered</option>
-    <option value="cancelled"    ${o.status==='cancelled'    ? 'selected':''}>Cancelled</option>
-</select>
+                <select class="status-select status-${status}"
+                        onchange="updateStatus(${o.id}, this.value, this)">
+                    <option value="paid"         ${status==='paid'         ?'selected':''}>💳 Paid</option>
+                    <option value="pending_bank" ${status==='pending_bank' ?'selected':''}>🏦 Pending Bank</option>
+                    <option value="whatsapp"     ${status==='whatsapp'     ?'selected':''}>💬 WhatsApp</option>
+                    <option value="shipped"      ${status==='shipped'      ?'selected':''}>🚚 Shipped</option>
+                    <option value="delivered"    ${status==='delivered'    ?'selected':''}>✅ Delivered</option>
+                    <option value="cancelled"    ${status==='cancelled'    ?'selected':''}>❌ Cancelled</option>
+                </select>
             </td>
         </tr>`;
     }).join('');
@@ -543,18 +571,22 @@ function filterOrders(q) {
 }
 
 async function updateStatus(id, status, selectEl) {
-    selectEl.className = `status-badge status-${status}`;
+    selectEl.className = `status-select status-${status}`;
     await sbFetch(`orders?id=eq.${id}`, {
-        method:  'PATCH',
-        body:    JSON.stringify({ status }),
+        method: 'PATCH',
+        body:   JSON.stringify({ status }),
     });
 }
 
 function updateOrderStats(orders) {
-    const today     = new Date().toDateString();
+    const today       = new Date().toDateString();
     const todayOrders = orders.filter(o => new Date(o.created_at).toDateString() === today);
-    const revenue   = orders.reduce((a, b) => a + (b.total || 0), 0);
-    const pending   = orders.filter(o => o.status === 'paid').length;
+    const revenue     = orders
+        .filter(o => o.status === 'paid' || o.status === 'shipped' || o.status === 'delivered')
+        .reduce((a, b) => a + (b.total || 0), 0);
+    const pending     = orders.filter(o =>
+        o.status === 'paid' || o.status === 'pending_bank' || o.status === 'whatsapp'
+    ).length;
 
     document.getElementById('s-total-orders').textContent = orders.length;
     document.getElementById('s-today-orders').textContent = todayOrders.length;
@@ -572,7 +604,6 @@ async function loadStock() {
     renderStock(allStock);
 }
 
-// Product names from your JS — used to label rows
 const PRODUCT_NAMES = [
     "Asymmetric Pleated Top (Black)","Asymmetric Pleated Top (Red)","Backless Top (Black)",
     "Backless Top (Wine)","Basic Top (Lotus)","Basic Top (Pink)","Black Tank Top",
@@ -609,12 +640,13 @@ const PRODUCT_CATS = [
     ...Array(3).fill('Joggers'),
     ...Array(12).fill('Pant'),
 ];
+
 function renderStock(stockRows) {
     const tbody = document.getElementById('stock-tbody');
     tbody.innerHTML = stockRows.map(row => {
-        const name  = PRODUCT_NAMES[row.id] || `Product #${row.id}`;
-        const cat   = PRODUCT_CATS[row.id]  || '—';
-        const cls   = row.stock === 0 ? 'stock-zero' : row.stock <= 3 ? 'stock-low' : 'stock-ok';
+        const name = PRODUCT_NAMES[row.id] || `Product #${row.id}`;
+        const cat  = PRODUCT_CATS[row.id]  || '—';
+        const cls  = row.stock === 0 ? 'stock-zero' : row.stock <= 3 ? 'stock-low' : 'stock-ok';
         return `
         <tr id="stock-row-${row.id}">
             <td style="color:var(--mid);font-size:12px;">${row.id}</td>
@@ -622,13 +654,14 @@ function renderStock(stockRows) {
             <td style="color:var(--mid);font-size:12px;">${cat}</td>
             <td><span class="${cls}">${row.stock}</span></td>
             <td style="display:flex;gap:8px;align-items:center;">
-                <input class="stock-input" type="number" min="0" value="${row.stock}" id="stock-input-${row.id}">
+                <input class="stock-input" type="number" min="0"
+                       value="${row.stock}" id="stock-input-${row.id}">
                 <button class="save-stock-btn" onclick="saveStock(${row.id})">Save</button>
             </td>
         </tr>`;
     }).join('');
 
-    // ── Show low stock banner ──────────────────────────────────────────────
+    // Low stock banner
     const lowItems = stockRows.filter(r => r.stock <= 3);
     const banner   = document.getElementById('low-stock-banner');
     const list     = document.getElementById('low-stock-list');
@@ -636,7 +669,7 @@ function renderStock(stockRows) {
     if (lowItems.length) {
         banner.style.display = 'block';
         list.innerHTML = lowItems.map(r => {
-            const name = PRODUCT_NAMES[r.id] || `Product #${r.id}`;
+            const name  = PRODUCT_NAMES[r.id] || `Product #${r.id}`;
             const color = r.stock === 0 ? '#A32D2D' : '#854F0B';
             const label = r.stock === 0 ? 'SOLD OUT' : `${r.stock} left`;
             return `
@@ -656,7 +689,8 @@ function filterStock(q) {
     document.querySelectorAll('#stock-tbody tr').forEach(row => {
         const name = row.querySelector('td:nth-child(2)');
         if (!name) return;
-        row.style.display = name.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
+        row.style.display =
+            name.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
     });
 }
 
@@ -670,12 +704,10 @@ async function saveStock(id) {
         body:   JSON.stringify({ stock: newQty }),
     });
 
-    // Update display
     const row = document.getElementById(`stock-row-${id}`);
     const cls = newQty === 0 ? 'stock-zero' : newQty <= 3 ? 'stock-low' : 'stock-ok';
     row.querySelector('td:nth-child(4)').innerHTML = `<span class="${cls}">${newQty}</span>`;
 
-    // Flash feedback
     const btn = row.querySelector('.save-stock-btn');
     btn.textContent = '✓ Saved';
     setTimeout(() => btn.textContent = 'Save', 1500);
@@ -687,23 +719,24 @@ async function saveStock(id) {
 function buildSummary() {
     if (!allOrders.length) return;
 
-    const revenue  = allOrders.reduce((a, b) => a + (b.total || 0), 0);
-    const avgOrder = Math.round(revenue / allOrders.length);
+    const paidOrders = allOrders.filter(o =>
+        o.status === 'paid' || o.status === 'shipped' || o.status === 'delivered'
+    );
+    const revenue  = paidOrders.reduce((a, b) => a + (b.total || 0), 0);
+    const avgOrder = paidOrders.length ? Math.round(revenue / paidOrders.length) : 0;
 
-    // Count items sold per product
     const productSales = {};
     allOrders.forEach(o => {
         if (!Array.isArray(o.items)) return;
         o.items.forEach(item => {
             if (!productSales[item.name]) productSales[item.name] = { qty: 0, revenue: 0 };
             productSales[item.name].qty     += item.qty;
-            productSales[item.name].revenue += item.price * item.qty;
+            productSales[item.name].revenue += (item.price || 0) * item.qty;
         });
     });
 
     const totalItems = Object.values(productSales).reduce((a, b) => a + b.qty, 0);
 
-    // Top delivery zone
     const zoneCounts = {};
     allOrders.forEach(o => {
         if (o.zone) zoneCounts[o.zone] = (zoneCounts[o.zone] || 0) + 1;
@@ -715,22 +748,24 @@ function buildSummary() {
     document.getElementById('sum-avg').textContent      = '₦' + avgOrder.toLocaleString();
     document.getElementById('sum-top-zone').textContent = topZone ? topZone[0] : '—';
 
-    // Top products list
     const sorted = Object.entries(productSales)
         .sort((a, b) => b[1].qty - a[1].qty)
         .slice(0, 10);
 
-    document.getElementById('top-products-list').innerHTML = sorted.map(([name, data], i) => `
-        <div class="top-product-row">
-            <div class="top-rank">${i + 1}</div>
-            <div class="top-name">${name}</div>
-            <div class="top-sales">${data.qty} sold</div>
-            <div class="top-revenue">₦${data.revenue.toLocaleString()}</div>
-        </div>
-    `).join('');
+    document.getElementById('top-products-list').innerHTML = sorted.length
+        ? sorted.map(([name, data], i) => `
+            <div class="top-product-row">
+                <div class="top-rank">${i + 1}</div>
+                <div class="top-name">${name}</div>
+                <div class="top-sales">${data.qty} sold</div>
+                <div class="top-revenue">₦${data.revenue.toLocaleString()}</div>
+            </div>`).join('')
+        : '<div style="text-align:center;padding:40px;color:var(--mid);">No sales data yet</div>';
 }
 
-// Init
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
 if (sessionStorage.getItem('wt_admin') === '1') {
     loadOrders();
     loadStock();
