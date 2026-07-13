@@ -319,11 +319,12 @@ function orderViaWhatsAppDirect(id) {
 // ══════════════════════════════════════════════════════════════════════════════
 function getFilteredProducts() {
     return PRODUCTS.filter(p => {
+        const inStock     = p.stock > 0;
         const matchCat    = activeCategory === 'all' || p.cat === activeCategory;
         const matchSearch = !searchQuery ||
             p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             p.cat.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchCat && matchSearch;
+        return inStock && matchCat && matchSearch;
     });
 }
 
