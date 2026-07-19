@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="product.css">
     <style>
         @media (max-width: 600px) {
-            .grid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
-            .card-name  { font-size: 10px !important; }
-            .card-price { font-size: 11px !important; }
-            .sz-btn     { font-size: 8px !important; padding: 2px 4px !important; }
-            .atc-btn    { font-size: 10px !important; padding: 8px 4px !important; }
+            .grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+            .card-name  { font-size: 12px !important; }
+            .card-price { font-size: 13px !important; }
+            .sz-btn     { font-size: 10px !important; padding: 5px 8px !important; }
+            .atc-btn    { font-size: 11px !important; padding: 10px 6px !important; }
         }
 
         /* ── Product Detail Modal ── */
@@ -26,15 +26,23 @@
         #pd-content { padding-bottom: 40px; }
         .pd-img-box { position: relative; width: 100%; background: #f5f2ee; overflow: hidden; }
         .pd-img-box img { width: 100%; display: block; max-height: 500px; object-fit: cover; object-position: top center; }
-        .pd-img-box .badge { position: absolute; top: 12px; left: 12px; z-index: 2; }
         .pd-img-box .sold-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; z-index: 3; }
         .pd-img-box .sold-overlay span { color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: .1em; }
         .pd-info { padding: 20px 18px 10px; }
         .pd-brand { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .14em; color: #aaa; margin-bottom: 6px; }
         .pd-name { font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 700; color: #111; margin: 0 0 12px; line-height: 1.25; }
-        .pd-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        .pd-img-box .badges { position: absolute; top: 12px; left: 12px; z-index: 2; display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+        .pd-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
         .pd-price { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: #111; letter-spacing: .04em; }
+        .pd-price.on-sale { color: #e8452a; }
+        .pd-price-original { font-family: 'DM Mono', monospace; font-size: 15px; color: #999; text-decoration: line-through; }
+        .pd-price-savings { font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 700; color: #e8452a; margin-bottom: 8px; }
         .pd-badge-new { background: #111; color: #fff; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; padding: 3px 8px; border-radius: 2px; }
+        .pd-badge-sale { background: #111; color: #ffce45; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; padding: 3px 8px; border-radius: 2px; }
+        .pd-badge-bestseller { background: #ffce45; color: #111; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .1em; padding: 3px 8px; border-radius: 2px; }
+        .pd-rating-row { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+        .pd-rating-stars { color: #f5a623; font-size: 15px; letter-spacing: 1px; }
+        .pd-rating-count { font-family: 'DM Mono', monospace; font-size: 11px; color: #888; }
         .pd-stock-status { font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; margin-bottom: 10px; }
         .pd-stock-status.in  { color: #2e7d32; }
         .pd-stock-status.out { color: #c62828; }
@@ -140,6 +148,14 @@
     <div class="container">
         <div class="results-bar">
             <span id="results-label">Loading...</span>
+            <select class="sort-select" id="sort-select">
+                <option value="featured">Sort: Featured</option>
+                <option value="bestselling">Best Selling</option>
+                <option value="rating">Top Rated</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="newest">Newest</option>
+            </select>
         </div>
         <div class="grid" id="product-grid"></div>
     </div>
