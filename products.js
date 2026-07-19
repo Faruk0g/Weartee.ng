@@ -34,15 +34,28 @@ const DELIVERY_ZONES = [
 // ══════════════════════════════════════════════════════════════════════════════
 // PRODUCTS
 // ══════════════════════════════════════════════════════════════════════════════
+// Optional fields you can add to any product below:
+//   originalPrice : number  — if set higher than `price`, shows a strikethrough
+//                             price + "SALE" badge + savings %. Omit = no discount.
+//   isBestSeller  : true    — shows a "BEST SELLER" badge. You decide which ones,
+//                             since only you know what's actually selling well.
+//   rating        : 0-5     — shows star rating on the card. ONLY add this once you
+//                             have real customer reviews — don't fabricate numbers,
+//                             that's misleading to shoppers and can get flagged as
+//                             deceptive advertising. Leave it out until you have
+//                             genuine review data (e.g. synced from Supabase).
+//   reviewCount   : number  — shown next to the stars, e.g. "(128)".
+// A handful of entries below have originalPrice / isBestSeller filled in as a
+// working example — edit them to reflect what's actually true for your store.
 const PRODUCTS = [
     // BASIC TOPS
-    { name:"Asymmetric Pleated Top (Black)",        price:12000, img:"images/Asymmetric Pleated Top(black).JPG",        stock:1,  cat:"basic tops", isNew:true },
+    { name:"Asymmetric Pleated Top (Black)",        price:12000, originalPrice:16000, isBestSeller:true, img:"images/Asymmetric Pleated Top(black).JPG",        stock:1,  cat:"basic tops", isNew:true },
     { name:"Asymmetric Pleated Top (Red)",          price:12000, img:"images/Asymmetric Pleated Top(red).JPG",          stock:1,  cat:"basic tops", isNew:true },
     { name:"Backless Top (Black)",                  price:10000, img:"images/Backless Top(black).JPG",                  stock:0,  cat:"basic tops", isNew:true },
     { name:"Backless Top (Wine)",                   price:10000, img:"images/Backless Top(wine).JPG",                   stock:1,  cat:"basic tops", isNew:true },
     { name:"Basic Top (Lotus)",                     price:10000, img:"images/Heart Shaped Basic Top(lotus).JPG",        stock:1,  cat:"basic tops", isNew:true },
     { name:"Basic Top (Pink)",                      price:10000, img:"images/Heart Shaped Basic Top(pink).JPG",         stock:1,  cat:"basic tops", isNew:true },
-    { name:"Black Tank Top",                        price:7000,  img:"images/Black Tank Top.JPG",                       stock:1,  cat:"basic tops", isNew:true },
+    { name:"Black Tank Top",                        price:7000,  originalPrice:9000, img:"images/Black Tank Top.JPG",                       stock:1,  cat:"basic tops", isNew:true },
     { name:"Black V-Neck Short Sleeve Basic Top",   price:10000, img:"images/Black V-neck Short Sleeve Basic Top.JPG",  stock:0,  cat:"basic tops", isNew:true },
     { name:"Brown Tank Top",                        price:7000,  img:"images/Brown Tank Top.JPG",                       stock:10, cat:"basic tops", isNew:true },
     { name:"Grey Tank Top",                         price:7000,  img:"images/Grey Tank Top.JPG",                        stock:1,  cat:"basic tops", isNew:true },
@@ -72,7 +85,7 @@ const PRODUCTS = [
     { name:"Black Graphic Tee",                     price:10000, img:"images/Black Graphics Tee.JPG",                   stock:0,  cat:"tee", isNew:true },
     { name:"Black Plain Tee",                       price:9500,  img:"images/Black Plain Tee.JPG",                      stock:1,  cat:"tee", isNew:true },
     { name:"Black Tee (Style 1)",                   price:10000, img:"images/Black Tee.JPG",                            stock:1,  cat:"tee", isNew:true },
-    { name:"Black Tee (Style 2)",                   price:15000, img:"images/Black Tee (2).JPG",                        stock:1,  cat:"tee", isNew:true },
+    { name:"Black Tee (Style 2)",                   price:15000, isBestSeller:true, img:"images/Black Tee (2).JPG",                        stock:1,  cat:"tee", isNew:true },
     { name:"Blue Tee",                              price:15000, img:"images/Blue Tee.JPG",                             stock:1,  cat:"tee", isNew:true },
     { name:"Cream Color Tee",                       price:10000, img:"images/Cream Color Tee.JPG",                      stock:1,  cat:"tee", isNew:true },
     { name:"Green Tee",                             price:15000, img:"images/Green TEe.JPG",                            stock:1,  cat:"tee", isNew:true },
@@ -87,13 +100,13 @@ const PRODUCTS = [
     { name:"Long Sleeve Graphics Tee",              price:20000, img:"images/Long Sleeve Graphics Tee.JPG",             stock:1,  cat:"tee", isNew:true },
     { name:"Long Sleeve Graphics Tee (Brown)",      price:20000, img:"images/Long Sleeve Graphics Tee(brown).JPG",     stock:1,  cat:"tee", isNew:true },
     { name:"Long Sleeve Graphics Tee (Wine)",       price:20000, img:"images/Long Sleeve Graphics Tee(wine).JPG",      stock:1,  cat:"tee", isNew:true },
-    { name:"One Piece Black Tee",                   price:15000, img:"images/One Piece Black Tee.JPG",                  stock:1,  cat:"tee", isNew:true },
+    { name:"One Piece Black Tee",                   price:15000, originalPrice:19000, img:"images/One Piece Black Tee.JPG",                  stock:1,  cat:"tee", isNew:true },
     { name:"Printed Tee (Black)",                   price:15000, img:"images/Printed Tee(black).JPG",                   stock:0,  cat:"tee", isNew:true },
     { name:"Tom & Jerry Round Neck Tee",            price:15000, img:"images/Mickey Round Neck Tee.JPG",                stock:0,  cat:"tee", isNew:true },
     { name:"White Button-Up Shirt",                 price:15000, img:"images/White Button-up Shirt.JPG",                stock:1,  cat:"tee", isNew:true },
     { name:"White Plain Tee",                       price:10000, img:"images/White Plain Tee.JPG",                      stock:0,  cat:"tee", isNew:true },
     // SNAPBACKS
-    { name:"Black Strapless Cap (Style 1)", price:15000, img:"images/Black Strapless Cap.JPG",      stock:1, cat:"snapback", isNew:true },
+    { name:"Black Strapless Cap (Style 1)", price:15000, isBestSeller:true, img:"images/Black Strapless Cap.JPG",      stock:1, cat:"snapback", isNew:true },
     { name:"Black Strapless Cap (Style 2)", price:15000, img:"images/Black Strapless Cap (2).JPG",  stock:1, cat:"snapback", isNew:true },
     { name:"Black Strapless Cap (Style 3)", price:15000, img:"images/Black Strapless Cap (3).JPG",  stock:1, cat:"snapback", isNew:true },
     { name:"Blue Strapless Cap (Style 1)",  price:15000, img:"images/Blue Strapless Cap.JPG",       stock:1, cat:"snapback", isNew:true },
@@ -103,14 +116,14 @@ const PRODUCTS = [
     // JOGGERS
     { name:"Blue Velvet Joggers",     price:15000, img:"images/Blue Velvet Joggers.JPG",      stock:0, cat:"joggers", isNew:true },
     { name:"Brown Velvet Joggers",    price:15000, img:"images/Brown Velvet Joggers.JPG",     stock:0, cat:"joggers", isNew:true },
-    { name:"Velvet Joggers (Burgundy)", price:15000, img:"images/Velvet Joggers(burgundy).JPG", stock:1, cat:"joggers", isNew:true },
+    { name:"Velvet Joggers (Burgundy)", price:15000, originalPrice:18000, isBestSeller:true, img:"images/Velvet Joggers(burgundy).JPG", stock:1, cat:"joggers", isNew:true },
     // PANTS
-    { name:"Blue Wide Leg Pant",            price:9000,  img:"images/Blue Wide Leg Pant.JPG",          stock:1, cat:"pant", isNew:true },
+    { name:"Blue Wide Leg Pant",            price:9000,  originalPrice:11500, img:"images/Blue Wide Leg Pant.JPG",          stock:1, cat:"pant", isNew:true },
     { name:"Linen Free Pant (Black)",       price:9000,  img:"images/Linen Free Pant(black).JPG",      stock:1, cat:"pant", isNew:true },
     { name:"Linen Free Pant (Brown)",       price:9000,  img:"images/Linen Free Pant(brown).JPG",      stock:1, cat:"pant", isNew:true },
     { name:"Linen Free Pant (Caramel)",     price:9000,  img:"images/Linen Free Pant(caramel).JPG",    stock:1, cat:"pant", isNew:true },
     { name:"Linen Free Pant (Grey)",        price:9000,  img:"images/Linen Free Pant (grey).JPG",      stock:1, cat:"pant", isNew:true },
-    { name:"Unisex Cargo (Black) Style 1",  price:15000, img:"images/Unisex Cargo(black).JPG",         stock:1, cat:"pant", isNew:true },
+    { name:"Unisex Cargo (Black) Style 1",  price:15000, originalPrice:19000, isBestSeller:true, img:"images/Unisex Cargo(black).JPG",         stock:1, cat:"pant", isNew:true },
     { name:"Unisex Cargo (Black) Style 2",  price:15000, img:"images/Unisex Cargo(black 2).JPG",       stock:1, cat:"pant", isNew:true },
     { name:"Unisex Cargo (Green) Style 1",  price:15000, img:"images/Unisex Cargo(green).JPG",         stock:1, cat:"pant", isNew:true },
     { name:"Unisex Cargo (Green) Style 2",  price:15000, img:"images/Unisex Cargo(green) (2).JPG",     stock:1, cat:"pant", isNew:true },
@@ -145,6 +158,7 @@ let cart          = hydrateCart(_savedCart);
 let selectedSizes = {};
 let activeCategory = 'all';
 let searchQuery    = '';
+let sortBy          = 'featured';
 
 // ══════════════════════════════════════════════════════════════════════════════
 // HELPERS
@@ -152,6 +166,26 @@ let searchQuery    = '';
 function sanitize(str) {
     if (!str) return '';
     return String(str).replace(/[*_~`]/g, '').trim();
+}
+
+// Renders a 5-star row (full/half/empty) for a given rating out of 5
+function renderStars(rating) {
+    const full  = Math.floor(rating);
+    const half  = rating - full >= 0.5;
+    let out = '';
+    for (let i = 0; i < full; i++) out += '&#9733;';
+    if (half) out += '&#189;&#9733;';
+    for (let i = full + (half ? 1 : 0); i < 5; i++) out += '&#9734;';
+    return out;
+}
+
+// Returns { hasDiscount, percentOff } for a product based on originalPrice vs price
+function getDiscountInfo(p) {
+    if (!p.originalPrice || p.originalPrice <= p.price) {
+        return { hasDiscount: false, percentOff: 0 };
+    }
+    const percentOff = Math.round((1 - p.price / p.originalPrice) * 100);
+    return { hasDiscount: true, percentOff };
 }
 
 function saveCart() {
@@ -222,11 +256,16 @@ function openProductDetail(id) {
     const selSize  = selectedSizes[p.id] || sizes[0];
     const modal    = document.getElementById('product-detail-modal');
     const content  = document.getElementById('pd-content');
+    const discountInfo = getDiscountInfo(p);
 
     content.innerHTML = `
         <div class="pd-img-box">
-            ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
-            ${lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
+            <div class="badges">
+                ${p.isBestSeller ? `<div class="badge pd-badge-bestseller">&#9733; Best Seller</div>` : ''}
+                ${discountInfo.hasDiscount ? `<div class="badge pd-badge-sale">-${discountInfo.percentOff}%</div>` : ''}
+                ${p.isNew ? `<div class="badge pd-badge-new">NEW</div>` : ''}
+                ${lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
+            </div>
             ${soldOut  ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
             <img id="pd-main-img" src="${p.img}" alt="${p.name}"
                 onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
@@ -234,10 +273,16 @@ function openProductDetail(id) {
         <div class="pd-info">
             <div class="pd-brand">WEARTEE.NG</div>
             <h2 class="pd-name">${p.name}</h2>
+            ${p.rating ? `
+            <div class="pd-rating-row">
+                <span class="pd-rating-stars">${renderStars(p.rating)}</span>
+                <span class="pd-rating-count">(${p.reviewCount || 0} reviews)</span>
+            </div>` : ''}
             <div class="pd-price-row">
-                <span class="pd-price">&#8358;${p.price.toLocaleString()}</span>
-                ${p.isNew ? `<span class="pd-badge-new">NEW ARRIVAL</span>` : ''}
+                <span class="pd-price${discountInfo.hasDiscount ? ' on-sale' : ''}">&#8358;${p.price.toLocaleString()}</span>
+                ${discountInfo.hasDiscount ? `<span class="pd-price-original">&#8358;${p.originalPrice.toLocaleString()}</span>` : ''}
             </div>
+            ${discountInfo.hasDiscount ? `<div class="pd-price-savings">You save &#8358;${(p.originalPrice - p.price).toLocaleString()} (${discountInfo.percentOff}% off)</div>` : ''}
             <div class="pd-stock-status ${soldOut ? 'out' : 'in'}">
                 ${soldOut ? '&#10006; Out of Stock' : lowStock ? `&#9888; Only ${p.stock} left` : '&#10003; In Stock'}
             </div>
@@ -318,7 +363,7 @@ function orderViaWhatsAppDirect(id) {
 // RENDER PRODUCTS
 // ══════════════════════════════════════════════════════════════════════════════
 function getFilteredProducts() {
-    return PRODUCTS.filter(p => {
+    const filtered = PRODUCTS.filter(p => {
         const inStock     = p.stock > 0;
         const matchCat    = activeCategory === 'all' || p.cat === activeCategory;
         const matchSearch = !searchQuery ||
@@ -326,6 +371,29 @@ function getFilteredProducts() {
             p.cat.toLowerCase().includes(searchQuery.toLowerCase());
         return inStock && matchCat && matchSearch;
     });
+
+    const sorted = filtered.slice();
+    switch (sortBy) {
+        case 'bestselling':
+            sorted.sort((a, b) => (b.isBestSeller ? 1 : 0) - (a.isBestSeller ? 1 : 0));
+            break;
+        case 'rating':
+            sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+            break;
+        case 'price-low':
+            sorted.sort((a, b) => a.price - b.price);
+            break;
+        case 'price-high':
+            sorted.sort((a, b) => b.price - a.price);
+            break;
+        case 'newest':
+            sorted.sort((a, b) => b.id - a.id);
+            break;
+        default:
+            // 'featured' — keep catalog order
+            break;
+    }
+    return sorted;
 }
 
 function renderProducts() {
@@ -344,12 +412,31 @@ function renderProducts() {
         const lowStock = p.stock > 0 && p.stock <= 3;
         const sizes    = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
         const selSize  = selectedSizes[p.id] || sizes[0];
+        const { hasDiscount, percentOff } = getDiscountInfo(p);
+
+        const badgesHTML = `
+            ${p.isBestSeller ? `<div class="badge badge-bestseller">&#9733; Best Seller</div>` : ''}
+            ${hasDiscount ? `<div class="badge badge-sale">-${percentOff}%</div>` : ''}
+            ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
+            ${lowStock && !soldOut ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
+        `;
+
+        const priceHTML = hasDiscount ? `
+            <span class="card-price on-sale">&#8358;${p.price.toLocaleString()}</span>
+            <span class="card-price-original">&#8358;${p.originalPrice.toLocaleString()}</span>
+        ` : `<span class="card-price">&#8358;${p.price.toLocaleString()}</span>`;
+
+        const ratingHTML = p.rating ? `
+            <div class="rating-row">
+                <span class="rating-stars">${renderStars(p.rating)}</span>
+                <span class="rating-count">(${p.reviewCount || 0})</span>
+            </div>
+        ` : '';
 
         return `
         <div class="card${soldOut ? ' disabled' : ''}">
             <div class="img-box" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
-                ${p.isNew ? `<div class="badge badge-new">NEW</div>` : ''}
-                ${lowStock && !soldOut ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
+                <div class="badges">${badgesHTML}</div>
                 ${soldOut ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
                 <img src="${p.img}" alt="${p.name}" loading="lazy"
                     onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
@@ -357,8 +444,9 @@ function renderProducts() {
             <div class="card-body">
                 <div class="card-meta" onclick="openProductDetail(${p.id})" style="cursor:pointer;">
                     <span class="card-name">${p.name}</span>
-                    <span class="card-price">&#8358;${p.price.toLocaleString()}</span>
                 </div>
+                <div class="card-price-row">${priceHTML}</div>
+                ${ratingHTML}
                 ${sizes.length > 1 ? `
                 <div class="size-row" id="sizes-${p.id}">
                     ${sizes.map(s => `<button class="sz-btn${s === selSize ? ' selected' : ''}" onclick="selectSize(${p.id}, '${s}')">${s}</button>`).join('')}
@@ -394,6 +482,11 @@ document.getElementById('filter-bar').addEventListener('click', e => {
     document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
     chip.classList.add('active');
     activeCategory = chip.dataset.cat;
+    renderProducts();
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+    sortBy = e.target.value;
     renderProducts();
 });
 
