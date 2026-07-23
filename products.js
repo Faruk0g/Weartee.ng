@@ -1,6 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // WearTee.ng — products.js
-// Product page only — cart lives in cart.html
+// Shared by index.html (shop grid) and product-detail.html (single product page)
+// Cart lives in cart.html
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -195,7 +196,7 @@ function saveCart() {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// CART — now just updates the count badge and navigates to cart.html
+// CART — updates the count badge and navigates to cart.html
 // ══════════════════════════════════════════════════════════════════════════════
 function updateCartUI() {
     const count = cart.reduce((a, b) => a + b.qty, 0);
@@ -203,7 +204,6 @@ function updateCartUI() {
     if (el) el.textContent = count;
 }
 
-// FIX: openCart now navigates to cart.html instead of opening a sidebar
 function openCart() {
     window.location.href = 'cart.html';
 }
@@ -245,98 +245,112 @@ function changeQty(id, size, delta) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// PRODUCT DETAIL MODAL
+// PRODUCT DETAIL — now a real page (product-detail.html?id=N), not a modal
 // ══════════════════════════════════════════════════════════════════════════════
+
+// Clicking a product on the grid takes the shopper to its own page.
 function openProductDetail(id) {
-    const p = PRODUCTS.find(x => x.id === id);
-    if (!p) return;
+    window.location.href = `product-detail.html?id=${id}`;
+}
+
+// Builds the inner HTML for a product's detail view. Used only by the
+// product-detail.html page — shared here so the markup and behaviour stay
+// identical to what the grid card already promises (price, badges, sizes, etc).
+function buildProductDetailHTML(p) {
     const sizes    = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
     const soldOut  = p.stock === 0;
     const lowStock = p.stock > 0 && p.stock <= 3;
     const selSize  = selectedSizes[p.id] || sizes[0];
-    const modal    = document.getElementById('product-detail-modal');
-    const content  = document.getElementById('pd-content');
     const discountInfo = getDiscountInfo(p);
 
-    content.innerHTML = `
-        <div class="pd-img-box">
-            <div class="badges">
-                ${p.isBestSeller ? `<div class="badge pd-badge-bestseller">&#9733; Best Seller</div>` : ''}
-                ${discountInfo.hasDiscount ? `<div class="badge pd-badge-sale">-${discountInfo.percentOff}%</div>` : ''}
-                ${p.isNew ? `<div class="badge pd-badge-new">NEW</div>` : ''}
-                ${lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
-            </div>
-            ${soldOut  ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
-            <img id="pd-main-img" src="${p.img}" alt="${p.name}"
-                onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
-        </div>
-        <div class="pd-info">
-            <div class="pd-brand">WEARTEE.NG</div>
-            <h2 class="pd-name">${p.name}</h2>
-            ${p.rating ? `
-            <div class="pd-rating-row">
-                <span class="pd-rating-stars">${renderStars(p.rating)}</span>
-                <span class="pd-rating-count">(${p.reviewCount || 0} reviews)</span>
-            </div>` : ''}
-            <div class="pd-price-row">
-                <span class="pd-price${discountInfo.hasDiscount ? ' on-sale' : ''}">&#8358;${p.price.toLocaleString()}</span>
-                ${discountInfo.hasDiscount ? `<span class="pd-price-original">&#8358;${p.originalPrice.toLocaleString()}</span>` : ''}
-            </div>
-            ${discountInfo.hasDiscount ? `<div class="pd-price-savings">You save &#8358;${(p.originalPrice - p.price).toLocaleString()} (${discountInfo.percentOff}% off)</div>` : ''}
-            <div class="pd-stock-status ${soldOut ? 'out' : 'in'}">
-                ${soldOut ? '&#10006; Out of Stock' : lowStock ? `&#9888; Only ${p.stock} left` : '&#10003; In Stock'}
-            </div>
-            <div class="pd-delivery-note">
-                <span>&#128666;</span> Delivery across Nigeria &bull; fee calculated in cart
-            </div>
-            ${sizes.length > 1 ? `
-            <div class="pd-size-section">
-                <div class="pd-size-label">SELECT SIZE</div>
-                <div class="pd-size-row" id="pd-sizes-${p.id}">
-                    ${sizes.map(s => `<button class="pd-sz-btn${s === selSize ? ' selected' : ''}" onclick="pdSelectSize(${p.id}, '${s}')">${s}</button>`).join('')}
+    return `
+        <div class="pd-layout">
+            <div class="pd-img-box">
+                <div class="badges">
+                    ${p.isBestSeller ? `<div class="badge pd-badge-bestseller">&#9733; Best Seller</div>` : ''}
+                    ${discountInfo.hasDiscount ? `<div class="badge pd-badge-sale">-${discountInfo.percentOff}%</div>` : ''}
+                    ${p.isNew ? `<div class="badge pd-badge-new">NEW</div>` : ''}
+                    ${lowStock ? `<div class="badge badge-low">Only ${p.stock} left</div>` : ''}
                 </div>
-            </div>` : `<div class="pd-size-section"><div class="pd-size-label">SIZE</div><div class="pd-one-size">ONE SIZE</div></div>`}
-            <div class="pd-actions">
-                <button class="pd-atc-btn" onclick="addToCartFromDetail(${p.id})" ${soldOut ? 'disabled' : ''}>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                    </svg>
-                    ${soldOut ? 'Sold Out' : 'Add to Cart'}
-                </button>
-                <button class="pd-wa-btn" onclick="orderViaWhatsAppDirect(${p.id})">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 0C5.373 0 0 5.373 0 12c0 2.115.554 4.1 1.522 5.823L0 24l6.335-1.508C8.025 23.452 9.975 24 11.998 24 18.625 24 24 18.627 24 12S18.625 0 11.998 0zm0 21.818c-1.872 0-3.633-.505-5.148-1.384l-.369-.219-3.761.895.952-3.652-.24-.378A9.79 9.79 0 0 1 2.18 12c0-5.413 4.406-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818S17.411 21.818 11.998 21.818z"/></svg>
-                    Order via WhatsApp
-                </button>
+                ${soldOut  ? `<div class="sold-overlay"><span>Sold Out</span></div>` : ''}
+                <img id="pd-main-img" src="${p.img}" alt="${p.name}"
+                    onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22380%22><rect fill=%22%23ece8e0%22 width=%22100%25%22 height=%22100%25%22/><text fill=%22%23bbb%22 x=%2250%25%22 y=%2250%25%22 font-size=%2213%22 text-anchor=%22middle%22 dy=%22.3em%22 font-family=%22sans-serif%22>${p.name}</text></svg>'">
             </div>
-            <div class="pd-details">
-                <div class="pd-detail-row"><span>Category</span><span>${p.cat.toUpperCase()}</span></div>
-                <div class="pd-detail-row"><span>Brand</span><span>WEARTEE.NG</span></div>
-                <div class="pd-detail-row"><span>Condition</span><span>Brand New</span></div>
+            <div class="pd-info">
+                <div class="pd-brand">WEARTEE.NG</div>
+                <h2 class="pd-name">${p.name}</h2>
+                ${p.rating ? `
+                <div class="pd-rating-row">
+                    <span class="pd-rating-stars">${renderStars(p.rating)}</span>
+                    <span class="pd-rating-count">(${p.reviewCount || 0} reviews)</span>
+                </div>` : ''}
+                <div class="pd-price-row">
+                    <span class="pd-price${discountInfo.hasDiscount ? ' on-sale' : ''}">&#8358;${p.price.toLocaleString()}</span>
+                    ${discountInfo.hasDiscount ? `<span class="pd-price-original">&#8358;${p.originalPrice.toLocaleString()}</span>` : ''}
+                </div>
+                ${discountInfo.hasDiscount ? `<div class="pd-price-savings">You save &#8358;${(p.originalPrice - p.price).toLocaleString()} (${discountInfo.percentOff}% off)</div>` : ''}
+                <div class="pd-stock-status ${soldOut ? 'out' : 'in'}">
+                    ${soldOut ? '&#10006; Out of Stock' : lowStock ? `&#9888; Only ${p.stock} left` : '&#10003; In Stock'}
+                </div>
+                <div class="pd-delivery-note">
+                    <span>&#128666;</span> Delivery across Nigeria &bull; fee calculated in cart
+                </div>
+                ${sizes.length > 1 ? `
+                <div class="pd-size-section">
+                    <div class="pd-size-label">SELECT SIZE</div>
+                    <div class="pd-size-row" id="pd-sizes-${p.id}">
+                        ${sizes.map(s => `<button class="pd-sz-btn${s === selSize ? ' selected' : ''}" onclick="pdSelectSize(${p.id}, '${s}')">${s}</button>`).join('')}
+                    </div>
+                </div>` : `<div class="pd-size-section"><div class="pd-size-label">SIZE</div><div class="pd-one-size">ONE SIZE</div></div>`}
+                <div class="pd-actions">
+                    <button class="pd-atc-btn" onclick="addToCartFromDetail(${p.id})" ${soldOut ? 'disabled' : ''}>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        ${soldOut ? 'Sold Out' : 'Add to Cart'}
+                    </button>
+                    <button class="pd-wa-btn" onclick="orderViaWhatsAppDirect(${p.id})">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 0C5.373 0 0 5.373 0 12c0 2.115.554 4.1 1.522 5.823L0 24l6.335-1.508C8.025 23.452 9.975 24 11.998 24 18.625 24 24 18.627 24 12S18.625 0 11.998 0zm0 21.818c-1.872 0-3.633-.505-5.148-1.384l-.369-.219-3.761.895.952-3.652-.24-.378A9.79 9.79 0 0 1 2.18 12c0-5.413 4.406-9.818 9.818-9.818 5.413 0 9.818 4.405 9.818 9.818S17.411 21.818 11.998 21.818z"/></svg>
+                        Order via WhatsApp
+                    </button>
+                </div>
+                <div class="pd-details">
+                    <div class="pd-detail-row"><span>Category</span><span>${p.cat.toUpperCase()}</span></div>
+                    <div class="pd-detail-row"><span>Brand</span><span>WEARTEE.NG</span></div>
+                    <div class="pd-detail-row"><span>Condition</span><span>Brand New</span></div>
+                </div>
             </div>
         </div>
     `;
-
-    modal.classList.add('show');
-    document.getElementById('overlay').classList.add('show');
-    document.body.style.overflow = 'hidden';
 }
 
-function closeProductDetail() {
-    const modal = document.getElementById('product-detail-modal');
-    if (modal) modal.classList.remove('show');
-    const overlay = document.getElementById('overlay');
-    if (overlay) overlay.classList.remove('show');
-    document.body.style.overflow = '';
+// Runs only on product-detail.html — reads ?id= from the URL and fills the page
+function initProductDetailPage() {
+    const container = document.getElementById('pd-page-content');
+    if (!container) return; // not on the detail page
+
+    const params = new URLSearchParams(window.location.search);
+    const id      = parseInt(params.get('id'), 10);
+    const p       = PRODUCTS.find(x => x.id === id);
+
+    if (!p) {
+        container.innerHTML = `<div class="pd-not-found"><strong>NOT FOUND</strong>This product doesn't exist or is no longer available.</div>`;
+        return;
+    }
+
+    document.title = `WearTee.ng | ${p.name}`;
+    container.innerHTML = buildProductDetailHTML(p);
 }
 
 function pdSelectSize(id, size) {
     selectedSizes[id] = size;
     const row = document.getElementById(`pd-sizes-${id}`);
-    if (!row) return;
-    row.querySelectorAll('.pd-sz-btn').forEach(btn => {
-        btn.classList.toggle('selected', btn.textContent === size);
-    });
+    if (row) {
+        row.querySelectorAll('.pd-sz-btn').forEach(btn => {
+            btn.classList.toggle('selected', btn.textContent === size);
+        });
+    }
     const gridRow = document.getElementById(`sizes-${id}`);
     if (gridRow) {
         gridRow.querySelectorAll('.sz-btn').forEach(btn => {
@@ -347,7 +361,6 @@ function pdSelectSize(id, size) {
 
 function addToCartFromDetail(id) {
     addToCart(id);
-    closeProductDetail();
 }
 
 function orderViaWhatsAppDirect(id) {
@@ -360,7 +373,7 @@ function orderViaWhatsAppDirect(id) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// RENDER PRODUCTS
+// RENDER PRODUCTS (grid page only)
 // ══════════════════════════════════════════════════════════════════════════════
 function getFilteredProducts() {
     const filtered = PRODUCTS.filter(p => {
@@ -397,10 +410,14 @@ function getFilteredProducts() {
 }
 
 function renderProducts() {
-    const grid     = document.getElementById('product-grid');
+    const grid = document.getElementById('product-grid');
+    if (!grid) return; // not on the grid page (e.g. product-detail.html)
+
     const filtered = getFilteredProducts();
-    document.getElementById('results-label').textContent =
-        `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
+    const resultsLabel = document.getElementById('results-label');
+    if (resultsLabel) {
+        resultsLabel.textContent = `${filtered.length} item${filtered.length !== 1 ? 's' : ''}`;
+    }
 
     if (!filtered.length) {
         grid.innerHTML = `<div class="no-results"><strong>EMPTY</strong>No results for "${searchQuery}"</div>`;
@@ -469,31 +486,57 @@ function selectSize(id, size) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// SEARCH & FILTER
+// SEARCH & CATEGORY SIDEBAR
 // ══════════════════════════════════════════════════════════════════════════════
-document.getElementById('search-input').addEventListener('input', e => {
-    searchQuery = e.target.value;
-    renderProducts();
-});
+const searchInput = document.getElementById('search-input');
+if (searchInput) {
+    searchInput.addEventListener('input', e => {
+        searchQuery = e.target.value;
+        renderProducts();
+    });
+}
 
-document.getElementById('filter-bar').addEventListener('click', e => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    activeCategory = chip.dataset.cat;
-    renderProducts();
-});
+// Category list (replaces the old top filter chip bar)
+const catList = document.getElementById('cat-list');
+if (catList) {
+    catList.addEventListener('click', e => {
+        const item = e.target.closest('.cat-item');
+        if (!item) return;
+        document.querySelectorAll('.cat-item').forEach(c => c.classList.remove('active'));
+        item.classList.add('active');
+        activeCategory = item.dataset.cat;
+        renderProducts();
+        closeCatDrawer(); // no-op on desktop, closes the drawer on mobile
+    });
+}
 
-document.getElementById('sort-select').addEventListener('change', e => {
-    sortBy = e.target.value;
-    renderProducts();
-});
+// Mobile category drawer open/close
+const catSidebar  = document.getElementById('cat-sidebar');
+const catToggle   = document.getElementById('cat-toggle');
+const catClose    = document.getElementById('cat-close');
+const catOverlay  = document.getElementById('cat-overlay');
 
-// Overlay closes product detail modal only
-document.getElementById('overlay').addEventListener('click', () => {
-    closeProductDetail();
-});
+function openCatDrawer() {
+    if (catSidebar) catSidebar.classList.add('show');
+    if (catOverlay) catOverlay.classList.add('show');
+    document.body.style.overflow = 'hidden';
+}
+function closeCatDrawer() {
+    if (catSidebar) catSidebar.classList.remove('show');
+    if (catOverlay) catOverlay.classList.remove('show');
+    document.body.style.overflow = '';
+}
+if (catToggle)  catToggle.addEventListener('click', openCatDrawer);
+if (catClose)   catClose.addEventListener('click', closeCatDrawer);
+if (catOverlay) catOverlay.addEventListener('click', closeCatDrawer);
+
+const sortSelect = document.getElementById('sort-select');
+if (sortSelect) {
+    sortSelect.addEventListener('change', e => {
+        sortBy = e.target.value;
+        renderProducts();
+    });
+}
 
 // ══════════════════════════════════════════════════════════════════════════════
 // TOAST
@@ -501,6 +544,7 @@ document.getElementById('overlay').addEventListener('click', () => {
 let toastTimer;
 function showToast(msg) {
     const t = document.getElementById('toast');
+    if (!t) return;
     t.textContent = msg;
     t.classList.add('show');
     clearTimeout(toastTimer);
@@ -530,6 +574,7 @@ async function syncStockFromSupabase() {
 // ══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════════════════
-renderProducts();
+renderProducts();          // no-op if #product-grid isn't on this page
+initProductDetailPage();   // no-op if #pd-page-content isn't on this page
 updateCartUI();
 syncStockFromSupabase();
