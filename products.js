@@ -345,9 +345,9 @@ function addToCartFromDetail(id) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// ORDER VIA WHATSAPP — builds a full description of the product, opens WhatsApp,
-// AND logs the enquiry to Supabase so it shows up on an admin page even if the
-// shopper never actually sends the WhatsApp message.
+// ORDER VIA WHATSAPP — builds a full product description, opens WhatsApp, AND
+// logs it to Supabase in the exact shape your admin.html expects, tagged with
+// status "whatsapp" so it shows up under Orders → Awaiting Action.
 // ══════════════════════════════════════════════════════════════════════════════
 async function orderViaWhatsAppDirect(id) {
     const p = PRODUCTS.find(x => x.id === id);
@@ -365,22 +365,25 @@ async function orderViaWhatsAppDirect(id) {
         `Link: ${productUrl}\n\n` +
         `I'd like to order this item.`;
 
-    // Log to Supabase in parallel — doesn't block opening WhatsApp even if it fails
-    logOrderEnquiry({
-        product_id: p.id,
-        product_name: p.name,
-        category: p.cat,
-        size: size,
-        price: p.price,
-        source: 'whatsapp-direct',
-    });
+    // Fires in parallel — never blocks opening WhatsApp even if the insert fails
+    logOrderEnquiry(p, size);
 
     window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// Inserts a row into a Supabase "orders" table so the admin page can see every
-// WhatsApp enquiry, not just the ones the shopper actually sends.
-async function logOrderEnquiry(order) {
+// Inserts a row shaped exactly like admin.html's Orders table expects:
+// ref, created_at, location, zone, items[{name,size,qty,price}], total, status
+async function logOrderEnquiry(p, size) {
+    const ref = `WA-${Date.now().toString(36).toUpperCase()}`;
+    const order = {
+        ref,
+        created_at: new Date().toISOString(),
+        location: 'Not provided (WhatsApp enquiry)',
+        zone: null,
+        items: [{ name: p.name, size: size, qty: 1, price: p.price }],
+        total: p.price,
+        status: 'whatsapp',
+    };
     try {
         await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
             method: 'POST',
@@ -390,11 +393,7 @@ async function logOrderEnquiry(order) {
                 Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
                 Prefer: 'return=minimal',
             },
-            body: JSON.stringify({
-                ...order,
-                status: 'pending',
-                created_at: new Date().toISOString(),
-            }),
+            body: JSON.stringify(order),
         });
     } catch (err) {
         console.warn('Could not log order enquiry:', err);
