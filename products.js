@@ -35,19 +35,6 @@ const DELIVERY_ZONES = [
 // ══════════════════════════════════════════════════════════════════════════════
 // PRODUCTS
 // ══════════════════════════════════════════════════════════════════════════════
-// Optional fields you can add to any product below:
-//   originalPrice : number  — if set higher than `price`, shows a strikethrough
-//                             price + "SALE" badge + savings %. Omit = no discount.
-//   isBestSeller  : true    — shows a "BEST SELLER" badge. You decide which ones,
-//                             since only you know what's actually selling well.
-//   rating        : 0-5     — shows star rating on the card. ONLY add this once you
-//                             have real customer reviews — don't fabricate numbers,
-//                             that's misleading to shoppers and can get flagged as
-//                             deceptive advertising. Leave it out until you have
-//                             genuine review data (e.g. synced from Supabase).
-//   reviewCount   : number  — shown next to the stars, e.g. "(128)".
-// A handful of entries below have originalPrice / isBestSeller filled in as a
-// working example — edit them to reflect what's actually true for your store.
 const PRODUCTS = [
     // BASIC TOPS
     { name:"Asymmetric Pleated Top (Black)",        price:12000, originalPrice:16000, isBestSeller:true, img:"images/Asymmetric Pleated Top(black).JPG",        stock:1,  cat:"basic tops", isNew:true },
@@ -169,7 +156,6 @@ function sanitize(str) {
     return String(str).replace(/[*_~`]/g, '').trim();
 }
 
-// Renders a 5-star row (full/half/empty) for a given rating out of 5
 function renderStars(rating) {
     const full  = Math.floor(rating);
     const half  = rating - full >= 0.5;
@@ -180,7 +166,6 @@ function renderStars(rating) {
     return out;
 }
 
-// Returns { hasDiscount, percentOff } for a product based on originalPrice vs price
 function getDiscountInfo(p) {
     if (!p.originalPrice || p.originalPrice <= p.price) {
         return { hasDiscount: false, percentOff: 0 };
@@ -200,8 +185,10 @@ function saveCart() {
 // ══════════════════════════════════════════════════════════════════════════════
 function updateCartUI() {
     const count = cart.reduce((a, b) => a + b.qty, 0);
-    const el    = document.getElementById('cart-count');
+    const el       = document.getElementById('cart-count');
     if (el) el.textContent = count;
+    const drawerEl = document.getElementById('drawer-cart-count');
+    if (drawerEl) drawerEl.textContent = count;
 }
 
 function openCart() {
@@ -245,17 +232,12 @@ function changeQty(id, size, delta) {
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
-// PRODUCT DETAIL — now a real page (product-detail.html?id=N), not a modal
+// PRODUCT DETAIL — real page (product-detail.html?id=N), not a modal
 // ══════════════════════════════════════════════════════════════════════════════
-
-// Clicking a product on the grid takes the shopper to its own page.
 function openProductDetail(id) {
     window.location.href = `product-detail.html?id=${id}`;
 }
 
-// Builds the inner HTML for a product's detail view. Used only by the
-// product-detail.html page — shared here so the markup and behaviour stay
-// identical to what the grid card already promises (price, badges, sizes, etc).
 function buildProductDetailHTML(p) {
     const sizes    = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
     const soldOut  = p.stock === 0;
@@ -325,10 +307,9 @@ function buildProductDetailHTML(p) {
     `;
 }
 
-// Runs only on product-detail.html — reads ?id= from the URL and fills the page
 function initProductDetailPage() {
     const container = document.getElementById('pd-page-content');
-    if (!container) return; // not on the detail page
+    if (!container) return;
 
     const params = new URLSearchParams(window.location.search);
     const id      = parseInt(params.get('id'), 10);
@@ -363,13 +344,61 @@ function addToCartFromDetail(id) {
     addToCart(id);
 }
 
-function orderViaWhatsAppDirect(id) {
+// ══════════════════════════════════════════════════════════════════════════════
+// ORDER VIA WHATSAPP — builds a full description of the product, opens WhatsApp,
+// AND logs the enquiry to Supabase so it shows up on an admin page even if the
+// shopper never actually sends the WhatsApp message.
+// ══════════════════════════════════════════════════════════════════════════════
+async function orderViaWhatsAppDirect(id) {
     const p = PRODUCTS.find(x => x.id === id);
     if (!p) return;
     const sizes = SIZES_MAP[p.cat] || ["S","M","L","XL","XXL"];
     const size  = sizes.length === 1 ? sizes[0] : (selectedSizes[id] || sizes[0]);
-    const msg   = `Enquiry from WearTee.ng\n\nProduct: ${p.name}\nSize: ${size}\nPrice: ₦${p.price.toLocaleString()}\n\nI'd like to order this item.`;
+
+    const productUrl = `${window.location.origin}${window.location.pathname.replace(/product-detail\.html.*$/, '')}product-detail.html?id=${id}`;
+
+    const msg = `Enquiry from WearTee.ng\n\n` +
+        `Product: ${p.name}\n` +
+        `Category: ${p.cat.toUpperCase()}\n` +
+        `Size: ${size}\n` +
+        `Price: ₦${p.price.toLocaleString()}\n` +
+        `Link: ${productUrl}\n\n` +
+        `I'd like to order this item.`;
+
+    // Log to Supabase in parallel — doesn't block opening WhatsApp even if it fails
+    logOrderEnquiry({
+        product_id: p.id,
+        product_name: p.name,
+        category: p.cat,
+        size: size,
+        price: p.price,
+        source: 'whatsapp-direct',
+    });
+
     window.open(`https://wa.me/2349067468815?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// Inserts a row into a Supabase "orders" table so the admin page can see every
+// WhatsApp enquiry, not just the ones the shopper actually sends.
+async function logOrderEnquiry(order) {
+    try {
+        await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                apikey: SUPABASE_ANON_KEY,
+                Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+                Prefer: 'return=minimal',
+            },
+            body: JSON.stringify({
+                ...order,
+                status: 'pending',
+                created_at: new Date().toISOString(),
+            }),
+        });
+    } catch (err) {
+        console.warn('Could not log order enquiry:', err);
+    }
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -403,7 +432,6 @@ function getFilteredProducts() {
             sorted.sort((a, b) => b.id - a.id);
             break;
         default:
-            // 'featured' — keep catalog order
             break;
     }
     return sorted;
@@ -411,7 +439,7 @@ function getFilteredProducts() {
 
 function renderProducts() {
     const grid = document.getElementById('product-grid');
-    if (!grid) return; // not on the grid page (e.g. product-detail.html)
+    if (!grid) return;
 
     const filtered = getFilteredProducts();
     const resultsLabel = document.getElementById('results-label');
@@ -496,7 +524,6 @@ if (searchInput) {
     });
 }
 
-// Category list (replaces the old top filter chip bar)
 const catList = document.getElementById('cat-list');
 if (catList) {
     catList.addEventListener('click', e => {
@@ -506,11 +533,10 @@ if (catList) {
         item.classList.add('active');
         activeCategory = item.dataset.cat;
         renderProducts();
-        closeCatDrawer(); // no-op on desktop, closes the drawer on mobile
+        closeCatDrawer();
     });
 }
 
-// Mobile category drawer open/close
 const catSidebar  = document.getElementById('cat-sidebar');
 const catToggle   = document.getElementById('cat-toggle');
 const catClose    = document.getElementById('cat-close');
@@ -574,7 +600,7 @@ async function syncStockFromSupabase() {
 // ══════════════════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════════════════
-renderProducts();          // no-op if #product-grid isn't on this page
-initProductDetailPage();   // no-op if #pd-page-content isn't on this page
+renderProducts();
+initProductDetailPage();
 updateCartUI();
 syncStockFromSupabase();
