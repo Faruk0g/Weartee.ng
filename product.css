@@ -177,7 +177,7 @@ header {
     display: flex;
     align-items: flex-start;
     gap: 32px;
-    padding: 0 5% 80px;
+    padding: 32px 5% 80px;
     max-width: 1600px;
     margin: 0 auto;
 }
@@ -206,8 +206,7 @@ header {
 }
 .cat-sidebar-logo span { color: var(--accent); }
 
-/* Quick links (Cart / Track Order) — mobile drawer only, mirrors the
-   quick-actions row at the top of a typical app category drawer */
+/* Quick links (Cart / Track Order) — mobile drawer only */
 .quick-links {
     display: none;
     flex-direction: column;
@@ -1108,7 +1107,7 @@ header {
     .search-wrap { max-width: 100%; }
 
     /* category sidebar becomes a slide-out drawer */
-    .shop-layout { padding: 0 5% 60px; gap: 0; }
+    .shop-layout { padding: 24px 5% 60px; gap: 0; }
     .cat-sidebar {
         position: fixed;
         top: 0;
