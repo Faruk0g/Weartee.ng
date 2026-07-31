@@ -53,7 +53,7 @@ const PRODUCTS = [
     img: "images/Asymmetric Pleated Top(red).JPG",
     stock: 1,
     cat: "basic tops",
-    false: false,
+    isNew: false,
   },
   {
     name: "Backless Top (Black)",
@@ -61,7 +61,7 @@ const PRODUCTS = [
     img: "images/Backless Top(black).JPG",
     stock: 0,
     cat: "basic tops",
-    false: false,
+    isNew: false,
   },
   {
     name: "Backless Top (Wine)",
